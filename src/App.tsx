@@ -1,8 +1,11 @@
+import VideoWindow from './components/VideoWindow'
+import './css/App.css'
+
 function App() {
   return (
-    <>
-      Hello world!
-    </>
+    <div className="container">
+      <VideoWindow />
+    </div>
   )
 }
 
