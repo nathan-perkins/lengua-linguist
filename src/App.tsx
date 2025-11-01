@@ -16,8 +16,8 @@ function App() {
 
   return (
     <div className="container">
-      <VideoWindow activeVideo={activeVideo} />
       <QueryForm handleQuery={handleQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <VideoWindow activeVideo={activeVideo} />
     </div>
   )
 }

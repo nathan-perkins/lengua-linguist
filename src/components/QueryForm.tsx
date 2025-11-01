@@ -6,18 +6,16 @@ type QueryFormProps = {
 
 function QueryForm({ handleQuery, searchQuery, setSearchQuery}: QueryFormProps) {
   return (
-    <form onSubmit={handleQuery}>
-        <label>
-          Input link:
-          <input
-            type="text" 
-            className="search-label" 
-            value={searchQuery} 
-            onChange={({ target }) => setSearchQuery(target.value)}
-          />
-        </label>
-        <button type="submit">Search</button>
-      </form>
+    <form onSubmit={handleQuery} className="query-form">
+      <input
+        type="text" 
+        className="search-label" 
+        value={searchQuery} 
+        onChange={({ target }) => setSearchQuery(target.value)}
+        placeholder="Search for a YouTube video..."
+      />
+      <button type="submit" className="query-btn">Search</button>
+    </form>
   )
 }
 

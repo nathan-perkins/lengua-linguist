@@ -74,6 +74,21 @@ body > #root {
 	height: 100%;
 }
 
+.query-form {
+	text-align: center;
+	margin-bottom: 2rem;
+}
+
 .search-label {
+	border-radius: 100px;
 	display: block;
+	margin: 0 auto 1rem auto;
+	padding: .5rem 1rem;
+	width: calc(max(66%, 16rem));
+}
+
+.query-btn {
+	background-color: #e47711;
+	border-radius: 100px;
+	padding: .5rem 1rem;
 }
