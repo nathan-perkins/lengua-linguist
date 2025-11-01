@@ -2,14 +2,17 @@ function VideoWindow() {
   return (
     <div className="video-window">
       <iframe
-        width="100%"
-        src="https://www.youtube.com/embed/LQH9PKVZh4A?si=FBFEvjcbuP1b4Psl"
-        frameBorder="0"
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/DlhPWS2S55Q?si=CJ2MMdC-GAGvxt60"
+        title="YouTube video player"
+        style={{ border: "none" }}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"
         allowFullScreen
-        title="YouTube video player"
-      />
+        // eslint-disable-next-line react-dom/no-unsafe-iframe-sandbox
+        sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
+      ></iframe>
     </div>
   )
 }
