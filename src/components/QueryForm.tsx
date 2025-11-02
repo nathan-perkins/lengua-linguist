@@ -1,4 +1,4 @@
-type QueryFormProps = {
+interface QueryFormProps {
   handleQuery: React.FormEventHandler<HTMLFormElement>
   searchQuery: string
   setSearchQuery: (value: string) => void

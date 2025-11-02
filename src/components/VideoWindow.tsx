@@ -1,14 +1,18 @@
-type VideoWindowProps = {
-  activeVideo: string
+interface VideoWindowProps {
+  activeVideo: string | null
 }
 
 function VideoWindow({ activeVideo }: VideoWindowProps) {
+  if (!activeVideo) return null
+
+  const embedUrl = `https://www.youtube.com/embed/${activeVideo}`
+
   return (
     <div className="video-window">
       <iframe
         width="560"
         height="315"
-        src={`${activeVideo}`}
+        src={embedUrl}
         title="YouTube video player"
         style={{ border: "none" }}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
