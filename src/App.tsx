@@ -14,20 +14,21 @@ interface YouTubeSearchResponse {
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
-  const [videos, setVideos] = useState<YouTubeSearchResponse['items']>([])
+  const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
 
   const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
+    setActiveVideo(null)
 
     const response = await fetchVideos(searchQuery)
     if (response) {
       const data = await response.json() as YouTubeSearchResponse
-      setVideos(data.items || [])
+      setVideoOptions(data.items || [])
 
-      if (data.items && data.items.length > 0) {
-        console.log(data.items)
-        setActiveVideo(data.items[0].id.videoId)
-      }
+      // if (data.items && data.items.length > 0) {
+      //   console.log(data.items)
+      //   setActiveVideo(data.items[0].id.videoId)
+      // }
     }
     setSearchQuery('')
   }
@@ -35,11 +36,22 @@ function App() {
   return (
     <div className="container">
       <QueryForm handleQuery={handleQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      { videos && activeVideo
+      {activeVideo
         ? (
           <VideoWindow activeVideo={activeVideo} />
         ) : (
-          ''
+          <div>
+            {videoOptions.map(option => (
+              <button
+                type="button"
+                key={option.id.videoId}
+                onClick={() => setActiveVideo(option.id.videoId)}
+                className="video-option-btn"
+              >
+                {option.snippet.title}
+              </button>
+            ))}
+          </div>
         )}
     </div>
   )
