@@ -4,6 +4,14 @@ import VideoWindow from './components/VideoWindow'
 import QueryForm from './components/QueryForm'
 import './css/App.css'
 
+import { validateLink } from './utils/validateLink'
+
+declare global {
+  interface Window {
+    logger: () => { isValid: boolean, isEmbed: boolean}
+  }
+}
+
 interface YouTubeSearchResponse {
   items: Array<{
     id: { videoId: string }
@@ -20,18 +28,39 @@ function App() {
     e.preventDefault()
     setActiveVideo(null)
 
+    const { isValid, isEmbed } = validateLink(searchQuery)
+
+    if (isValid) {
+      let videoId: string | null = null
+
+      if (isEmbed) {
+        const match = searchQuery.match(/embed\/([\w-]+)/)
+        videoId = match ? match[1] : null
+      } else {
+        const match = searchQuery.match(/(?:v=|\/v\/|youtu\.be\/|\/watch\?v=|\/live\/|\/shorts\/|\/embed\/)?([\w-]{11})/)
+        videoId = match ? match[1] : null
+      }
+
+      if (videoId) {
+        setActiveVideo(videoId)
+        setVideoOptions([])
+        setSearchQuery('')
+        return
+      }
+    }
+
     const response = await fetchVideos(searchQuery)
     if (response) {
       const data = await response.json() as YouTubeSearchResponse
       setVideoOptions(data.items || [])
-
-      // if (data.items && data.items.length > 0) {
-      //   console.log(data.items)
-      //   setActiveVideo(data.items[0].id.videoId)
-      // }
     }
+
     setSearchQuery('')
   }
+
+  const logger = () => validateLink('https://www.youtube.com/embed/YasnpE7ONNA?si=g1O_JqR-qPPav-RA')
+
+  window.logger = logger
 
   return (
     <div className="container">
@@ -41,10 +70,10 @@ function App() {
           <VideoWindow activeVideo={activeVideo} />
         ) : (
           <div>
-            {videoOptions.map(option => (
+            {videoOptions.map((option, idx) => (
               <button
                 type="button"
-                key={option.id.videoId}
+                key={option.id.videoId || idx}
                 onClick={() => setActiveVideo(option.id.videoId)}
                 className="video-option-btn"
               >
