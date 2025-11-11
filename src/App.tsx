@@ -1,16 +1,9 @@
 import { useState } from 'react'
 import { fetchVideos } from './utils/fetchVideos'
+import { validateLink } from './utils/validateLink'
 import VideoWindow from './components/VideoWindow'
 import QueryForm from './components/QueryForm'
 import './css/App.css'
-
-import { validateLink } from './utils/validateLink'
-
-declare global {
-  interface Window {
-    logger: () => { isValid: boolean, isEmbed: boolean}
-  }
-}
 
 interface YouTubeSearchResponse {
   items: Array<{
@@ -58,23 +51,35 @@ function App() {
     setSearchQuery('')
   }
 
-  const logger = () => validateLink('https://www.youtube.com/embed/YasnpE7ONNA?si=g1O_JqR-qPPav-RA')
+  const handleSelect = (videoId: string) => {
+    setActiveVideo(videoId)
+    setVideoOptions([])
+  }
 
-  window.logger = logger
+  const handleDeselect = () => {
+    setActiveVideo(null)
+  }
 
   return (
     <div className="container">
-      <QueryForm handleQuery={handleQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      {activeVideo ? (
+        null
+      ) : (
+        <QueryForm handleQuery={handleQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      )}
       {activeVideo
         ? (
-          <VideoWindow activeVideo={activeVideo} />
+          <div className="active-window">
+            <VideoWindow activeVideo={activeVideo} />
+            <button type="button" onClick={handleDeselect} className="deselect-btn">deselect</button>
+          </div>
         ) : (
           <div>
             {videoOptions.map((option, idx) => (
               <button
                 type="button"
                 key={option.id.videoId || idx}
-                onClick={() => setActiveVideo(option.id.videoId)}
+                onClick={() => handleSelect(option.id.videoId)}
                 className="video-option-btn"
               >
                 {option.snippet.title}

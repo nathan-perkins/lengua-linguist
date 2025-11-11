@@ -104,3 +104,14 @@ body > #root {
 	background: #cccccc;
 	cursor: pointer;
 }
+
+.deselect-btn {
+	background: none;
+	border: 1px solid #cccccc;
+	border-radius: 100px;
+	color: #cccccc;
+	cursor: pointer;
+	display: block;
+	padding: .5rem 1rem;
+	margin: 1rem auto 0 auto;
+}
