@@ -1,11 +1,19 @@
 interface VideoWindowProps {
   activeVideo: string | null
+  startPoint?: string | null
+  endPoint?: string | null
 }
 
-function VideoWindow({ activeVideo }: VideoWindowProps) {
+function VideoWindow({ activeVideo, startPoint, endPoint }: VideoWindowProps) {
   if (!activeVideo) return null
 
-  const embedUrl = `https://www.youtube.com/embed/${activeVideo}`
+  const breakpointParams = startPoint && endPoint
+    ? `?start=${startPoint}&end=${endPoint}`
+    : null
+
+  const embedUrl = breakpointParams
+    ? `https://www.youtube.com/embed/${activeVideo}${breakpointParams}`
+    : `https://www.youtube.com/embed/${activeVideo}`
 
   return (
     <div className="video-window">

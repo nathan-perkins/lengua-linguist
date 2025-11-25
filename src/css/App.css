@@ -105,7 +105,7 @@ body > #root {
 	cursor: pointer;
 }
 
-.deselect-btn {
+.deselect-btn, .breakpoint-btn, .reset-breakpoints-btn {
 	background: none;
 	border: 1px solid #cccccc;
 	border-radius: 100px;
@@ -113,5 +113,59 @@ body > #root {
 	cursor: pointer;
 	display: block;
 	padding: .5rem 1rem;
-	margin: 1rem auto 0 auto;
+}
+
+.btn-row {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.breakpoint-container {
+	margin-top: 1rem;
+}
+
+.breakpoint-header {
+	font-size: 1.25rem;
+	font-weight: 600;
+}
+
+.breakpoint-form {
+	margin-top: 1rem;
+}
+
+.breakpoint-input {
+	border-radius: 100px;
+	display: block;
+	margin-bottom: 1rem;
+	margin-top: .5rem;
+	padding: .5rem 1rem;
+	width: calc(max(66%, 16rem));
+}
+
+.breakpoint-btn-row {
+	display: flex;
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.breakpoint-submit-btn {
+	background: none;
+	border: 1px solid #e47711;
+	border-radius: 100px;
+	color: #e47711;
+	cursor: pointer;
+	display: block;
+	padding: .5rem 1rem;
+}
+
+.breakpoint-cancel-btn {
+	background: none;
+	border: 1px solid #cccccc;
+	border-radius: 100px;
+	color: #cccccc;
+	cursor: pointer;
+	display: block;
+	padding: .5rem 1rem;
 }
