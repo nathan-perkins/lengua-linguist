@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { fetchVideos } from './utils/fetchVideos'
 import { validateLink } from './utils/validateLink'
+import { calcSec } from './utils/calcSec'
 import VideoWindow from './components/VideoWindow'
 import QueryForm from './components/QueryForm'
 import BreakpointPane from './components/BreakpointPane'
@@ -20,8 +21,8 @@ function App() {
   const [breakpointPaneVisible, setBreakpointPaneVisible] = useState<boolean>(false)
   const [startInput, setStartInput] = useState<string | undefined>(undefined)
   const [endInput, setEndInput] = useState<string | undefined>(undefined)
-  const [startPoint, setStartPoint] = useState<string | null>(null)
-  const [endPoint, setEndPoint] = useState<string | null>(null)
+  const [startPoint, setStartPoint] = useState<number | null>(null)
+  const [endPoint, setEndPoint] = useState<number | null>(null)
 
   const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
@@ -80,11 +81,10 @@ function App() {
   const handleSetBreakpoints = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (startInput) {
-      setStartPoint(startInput)
-    }
-    if (endInput) {
-      setEndPoint(endInput)
+    if (startInput && endInput) {
+      const [calculatedStart, calculetedEnd] = calcSec(startInput, endInput)
+      setStartPoint(calculatedStart)
+      setEndPoint(calculetedEnd)
     }
 
     setBreakpointPaneVisible(false)
@@ -92,6 +92,9 @@ function App() {
   }
 
   const handleResetBreakpoints = () => {
+    setBreakpointPaneVisible(false)
+    setStartInput(undefined)
+    setEndInput(undefined)
     setStartPoint(null)
     setEndPoint(null)
   }

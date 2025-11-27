@@ -1,34 +1,45 @@
+import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
+
 interface VideoWindowProps {
   activeVideo: string | null
-  startPoint?: string | null
-  endPoint?: string | null
+  startPoint?: number | null
+  endPoint?: number | null
+}
+
+interface YouTubePlayer {
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void
+  pauseVideo: () => void
 }
 
 function VideoWindow({ activeVideo, startPoint, endPoint }: VideoWindowProps) {
   if (!activeVideo) return null
 
-  const breakpointParams = startPoint && endPoint
-    ? `?start=${startPoint}&end=${endPoint}`
-    : null
-
-  const embedUrl = breakpointParams
-    ? `https://www.youtube.com/embed/${activeVideo}${breakpointParams}`
-    : `https://www.youtube.com/embed/${activeVideo}`
+  const resetToStartpoint: YouTubeProps['onEnd'] = (event: YouTubeEvent) => {
+    const player = event.target as YouTubePlayer
+    if (
+      event.data === 0 &&
+      startPoint &&
+      player &&
+      typeof player.seekTo === 'function' &&
+      typeof player.pauseVideo === 'function'
+    ) {
+      player.seekTo(startPoint, true)
+      player.pauseVideo()
+    }
+  }
 
   return (
     <div className="video-window">
-      <iframe
-        width="560"
-        height="315"
-        src={embedUrl}
-        title="YouTube video player"
-        style={{ border: "none" }}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-        // eslint-disable-next-line react-dom/no-unsafe-iframe-sandbox
-        sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
-      ></iframe>
+      <YouTube
+        videoId={activeVideo}
+        opts={{
+          playerVars: {
+            start: startPoint ? startPoint : undefined,
+            end: endPoint ? endPoint : undefined,
+          }
+        }}
+        onEnd={resetToStartpoint}
+      />
     </div>
   )
 }
