@@ -105,7 +105,7 @@ body > #root {
 	cursor: pointer;
 }
 
-.deselect-btn {
+.control-btn {
 	background: none;
 	border: 1px solid #cccccc;
 	border-radius: 100px;

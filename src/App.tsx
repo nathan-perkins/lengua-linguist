@@ -87,7 +87,7 @@ function App() {
                 ) : (
                   <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
                 )}
-              <button type="button" onClick={handleDeselect} className="deselect-btn">deselect</button>
+              <button type="button" onClick={handleDeselect} className="control-btn">Deselect</button>
             </div>
           </div>
         ) : (

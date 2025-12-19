@@ -10,17 +10,23 @@ interface YouTubePlayer {
   seekTo: (seconds: number, allowSeekAhead: boolean) => void
   pauseVideo: () => void
   getCurrentTime: () => number
+  getDuration: () => number
 }
 
 function VideoWindow({ activeVideo, activeLoop }: VideoWindowProps) {
   const [startSegment, setStartSegment] = useState<number | null>(null)
   const [endSegment, setEndSegment] = useState<number | null>(null)
+  const [duration, setDuration] = useState<number | null>(null)
 
   const playerRef = useRef<YouTubePlayer | null>(null)
   const intervalRef = useRef<number | undefined>(undefined)
 
   const handleReady: YouTubeProps['onReady'] = (event: YouTubeEvent) => {
-    playerRef.current = event.target as YouTubePlayer
+    const player = event.target as YouTubePlayer
+    playerRef.current = player
+
+    const videoDuration = player.getDuration()
+    setDuration(videoDuration)
   }
 
   useEffect(() => {
@@ -66,7 +72,6 @@ function VideoWindow({ activeVideo, activeLoop }: VideoWindowProps) {
     ) {
       intervalRef.current = setInterval(() => {
         const currentTime = player.getCurrentTime()
-        console.log(currentTime)
         if (currentTime >= endSegment) {
           player.pauseVideo()
           if (intervalRef.current !== undefined) {
@@ -78,20 +83,61 @@ function VideoWindow({ activeVideo, activeLoop }: VideoWindowProps) {
     }
   }
 
+  const handleNextLoop = () => {
+    if (startSegment === null || endSegment === null || duration === null) return
+
+    const newStartSegment = startSegment + 8
+    const newEndSegment = newStartSegment + 8
+
+    if (newEndSegment > duration) {
+      const adjustedStart = Math.max(0, duration - 8)
+      setStartSegment(adjustedStart)
+      setEndSegment(duration)
+      return
+    }
+
+    setStartSegment(newStartSegment)
+    setEndSegment(newEndSegment)
+  }
+
+  const handlePreviousLoop = () => {
+    if (startSegment === null || endSegment === null) return
+
+    const newStartSegment = startSegment - 8
+    const newEndSegment = newStartSegment + 8
+
+    if (newStartSegment <= 0) {
+      setStartSegment(0)
+      setEndSegment(8)
+      return
+    }
+
+    setStartSegment(newStartSegment)
+    setEndSegment(newEndSegment)
+  }
+
   return (
-    <div className="video-window">
-      <YouTube
-        videoId={activeVideo}
-        opts={{
-          playerVars: {
-            start: startSegment ? startSegment : undefined
-          }
-        }}
-        onReady={handleReady}
-        onPause={resetToStartpoint}
-        onStateChange={handleStateChange}
-      />
-    </div>
+    <>
+      <div className="video-window">
+        <YouTube
+          videoId={activeVideo}
+          opts={{
+            playerVars: {
+              start: startSegment ? startSegment : undefined
+            }
+          }}
+          onReady={handleReady}
+          onPause={resetToStartpoint}
+          onStateChange={handleStateChange}
+        />
+      </div>
+      {activeLoop && (
+        <div className="btn-row">
+          <button type="button" onClick={handlePreviousLoop} className="control-btn">Previous loop</button>
+          <button type="button" onClick={handleNextLoop} className="control-btn">Next loop</button>
+        </div>
+      )}
+    </>
   )
 }
 
