@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { fetchVideos } from './utils/fetchVideos'
+import { fetchVideos } from './services/fetchVideos'
 import { validateLink } from './utils/validateLink'
-import { calcSec } from './utils/calcSec'
 import VideoWindow from './components/VideoWindow'
 import QueryForm from './components/QueryForm'
-import BreakpointPane from './components/BreakpointPane'
 import './css/App.css'
 
 interface YouTubeSearchResponse {
@@ -18,11 +16,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
-  const [breakpointPaneVisible, setBreakpointPaneVisible] = useState<boolean>(false)
-  const [startInput, setStartInput] = useState<string | undefined>(undefined)
-  const [endInput, setEndInput] = useState<string | undefined>(undefined)
-  const [startPoint, setStartPoint] = useState<number | null>(null)
-  const [endPoint, setEndPoint] = useState<number | null>(null)
+  const [activeLoop, setActiveLoop] = useState<boolean>(false)
 
   const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
@@ -65,38 +59,14 @@ function App() {
 
   const handleDeselect = () => {
     setActiveVideo(null)
-    setBreakpointPaneVisible(false)
   }
 
-  const handleOpenBreakpointPane = () => {
-    setBreakpointPaneVisible(true)
+  const handleStartLoop = () => {
+    setActiveLoop(true)
   }
 
-  const handleCloseBreakpointPane = () => {
-    setBreakpointPaneVisible(false)
-    setStartInput(undefined)
-    setEndInput(undefined)
-  }
-
-  const handleSetBreakpoints = (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    if (startInput && endInput) {
-      const [calculatedStart, calculetedEnd] = calcSec(startInput, endInput)
-      setStartPoint(calculatedStart)
-      setEndPoint(calculetedEnd)
-    }
-
-    setBreakpointPaneVisible(false)
-    console.log(activeVideo)
-  }
-
-  const handleResetBreakpoints = () => {
-    setBreakpointPaneVisible(false)
-    setStartInput(undefined)
-    setEndInput(undefined)
-    setStartPoint(null)
-    setEndPoint(null)
+  const handleEndLoop = () => {
+    setActiveLoop(false)
   }
 
   return (
@@ -109,15 +79,15 @@ function App() {
       {activeVideo
         ? (
           <div className="active-window">
-            <VideoWindow activeVideo={activeVideo} startPoint={startPoint} endPoint={endPoint} />
+            <VideoWindow activeVideo={activeVideo} activeLoop={activeLoop} />
             <div className="btn-row">
+              {activeLoop
+                ? (
+                  <button type="button" onClick={handleEndLoop} className="loop-control-btn">End loop</button>
+                ) : (
+                  <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
+                )}
               <button type="button" onClick={handleDeselect} className="deselect-btn">deselect</button>
-              <button type="button" onClick={handleOpenBreakpointPane} className="breakpoint-btn">add breakpoints</button>
-              {startPoint !== null || endPoint !== null ? (
-                <button type="button" onClick={handleResetBreakpoints} className="reset-breakpoints-btn">reset</button>
-              ) : (
-                null
-              )}
             </div>
           </div>
         ) : (
@@ -133,11 +103,6 @@ function App() {
               </button>
             ))}
           </div>
-        )}
-        {breakpointPaneVisible ? (
-          <BreakpointPane handleCloseBreakpointPane={handleCloseBreakpointPane} startInput={startInput} setStartInput={setStartInput} endInput={endInput} setEndInput={setEndInput} handleSetBreakpoints={handleSetBreakpoints} />
-        ) : (
-          null
         )}
     </div>
   )
