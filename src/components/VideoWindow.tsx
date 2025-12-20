@@ -32,7 +32,14 @@ function VideoWindow({ activeVideo, activeLoop }: VideoWindowProps) {
   useEffect(() => {
     const player = playerRef.current
 
-    if (player && activeLoop) {
+    if (player === null || duration === null) return
+
+    if (activeLoop && duration < 16) {
+      setStartSegment(0)
+      setEndSegment(duration)
+    }
+
+    if (activeLoop) {
       const currentTime = player.getCurrentTime()
       setStartSegment(currentTime)
       setEndSegment(currentTime + 8)
@@ -40,7 +47,7 @@ function VideoWindow({ activeVideo, activeLoop }: VideoWindowProps) {
       setStartSegment(null)
       setEndSegment(null)
     }
-  }, [activeLoop])
+  }, [activeLoop, duration])
 
   if (!activeVideo) return null
 
