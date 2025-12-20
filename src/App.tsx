@@ -3,6 +3,7 @@ import { fetchVideos } from './services/fetchVideos'
 import { validateLink } from './utils/validateLink'
 import VideoWindow from './components/VideoWindow'
 import QueryForm from './components/QueryForm'
+import Recorder from './components/Recorder'
 import './css/App.css'
 
 interface YouTubeSearchResponse {
@@ -104,6 +105,9 @@ function App() {
             ))}
           </div>
         )}
+        {activeLoop ? (
+          <Recorder />
+        ) : null}
     </div>
   )
 }

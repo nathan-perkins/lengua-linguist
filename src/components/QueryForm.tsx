@@ -14,7 +14,7 @@ function QueryForm({ handleQuery, searchQuery, setSearchQuery}: QueryFormProps) 
         onChange={({ target }) => setSearchQuery(target.value)}
         placeholder="Search for a YouTube video..."
       />
-      <button type="submit" className="query-btn">Search</button>
+      <button type="submit" className="action-btn">Search</button>
     </form>
   )
 }

@@ -87,7 +87,7 @@ body > #root {
 	width: calc(max(66%, 16rem));
 }
 
-.query-btn {
+.action-btn {
 	background-color: #e47711;
 	border-radius: 100px;
 	padding: .5rem 1rem;
@@ -130,4 +130,15 @@ body > #root {
 	cursor: pointer;
 	display: block;
 	padding: .5rem 1rem;
+}
+
+.recorder-panel {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 1rem;
+}
+
+.record-icon {
+	cursor: pointer;
 }
