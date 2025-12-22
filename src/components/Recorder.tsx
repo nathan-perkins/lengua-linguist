@@ -1,8 +1,14 @@
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMicrophone, faStop } from '@fortawesome/free-solid-svg-icons'
 
-function Recorder() {
+interface RecorderProps {
+  videoId: string
+  startSegment: number
+  endSegment: number
+}
+
+function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
   const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'prompt'>('prompt')
   const [isRecording, setIsRecording] = useState<boolean>(false)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
@@ -10,6 +16,17 @@ function Recorder() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const streamRef = useRef<MediaStream | null>(null)
+
+  const segmentKey = `recording-${videoId}-${startSegment}-${endSegment}`
+
+  useEffect(() => {
+    const savedRecording = sessionStorage.getItem(segmentKey)
+    if (savedRecording) {
+      setAudioUrl(savedRecording)
+    } else {
+      setAudioUrl(null)
+    }
+  }, [segmentKey])
 
   const handleRecord = async () => {
     if (permissionStatus === 'denied') {
@@ -48,8 +65,14 @@ function Recorder() {
 
     mediaRecorder.onstop = () => {
       const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
-      const url = URL.createObjectURL(audioBlob)
-      setAudioUrl(url)
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const base64data = reader.result as string
+        sessionStorage.setItem(segmentKey, base64data)
+        setAudioUrl(base64data)
+      }
+      reader.readAsDataURL(audioBlob)
 
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop())
@@ -61,12 +84,12 @@ function Recorder() {
     setIsRecording(true)
   }
 
-  const handleReset = () => {
+  const handleDelete = () => {
     if (audioUrl) {
-      URL.revokeObjectURL(audioUrl)
+      sessionStorage.removeItem(segmentKey)
+      setAudioUrl(null)
+      audioChunksRef.current = []
     }
-    setAudioUrl(null)
-    audioChunksRef.current = []
   }
 
   const handleStopRecord = () => {
@@ -86,7 +109,7 @@ function Recorder() {
       ) : audioUrl ? (
         <div>
           <audio src={audioUrl} controls />
-          <button type="button" onClick={handleReset}></button>
+          <button type="button" onClick={handleDelete}></button>
         </div>
       ) : (
         <FontAwesomeIcon icon={faMicrophone} onClick={handleRecord} className="record-icon" />

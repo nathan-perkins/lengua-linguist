@@ -18,6 +18,7 @@ function App() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
   const [activeLoop, setActiveLoop] = useState<boolean>(false)
+  const [currentSegment, setCurrentSegment] = useState<{ start: number; end: number } | null>(null)
 
   const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
@@ -80,7 +81,7 @@ function App() {
       {activeVideo
         ? (
           <div className="active-window">
-            <VideoWindow activeVideo={activeVideo} activeLoop={activeLoop} />
+            <VideoWindow activeVideo={activeVideo} activeLoop={activeLoop} onSegmentChange={setCurrentSegment} />
             <div className="btn-row">
               {activeLoop
                 ? (
@@ -105,8 +106,8 @@ function App() {
             ))}
           </div>
         )}
-        {activeLoop ? (
-          <Recorder />
+        {activeLoop && activeVideo && currentSegment ? (
+          <Recorder videoId={activeVideo} startSegment={currentSegment.start} endSegment={currentSegment.end} />
         ) : null}
     </div>
   )

@@ -4,6 +4,7 @@ import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 interface VideoWindowProps {
   activeVideo: string | null
   activeLoop: boolean
+  onSegmentChange?: (segment: { start: number; end: number }) => void
 }
 
 interface YouTubePlayer {
@@ -13,7 +14,7 @@ interface YouTubePlayer {
   getDuration: () => number
 }
 
-function VideoWindow({ activeVideo, activeLoop }: VideoWindowProps) {
+function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowProps) {
   const [startSegment, setStartSegment] = useState<number | null>(null)
   const [endSegment, setEndSegment] = useState<number | null>(null)
   const [duration, setDuration] = useState<number | null>(null)
@@ -48,6 +49,12 @@ function VideoWindow({ activeVideo, activeLoop }: VideoWindowProps) {
       setEndSegment(null)
     }
   }, [activeLoop, duration])
+
+  useEffect(() => {
+    if (startSegment !== null && endSegment !== null && onSegmentChange) {
+      onSegmentChange({ start: startSegment, end: endSegment })
+    }
+  }, [startSegment, endSegment, onSegmentChange])
 
   if (!activeVideo) return null
 
