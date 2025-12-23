@@ -60,6 +60,7 @@ function App() {
   }
 
   const handleDeselect = () => {
+    sessionStorage.clear()
     setActiveVideo(null)
   }
 
