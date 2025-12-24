@@ -142,3 +142,7 @@ body > #root {
 .record-icon {
 	cursor: pointer;
 }
+
+.audio-btn {
+	margin: 1rem auto 0 auto;
+}
