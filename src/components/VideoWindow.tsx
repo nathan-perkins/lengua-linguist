@@ -22,6 +22,8 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
   const playerRef = useRef<YouTubePlayer | null>(null)
   const intervalRef = useRef<number | undefined>(undefined)
 
+  const segmentLength = 4
+
   const handleReady: YouTubeProps['onReady'] = (event: YouTubeEvent) => {
     const player = event.target as YouTubePlayer
     playerRef.current = player
@@ -35,7 +37,7 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
 
     if (player === null || duration === null) return
 
-    if (activeLoop && duration < 16) {
+    if (activeLoop && duration < segmentLength * 2) {
       setStartSegment(0)
       setEndSegment(duration)
     }
@@ -43,7 +45,7 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
     if (activeLoop) {
       const currentTime = player.getCurrentTime()
       setStartSegment(currentTime)
-      setEndSegment(currentTime + 8)
+      setEndSegment(currentTime + segmentLength)
     } else {
       setStartSegment(null)
       setEndSegment(null)
@@ -99,11 +101,11 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
   const handleNextLoop = () => {
     if (startSegment === null || endSegment === null || duration === null) return
 
-    const newStartSegment = startSegment + 8
-    const newEndSegment = newStartSegment + 8
+    const newStartSegment = startSegment + segmentLength
+    const newEndSegment = newStartSegment + segmentLength
 
     if (newEndSegment > duration) {
-      const adjustedStart = Math.max(0, duration - 8)
+      const adjustedStart = Math.max(0, duration - segmentLength)
       setStartSegment(adjustedStart)
       setEndSegment(duration)
       return
@@ -116,12 +118,12 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
   const handlePreviousLoop = () => {
     if (startSegment === null || endSegment === null) return
 
-    const newStartSegment = startSegment - 8
-    const newEndSegment = newStartSegment + 8
+    const newStartSegment = startSegment - segmentLength
+    const newEndSegment = newStartSegment + segmentLength
 
     if (newStartSegment <= 0) {
       setStartSegment(0)
-      setEndSegment(8)
+      setEndSegment(segmentLength)
       return
     }
 
