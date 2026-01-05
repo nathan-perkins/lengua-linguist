@@ -64,10 +64,9 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
     if (
       player &&
       startSegment &&
-      event.data === 0
+      event.data === 2
     ) {
       player.seekTo(startSegment, true)
-      player.pauseVideo()
     }
   }
 
