@@ -146,8 +146,12 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
       </div>
       {activeLoop && (
         <div className="btn-row">
-          <button type="button" onClick={handlePreviousLoop} className="control-btn">Previous loop</button>
-          <button type="button" onClick={handleNextLoop} className="control-btn">Next loop</button>
+          {startSegment !== 0 ? (
+            <button type="button" onClick={handlePreviousLoop} className="control-btn">Previous loop</button>
+          ) : null}
+          {endSegment !== duration ? (
+            <button type="button" onClick={handleNextLoop} className="control-btn">Next loop</button>
+          ) : null}
         </div>
       )}
     </>
