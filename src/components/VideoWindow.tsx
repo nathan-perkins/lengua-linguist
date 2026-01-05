@@ -12,6 +12,7 @@ interface YouTubePlayer {
   pauseVideo: () => void
   getCurrentTime: () => number
   getDuration: () => number
+  getIframe: () => HTMLIFrameElement
 }
 
 function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowProps) {
@@ -65,7 +66,8 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
 
     if (
       player &&
-      startSegment &&
+      activeLoop &&
+      startSegment !== null &&
       event.data === 2
     ) {
       player.seekTo(startSegment, true)
@@ -92,6 +94,19 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
           if (intervalRef.current !== undefined) {
             clearInterval(intervalRef.current)
             intervalRef.current = undefined
+          }
+          // simulate click to focus the cross-origin iframe
+          const iframe = playerRef.current?.getIframe()
+          if (iframe) {
+            const rect = iframe.getBoundingClientRect()
+            const clickEvent = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true,
+              clientX: rect.left + rect.width / 2,
+              clientY: rect.top + rect.height / 2
+            })
+            iframe.dispatchEvent(clickEvent)
           }
         }
       }, 100)
@@ -138,7 +153,8 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
           videoId={activeVideo}
           opts={{
             playerVars: {
-              start: startSegment ? startSegment : undefined
+              start: startSegment ? startSegment : undefined,
+              rel: 0
             }
           }}
           onReady={handleReady}
