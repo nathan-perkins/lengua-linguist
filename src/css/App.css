@@ -58,6 +58,20 @@ body > #root {
 	height: 80vh;
 }
 
+.home-container {
+	text-align: center;
+}
+
+.home-heading {
+	font-size: 3rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
+}
+
+.home-body {
+	margin-bottom: 2rem;
+}
+
 .video-window {
   height: 0;
 	position: relative;
@@ -90,6 +104,7 @@ body > #root {
 .action-btn {
 	background-color: #e47711;
 	border-radius: 100px;
+	cursor: pointer;
 	padding: .5rem 1rem;
 }
 
