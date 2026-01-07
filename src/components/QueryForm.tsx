@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+
 interface QueryFormProps {
   handleQuery: React.FormEventHandler<HTMLFormElement>
   searchQuery: string
@@ -6,16 +9,23 @@ interface QueryFormProps {
 
 function QueryForm({ handleQuery, searchQuery, setSearchQuery}: QueryFormProps) {
   return (
-    <form onSubmit={handleQuery} className="query-form">
-      <input
-        type="text" 
-        className="search-label" 
-        value={searchQuery} 
-        onChange={({ target }) => setSearchQuery(target.value)}
-        placeholder="Search for a YouTube video..."
-      />
-      <button type="submit" className="action-btn">Search</button>
-    </form>
+    <div className="query-form-container">
+      <p>Select a YouTube video</p>
+      <form onSubmit={handleQuery} className="query-form">
+        <div className="search-wrapper">
+          <button type="submit" className="search-icon-btn">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </button>
+          <input
+            type="text" 
+            className="search-label" 
+            value={searchQuery} 
+            onChange={({ target }) => setSearchQuery(target.value)}
+          />
+        </div>
+      </form>
+      <p>Search by title or link</p>
+    </div>
   )
 }
 

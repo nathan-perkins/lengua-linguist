@@ -74,42 +74,48 @@ function App() {
 
   return (
     <div className="container">
-      {activeVideo ? (
-        null
-      ) : (
-        <QueryForm handleQuery={handleQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      )}
-      {activeVideo
-        ? (
-          <div className="active-window">
-            <VideoWindow activeVideo={activeVideo} activeLoop={activeLoop} onSegmentChange={setCurrentSegment} />
-            <div className="btn-row">
-              {activeLoop
-                ? (
-                  <button type="button" onClick={handleEndLoop} className="loop-control-btn">End loop</button>
-                ) : (
-                  <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
-                )}
-              <button type="button" onClick={handleDeselect} className="control-btn">Deselect</button>
-            </div>
-          </div>
+      <div className="app-header">
+        <h1>Lengua<span className="accent">Linguist</span></h1>
+      </div>
+      <div className="app-body">
+        {activeVideo ? (
+          null
         ) : (
-          <div>
-            {videoOptions.map((option, idx) => (
-              <button
-                type="button"
-                key={option.id.videoId || idx}
-                onClick={() => handleSelect(option.id.videoId)}
-                className="video-option-btn"
-              >
-                {option.snippet.title}
-              </button>
-            ))}
-          </div>
+          <QueryForm handleQuery={handleQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         )}
-        {activeLoop && activeVideo && currentSegment ? (
-          <Recorder videoId={activeVideo} startSegment={currentSegment.start} endSegment={currentSegment.end} />
-        ) : null}
+        {activeVideo
+          ? (
+            <div className="active-window">
+              <VideoWindow activeVideo={activeVideo} activeLoop={activeLoop} onSegmentChange={setCurrentSegment} />
+              <div className="btn-row">
+                {activeLoop
+                  ? (
+                    <button type="button" onClick={handleEndLoop} className="loop-control-btn">End loop</button>
+                  ) : (
+                    <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
+                  )}
+                <button type="button" onClick={handleDeselect} className="control-btn">Deselect</button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              {videoOptions.map((option, idx) => (
+                <button
+                  type="button"
+                  key={option.id.videoId || idx}
+                  onClick={() => handleSelect(option.id.videoId)}
+                  className="video-option-btn"
+                >
+                  {option.snippet.title}
+                </button>
+              ))}
+            </div>
+          )}
+          {activeLoop && activeVideo && currentSegment ? (
+            <Recorder videoId={activeVideo} startSegment={currentSegment.start} endSegment={currentSegment.end} />
+          ) : null}
+      </div>
+      <div className="app-footer"></div>
     </div>
   )
 }
