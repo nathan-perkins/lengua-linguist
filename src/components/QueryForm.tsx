@@ -13,15 +13,15 @@ function QueryForm({ handleQuery, searchQuery, setSearchQuery}: QueryFormProps) 
       <p>Select a YouTube video</p>
       <form onSubmit={handleQuery} className="query-form">
         <div className="search-wrapper">
-          <button type="submit" className="search-icon-btn">
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </button>
           <input
             type="text" 
             className="search-label" 
             value={searchQuery} 
             onChange={({ target }) => setSearchQuery(target.value)}
           />
+          <button type="submit" className="search-icon-btn">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </button>
         </div>
       </form>
       <p>Search by title or link</p>
