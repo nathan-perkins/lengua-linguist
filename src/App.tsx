@@ -5,6 +5,8 @@ import VideoWindow from './components/VideoWindow'
 import QueryForm from './components/QueryForm'
 import VideoResult from './components/VideoResult'
 import Recorder from './components/Recorder'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import './css/App.css'
 
 interface YouTubeSearchResponse {
@@ -99,6 +101,9 @@ function App() {
           ? (
             <div className="active-window">
               <VideoWindow activeVideo={activeVideo} activeLoop={activeLoop} onSegmentChange={setCurrentSegment} />
+              <button type="button" onClick={handleDeselect} className="video-deselect-btn">
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
               <div className="btn-row">
                 {activeLoop
                   ? (
@@ -106,7 +111,6 @@ function App() {
                   ) : (
                     <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
                   )}
-                <button type="button" onClick={handleDeselect} className="control-btn">Deselect</button>
               </div>
             </div>
           ) : (
