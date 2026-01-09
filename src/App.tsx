@@ -10,7 +10,18 @@ import './css/App.css'
 interface YouTubeSearchResponse {
   items: Array<{
     id: { videoId: string }
-    snippet: { title: string }
+    snippet: {
+      title: string
+      thumbnails: {
+        medium: {
+          url: string
+          width: number
+          height: number
+        }
+      }
+      channelTitle: string
+      description: string
+    }
   }>
 }
 
@@ -99,7 +110,7 @@ function App() {
               </div>
             </div>
           ) : (
-            <div>
+            <div className="video-options-group">
               {videoOptions.map((option, idx) => (
                 <VideoResult key={option.id.videoId || idx} option={option} onSelect={handleSelect} />
               ))}

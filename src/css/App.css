@@ -155,16 +155,51 @@ body > #root {
 	padding: .5rem 1rem;
 }
 
+.video-options-group {
+	margin-bottom: 2rem;
+}
+
 .video-option-btn {
-	border-radius: 100px;
-	margin-bottom: 1rem;
-	padding: .5rem 1rem;
+	display: flex;
+	align-items: flex-start;
+	gap: 1rem;
 	width: 100%;
+	padding: 1rem;
+	background-color: transparent;
+	border-radius: 12px;
+	cursor: pointer;
+	text-align: left;
+	transition: background-color .2s ease;
 }
 
 .video-option-btn:hover, .video-option-btn:focus {
-	background: #cccccc;
-	cursor: pointer;
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.video-option-thumbnail {
+	border-radius: 8px;
+}
+
+.video-option-info {
+	display: flex;
+	flex-direction: column;
+	gap: .25rem;
+}
+
+.video-option-title {
+	color: #f6f6f6;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.video-option-channel {
+	color: #cccccc;
+}
+
+.video-option-description {
+	color: #cccccc;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .control-btn {
