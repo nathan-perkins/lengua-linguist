@@ -3,6 +3,7 @@ import { fetchVideos } from './services/fetchVideos'
 import { validateLink } from './utils/validateLink'
 import VideoWindow from './components/VideoWindow'
 import QueryForm from './components/QueryForm'
+import VideoResult from './components/VideoResult'
 import Recorder from './components/Recorder'
 import './css/App.css'
 
@@ -100,14 +101,7 @@ function App() {
           ) : (
             <div>
               {videoOptions.map((option, idx) => (
-                <button
-                  type="button"
-                  key={option.id.videoId || idx}
-                  onClick={() => handleSelect(option.id.videoId)}
-                  className="video-option-btn"
-                >
-                  {option.snippet.title}
-                </button>
+                <VideoResult key={option.id.videoId || idx} option={option} onSelect={handleSelect} />
               ))}
             </div>
           )}
