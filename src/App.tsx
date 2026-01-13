@@ -6,7 +6,7 @@ import QueryForm from './components/QueryForm'
 import VideoResult from './components/VideoResult'
 import Recorder from './components/Recorder'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faXmark } from '@fortawesome/free-solid-svg-icons'
 import './css/App.css'
 
 interface YouTubeSearchResponse {
@@ -29,6 +29,7 @@ interface YouTubeSearchResponse {
 
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [previousQuery, setPreviousQuery] = useState<string>('')
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
   const [activeLoop, setActiveLoop] = useState<boolean>(false)
@@ -37,6 +38,7 @@ function App() {
   const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     setActiveVideo(null)
+    setPreviousQuery(searchQuery)
 
     const { isValid, isEmbed } = validateLink(searchQuery)
 
@@ -66,6 +68,16 @@ function App() {
     }
 
     setSearchQuery('')
+  }
+
+  const handleReturnToResults = async () => {
+    setActiveVideo(null)
+    
+    const response = await fetchVideos(previousQuery)
+    if (response) {
+      const data = await response.json() as YouTubeSearchResponse
+      setVideoOptions(data.items || [])
+    }
   }
 
   const handleSelect = (videoId: string) => {
@@ -100,6 +112,9 @@ function App() {
         {activeVideo
           ? (
             <div className="active-window">
+              <button type="button" onClick={handleReturnToResults} className="search-return-btn">
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </button>
               <VideoWindow activeVideo={activeVideo} activeLoop={activeLoop} onSegmentChange={setCurrentSegment} />
               <button type="button" onClick={handleDeselect} className="video-deselect-btn">
                 <FontAwesomeIcon icon={faXmark} />
