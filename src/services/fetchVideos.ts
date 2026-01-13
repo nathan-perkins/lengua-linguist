@@ -3,7 +3,7 @@ export async function fetchVideos(searchQuery: string) {
   const apiUrl: string = import.meta.env.VITE_YOUTUBE_DATA_API_URL as string
 
   try {
-    const url = `${apiUrl}/search?key=${apiKey}&type=video&part=snippet&q=${searchQuery}`
+    const url = `${apiUrl}/search?key=${apiKey}&type=video&part=snippet&q=${searchQuery}&maxResults=5`
     const response = await fetch(url)
     return response
   } catch (error) {
