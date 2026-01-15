@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
 interface VideoWindowProps {
   activeVideo: string | null
@@ -9,6 +11,7 @@ interface VideoWindowProps {
 
 interface YouTubePlayer {
   seekTo: (seconds: number, allowSeekAhead: boolean) => void
+  playVideo: () => void
   pauseVideo: () => void
   getCurrentTime: () => number
   getDuration: () => number
@@ -19,6 +22,7 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
   const [startSegment, setStartSegment] = useState<number | null>(null)
   const [endSegment, setEndSegment] = useState<number | null>(null)
   const [duration, setDuration] = useState<number | null>(null)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
 
   const playerRef = useRef<YouTubePlayer | null>(null)
   const intervalRef = useRef<number | undefined>(undefined)
@@ -113,6 +117,20 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
     }
   }
 
+  const handlePlay = () => {
+    if (playerRef.current) {
+      playerRef.current.playVideo()
+      setIsPlaying(true)
+    }
+  }
+
+  const handlePause = () => {
+    if (playerRef.current) {
+      playerRef.current.pauseVideo()
+      setIsPlaying(false)
+    }
+  }
+
   const handleNextLoop = () => {
     if (startSegment === null || endSegment === null || duration === null) return
 
@@ -161,6 +179,17 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
           onPause={resetToStartpoint}
           onStateChange={handleStateChange}
         />
+      </div>
+      <div className="video-control-btns">
+        {isPlaying ? (
+          <button type="button" onClick={handlePause} className="video-control-pause">
+            <FontAwesomeIcon icon={faPause} />
+          </button>
+        ) : (
+          <button type="button" onClick={handlePlay} className="video-control-play">
+            <FontAwesomeIcon icon={faPlay} />
+          </button>
+        )}
       </div>
       {activeLoop && (
         <div className="btn-row">
