@@ -236,7 +236,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         />
       </div>
       <div className="video-timeline">
-          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} onSeek={handleSeek} />
+          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} onSeek={handleSeek} />
       </div>
       <div className="video-control-btns">
         {isPlaying ? (

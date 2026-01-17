@@ -11,6 +11,7 @@ interface VideoTimelineProps {
   currentTime: number
   duration: number
   segments?: Segment[]
+  activeSegmentIndex: number
   onSeek?: (time: number) => void
 }
 
@@ -18,7 +19,7 @@ function getSegmentKey(segment: Segment) {
   return `${segment.start}-${segment.end}`
 }
 
-function VideoTimeline({ currentTime, duration, segments, onSeek }: VideoTimelineProps) {
+function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, onSeek }: VideoTimelineProps) {
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0
   const barRef = useRef<HTMLDivElement>(null)
 
@@ -42,23 +43,24 @@ function VideoTimeline({ currentTime, duration, segments, onSeek }: VideoTimelin
 
   return (
     <div className="video-timeline-bar" ref={barRef}>
-      {segments && segments.map(segment => {
+      {segments && segments.map((segment, idx) => {
         if (duration <= 0) return null
 
         const startMarker = (segment.start / duration) * 100
         const endMarker = (segment.end / duration) * 100
         const keyBase = getSegmentKey(segment)
+        const isActive = idx === activeSegmentIndex
 
         return (
           <React.Fragment key={keyBase}>
             <div
-              className="video-timeline-tick"
+              className={`video-timeline-tick${isActive ? ' active-timeline-tick' : ''}`}
               style={{ left: `${startMarker}%` }}
               aria-label={`Segment start at ${segment.start}s`}
               key={`${keyBase}-start`}
             />
             <div
-              className="video-timeline-tick"
+              className={`video-timeline-tick${isActive ? ' active-timeline-tick' : ''}`}
               style={{ left: `${endMarker}%` }}
               aria-label={`Segment end at ${segment.end}s`}
               key={`${keyBase}-end`}

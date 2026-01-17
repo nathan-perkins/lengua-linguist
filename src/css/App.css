@@ -328,3 +328,13 @@ body > #root {
 	z-index: 3;
 	border-radius: 1px;
 }
+
+.active-timeline-tick {
+	background-color: #e47711;
+	box-shadow: 0 0 0px #e47711;
+	width: 3px;
+	height: 18px;
+	top: -6px;
+	z-index: 4;
+	transition: background 0.2s, box-shadow 0.2s;
+}
