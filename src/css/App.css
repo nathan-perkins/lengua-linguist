@@ -306,6 +306,19 @@ body > #root {
 	transition: width 0.1s linear;
 }
 
+.video-timeline-indicator {
+	position: absolute;
+	top: 50%;
+	z-index: 3;
+	width: 16px;
+	height: 16px;
+	background-color: #4285f4;
+	border-radius: 50%;
+	border: 2px solid #f6f6f6;
+	box-shadow: 0 0 4px #4285f4;
+	transition: box-shadow 0.1s;
+}
+
 .video-timeline-tick {
 	position: absolute;
 	top: -4px;

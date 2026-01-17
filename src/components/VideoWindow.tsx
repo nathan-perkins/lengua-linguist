@@ -127,6 +127,13 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     }
   }
 
+  const handleSeek = (time: number) => {
+    if (playerRef.current) {
+      playerRef.current.seekTo(time, true)
+      setCurrentTime(time)
+    }
+  }
+
   const handlePlay = () => {
     if (playerRef.current) {
       playerRef.current.playVideo()
@@ -229,7 +236,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         />
       </div>
       <div className="video-timeline">
-          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} />
+          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} onSeek={handleSeek} />
       </div>
       <div className="video-control-btns">
         {isPlaying ? (
