@@ -4,7 +4,6 @@ import { validateLink } from './utils/validateLink'
 import VideoWindow from './components/VideoWindow'
 import QueryForm from './components/QueryForm'
 import VideoResult from './components/VideoResult'
-import Recorder from './components/Recorder'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faXmark } from '@fortawesome/free-solid-svg-icons'
 import './css/App.css'
@@ -32,8 +31,6 @@ function App() {
   const [previousQuery, setPreviousQuery] = useState<string>('')
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
-  const [activeLoop, setActiveLoop] = useState<boolean>(false)
-  const [currentSegment, setCurrentSegment] = useState<{ start: number; end: number } | null>(null)
 
   const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
@@ -90,14 +87,6 @@ function App() {
     setActiveVideo(null)
   }
 
-  const handleStartLoop = () => {
-    setActiveLoop(true)
-  }
-
-  const handleEndLoop = () => {
-    setActiveLoop(false)
-  }
-
   return (
     <div className="container">
       <div className="app-header">
@@ -115,18 +104,10 @@ function App() {
               <button type="button" onClick={handleReturnToResults} className="search-return-btn">
                 <FontAwesomeIcon icon={faArrowLeft} />
               </button>
-              <VideoWindow activeVideo={activeVideo} activeLoop={activeLoop} onSegmentChange={setCurrentSegment} />
+              <VideoWindow activeVideo={activeVideo} />
               <button type="button" onClick={handleDeselect} className="video-deselect-btn">
                 <FontAwesomeIcon icon={faXmark} />
               </button>
-              <div className="btn-row">
-                {activeLoop
-                  ? (
-                    <button type="button" onClick={handleEndLoop} className="loop-control-btn">End loop</button>
-                  ) : (
-                    <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
-                  )}
-              </div>
             </div>
           ) : (
             <div className="video-options-group">
@@ -135,9 +116,6 @@ function App() {
               ))}
             </div>
           )}
-          {activeLoop && activeVideo && currentSegment ? (
-            <Recorder videoId={activeVideo} startSegment={currentSegment.start} endSegment={currentSegment.end} />
-          ) : null}
       </div>
       <div className="app-footer"></div>
     </div>

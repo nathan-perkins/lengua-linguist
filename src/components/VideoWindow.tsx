@@ -1,14 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 import VideoTimeline from './VideoTimeline'
+import Recorder from './Recorder'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
-
-interface VideoWindowProps {
-  activeVideo: string | null
-  activeLoop: boolean
-  onSegmentChange?: (segment: { start: number; end: number }) => void
-}
 
 interface YouTubePlayer {
   seekTo: (seconds: number, allowSeekAhead: boolean) => void
@@ -19,9 +14,19 @@ interface YouTubePlayer {
   getIframe: () => HTMLIFrameElement
 }
 
-function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowProps) {
-  const [startSegment, setStartSegment] = useState<number | null>(null)
-  const [endSegment, setEndSegment] = useState<number | null>(null)
+interface Segment {
+  start: number
+  end: number
+}
+
+interface VideoWindowProps {
+  activeVideo: string | null
+}
+
+function VideoWindow({ activeVideo }: VideoWindowProps) {
+  const [activeLoop, setActiveLoop] = useState<boolean>(false)
+  const [segments, setSegments] = useState<Segment[]>([])
+  const [activeSegmentIndex, setActiveSegmentIndex] = useState<number>(0)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number | null>(null)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
@@ -57,35 +62,12 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
 
   useEffect(() => {
     setCurrentTime(0)
+    setActiveSegmentIndex(0)
   }, [activeVideo])
 
-  useEffect(() => {
-    const player = playerRef.current
-
-    if (player === null || duration === null) return
-
-    if (activeLoop && duration < segmentLength * 2) {
-      setStartSegment(0)
-      setEndSegment(duration)
-    }
-
-    if (activeLoop) {
-      const currentTime = player.getCurrentTime()
-      setStartSegment(currentTime)
-      setEndSegment(currentTime + segmentLength)
-    } else {
-      setStartSegment(null)
-      setEndSegment(null)
-    }
-  }, [activeLoop, duration])
-
-  useEffect(() => {
-    if (startSegment !== null && endSegment !== null && onSegmentChange) {
-      onSegmentChange({ start: startSegment, end: endSegment })
-    }
-  }, [startSegment, endSegment, onSegmentChange])
-
   if (!activeVideo) return null
+
+  const activeSegment = segments[activeSegmentIndex]
 
   const resetToStartpoint: YouTubeProps['onPause'] = (event: YouTubeEvent) => {
     const player = event.target as YouTubePlayer
@@ -93,10 +75,10 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
     if (
       player &&
       activeLoop &&
-      startSegment !== null &&
+      activeSegment &&
       event.data === 2
     ) {
-      player.seekTo(startSegment, true)
+      player.seekTo(activeSegment.start, true)
     }
   }
 
@@ -116,12 +98,12 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
 
     if (
       player &&
-      endSegment &&
+      activeSegment &&
       event.data === 1
     ) {
       intervalRef.current = setInterval(() => {
         const currentTime = player.getCurrentTime()
-        if (currentTime >= endSegment) {
+        if (currentTime >= activeSegment.end) {
           player.pauseVideo()
           if (intervalRef.current !== undefined) {
             clearInterval(intervalRef.current)
@@ -160,36 +142,74 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
   }
 
   const handleNextLoop = () => {
-    if (startSegment === null || endSegment === null || duration === null) return
+    if (!duration) return
 
-    const newStartSegment = startSegment + segmentLength
-    const newEndSegment = newStartSegment + segmentLength
-
-    if (newEndSegment > duration) {
-      const adjustedStart = Math.max(0, duration - segmentLength)
-      setStartSegment(adjustedStart)
-      setEndSegment(duration)
-      return
+    if (activeSegmentIndex < segments.length - 1) {
+      const nextIndex = activeSegmentIndex + 1
+      setActiveSegmentIndex(nextIndex)
+      if (playerRef.current) {
+        playerRef.current.seekTo(segments[nextIndex].start, true)
+      }
+    } else {
+      const lastSegmentEndTime = segments.length > 0 ? segments[segments.length - 1].end : 0
+      if (lastSegmentEndTime < duration) {
+        const newSegment = {
+          start: lastSegmentEndTime,
+          end: Math.min(lastSegmentEndTime + segmentLength, duration)
+        }
+        const updatedSegments = [...segments, newSegment].sort((a, b) => a.start - b.start)
+        setSegments(updatedSegments)
+        // this will need to change to be based on an id that's based on start and end times
+        setActiveSegmentIndex(updatedSegments.length - 1)
+        if (playerRef.current) {
+          playerRef.current.seekTo(newSegment.start, true)
+        }
+      }
     }
-
-    setStartSegment(newStartSegment)
-    setEndSegment(newEndSegment)
   }
 
   const handlePreviousLoop = () => {
-    if (startSegment === null || endSegment === null) return
+    if (!duration) return
 
-    const newStartSegment = startSegment - segmentLength
-    const newEndSegment = newStartSegment + segmentLength
-
-    if (newStartSegment <= 0) {
-      setStartSegment(0)
-      setEndSegment(segmentLength)
-      return
+    if (activeSegmentIndex > 0) {
+      const prevIndex = activeSegmentIndex - 1
+      setActiveSegmentIndex(prevIndex)
+      if (playerRef.current) {
+        playerRef.current.seekTo(segments[prevIndex].start, true)
+      }
+    } else {
+      const prevSegmentStartTime = segments.length > 0 ? segments[0].start : 0
+      if (prevSegmentStartTime > 0) {
+        const newSegment = {
+          start: Math.max(0, prevSegmentStartTime - segmentLength),
+          end: prevSegmentStartTime
+        }
+        const updatedSegments = [newSegment, ...segments].sort((a, b) => a.start - b.start)
+        setSegments(updatedSegments)
+        // this will also need to change (see above)
+        setActiveSegmentIndex(0)
+        if (playerRef.current) {
+          playerRef.current.seekTo(newSegment.start, true)
+        }
+      }
     }
+  }
 
-    setStartSegment(newStartSegment)
-    setEndSegment(newEndSegment)
+  const handleStartLoop = () => {
+    if (!playerRef.current || duration === null) return
+
+    const start = playerRef.current.getCurrentTime()
+    const end = Math.min(start + segmentLength, duration)
+
+    setSegments([{ start, end }])
+    setActiveSegmentIndex(0)
+    setActiveLoop(true)
+  }
+
+  const handleEndLoop = () => {
+    setSegments([])
+    setActiveSegmentIndex(0)
+    setActiveLoop(false)
   }
 
   return (
@@ -199,7 +219,7 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
           videoId={activeVideo}
           opts={{
             playerVars: {
-              start: startSegment ? startSegment : undefined,
+              start: activeSegment ? activeSegment.start : undefined,
               rel: 0
             }
           }}
@@ -209,7 +229,7 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
         />
       </div>
       <div className="video-timeline">
-          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} />
+          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} />
       </div>
       <div className="video-control-btns">
         {isPlaying ? (
@@ -224,14 +244,25 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
       </div>
       {activeLoop && (
         <div className="btn-row">
-          {startSegment !== 0 ? (
+          {activeSegment.start !== 0 ? (
             <button type="button" onClick={handlePreviousLoop} className="control-btn">Previous loop</button>
           ) : null}
-          {endSegment !== duration ? (
+          {activeSegment.end !== duration ? (
             <button type="button" onClick={handleNextLoop} className="control-btn">Next loop</button>
           ) : null}
         </div>
       )}
+      <div className="btn-row">
+        {activeLoop
+          ? (
+            <button type="button" onClick={handleEndLoop} className="loop-control-btn">End loop</button>
+          ) : (
+            <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
+          )}
+      </div>
+      {activeLoop && activeVideo && activeSegment ? (
+        <Recorder videoId={activeVideo} startSegment={activeSegment.start} endSegment={activeSegment.end} />
+      ) : null}
     </>
   )
 }
