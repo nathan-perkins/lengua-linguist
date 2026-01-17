@@ -12,6 +12,7 @@ interface VideoTimelineProps {
   duration: number
   segments?: Segment[]
   activeSegmentIndex: number
+  pendingSegmentStart: number | null
   onSeek?: (time: number) => void
 }
 
@@ -19,7 +20,7 @@ function getSegmentKey(segment: Segment) {
   return `${segment.start}-${segment.end}`
 }
 
-function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, onSeek }: VideoTimelineProps) {
+function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek }: VideoTimelineProps) {
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0
   const barRef = useRef<HTMLDivElement>(null)
 
@@ -41,8 +42,21 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, on
     }
   }
 
+  let pendingMarker
+
+  if (pendingSegmentStart) {
+    pendingMarker = (pendingSegmentStart / duration) * 100
+  }
+
   return (
     <div className="video-timeline-bar" ref={barRef}>
+      {pendingSegmentStart && (
+        <div
+          className="video-timeline-tick active-timeline-tick"
+          style={{ left: `${pendingMarker}%` }}
+          aria-label={`Pending segment start at ${pendingMarker}s`}
+        />
+      )}
       {segments && segments.map((segment, idx) => {
         if (duration <= 0) return null
 

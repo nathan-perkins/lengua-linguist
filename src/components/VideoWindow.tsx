@@ -25,6 +25,7 @@ interface VideoWindowProps {
 
 function VideoWindow({ activeVideo }: VideoWindowProps) {
   const [activeLoop, setActiveLoop] = useState<boolean>(false)
+  const [pendingSegmentStart, setPendingSegmentStart] = useState<number | null>(null)
   const [segments, setSegments] = useState<Segment[]>([])
   const [activeSegmentIndex, setActiveSegmentIndex] = useState<number>(0)
   const [currentTime, setCurrentTime] = useState<number>(0)
@@ -69,17 +70,22 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
 
   const activeSegment = segments[activeSegmentIndex]
 
-  const resetToStartpoint: YouTubeProps['onPause'] = (event: YouTubeEvent) => {
+  const handlePause: YouTubeProps['onPause'] = (event: YouTubeEvent) => {
     const player = event.target as YouTubePlayer
 
-    if (
-      player &&
-      activeLoop &&
-      activeSegment &&
-      event.data === 2
-    ) {
+    if (!player || duration === 0) return
+
+    if (pendingSegmentStart !== null) {
+      const end = player.getCurrentTime()
+      if (end > pendingSegmentStart) {
+        setSegments([...segments, { start: pendingSegmentStart, end }].sort((a, b) => a.start - b.start))
+      }
+      setPendingSegmentStart(null)
+    } else if (activeSegment && event.data === 2) {
       player.seekTo(activeSegment.start, true)
     }
+
+    setIsPlaying(false)
   }
 
   const handleStateChange: YouTubeProps['onStateChange'] = (event: YouTubeEvent) => {
@@ -141,7 +147,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     }
   }
 
-  const handlePause = () => {
+  const handlePauseClick = () => {
     if (playerRef.current) {
       playerRef.current.pauseVideo()
       setIsPlaying(false)
@@ -205,15 +211,17 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
   const handleStartLoop = () => {
     if (!playerRef.current || duration === null) return
 
-    const start = playerRef.current.getCurrentTime()
-    const end = Math.min(start + segmentLength, duration)
+    setPendingSegmentStart(playerRef.current.getCurrentTime())
 
-    setSegments([{ start, end }])
-    setActiveSegmentIndex(0)
-    setActiveLoop(true)
+    // const start = playerRef.current.getCurrentTime()
+    // const end = Math.min(start + segmentLength, duration)
+
+    // setSegments([{ start, end }])
+    // setActiveSegmentIndex(0)
+    // setActiveLoop(true)
   }
 
-  const handleEndLoop = () => {
+  const handleClearLoops = () => {
     setSegments([])
     setActiveSegmentIndex(0)
     setActiveLoop(false)
@@ -231,12 +239,12 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
             }
           }}
           onReady={handleReady}
-          onPause={resetToStartpoint}
+          onPause={handlePause}
           onStateChange={handleStateChange}
         />
       </div>
       <div className="video-timeline">
-          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} onSeek={handleSeek} />
+          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} />
       </div>
       <div className="video-control-btns">
         {activeLoop && (
@@ -251,7 +259,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           )
         )}
         {isPlaying ? (
-          <button type="button" onClick={handlePause} className="video-control-pause">
+          <button type="button" onClick={handlePauseClick} className="video-control-pause">
             <FontAwesomeIcon icon={faPause} />
           </button>
         ) : (
@@ -274,7 +282,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
       <div className="btn-row">
         {activeLoop
           ? (
-            <button type="button" onClick={handleEndLoop} className="loop-control-btn">End loop</button>
+            <button type="button" onClick={handleClearLoops} className="loop-control-btn">Clear loops</button>
           ) : (
             <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
           )}
