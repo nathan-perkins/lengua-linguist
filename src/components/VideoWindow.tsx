@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
+import VideoTimeline from './VideoTimeline'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
@@ -21,6 +22,7 @@ interface YouTubePlayer {
 function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowProps) {
   const [startSegment, setStartSegment] = useState<number | null>(null)
   const [endSegment, setEndSegment] = useState<number | null>(null)
+  const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number | null>(null)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
 
@@ -36,6 +38,26 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
     const videoDuration = player.getDuration()
     setDuration(videoDuration)
   }
+
+  useEffect(() => {
+    const player = playerRef.current
+    let timeInterval: number | undefined
+
+    if (player && isPlaying) {
+      timeInterval = setInterval(() => {
+        const time = player?.getCurrentTime() ?? 0
+        setCurrentTime(time)
+      }, 100)
+    }
+
+    return () => {
+      if (timeInterval) clearInterval(timeInterval)
+    }
+  }, [isPlaying])
+
+  useEffect(() => {
+    setCurrentTime(0)
+  }, [activeVideo])
 
   useEffect(() => {
     const player = playerRef.current
@@ -179,6 +201,9 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
           onPause={resetToStartpoint}
           onStateChange={handleStateChange}
         />
+      </div>
+      <div className="video-timeline">
+          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} />
       </div>
       <div className="video-control-btns">
         {isPlaying ? (
