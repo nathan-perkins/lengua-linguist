@@ -24,7 +24,7 @@ interface VideoWindowProps {
 }
 
 function VideoWindow({ activeVideo }: VideoWindowProps) {
-  const [activeLoop, setActiveLoop] = useState<boolean>(false)
+  const [isActiveLoop, setIsActiveLoop] = useState<boolean>(false)
   const [pendingSegmentStart, setPendingSegmentStart] = useState<number | null>(null)
   const [segments, setSegments] = useState<Segment[]>([])
   const [activeSegmentIndex, setActiveSegmentIndex] = useState<number>(0)
@@ -212,19 +212,14 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     if (!playerRef.current || duration === null) return
 
     setPendingSegmentStart(playerRef.current.getCurrentTime())
-
-    // const start = playerRef.current.getCurrentTime()
-    // const end = Math.min(start + segmentLength, duration)
-
-    // setSegments([{ start, end }])
-    // setActiveSegmentIndex(0)
-    // setActiveLoop(true)
+    setActiveSegmentIndex(0)
+    setIsActiveLoop(true)
   }
 
   const handleClearLoops = () => {
     setSegments([])
     setActiveSegmentIndex(0)
-    setActiveLoop(false)
+    setIsActiveLoop(false)
   }
 
   return (
@@ -247,7 +242,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} />
       </div>
       <div className="video-control-btns">
-        {activeLoop && (
+        {isActiveLoop && activeSegment && (
           activeSegment.start !== 0 ? (
             <button type="button" onClick={handlePreviousLoop} className="loop-control-arrow">
               <FontAwesomeIcon icon={faArrowLeft} />
@@ -267,7 +262,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
             <FontAwesomeIcon icon={faPlay} />
           </button>
         )}
-        {activeLoop && (
+        {isActiveLoop && activeSegment && (
           activeSegment.end !== duration ? (
             <button type="button" onClick={handleNextLoop} className="loop-control-arrow">
               <FontAwesomeIcon icon={faArrowRight} />
@@ -280,14 +275,14 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         )}
       </div>
       <div className="btn-row">
-        {activeLoop
+        {isActiveLoop
           ? (
             <button type="button" onClick={handleClearLoops} className="loop-control-btn">Clear loops</button>
           ) : (
             <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
           )}
       </div>
-      {activeLoop && activeVideo && activeSegment ? (
+      {isActiveLoop && activeVideo && activeSegment ? (
         <Recorder videoId={activeVideo} startSegment={activeSegment.start} endSegment={activeSegment.end} />
       ) : null}
     </>
