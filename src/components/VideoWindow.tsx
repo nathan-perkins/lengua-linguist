@@ -3,7 +3,7 @@ import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 import VideoTimeline from './VideoTimeline'
 import Recorder from './Recorder'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faArrowRight, faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 
 interface YouTubePlayer {
   seekTo: (seconds: number, allowSeekAhead: boolean) => void
@@ -239,6 +239,17 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} onSeek={handleSeek} />
       </div>
       <div className="video-control-btns">
+        {activeLoop && (
+          activeSegment.start !== 0 ? (
+            <button type="button" onClick={handlePreviousLoop} className="loop-control-arrow">
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </button>
+          ) : (
+            <button type="button" className="loop-control-arrow dummy-arrow">
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </button>
+          )
+        )}
         {isPlaying ? (
           <button type="button" onClick={handlePause} className="video-control-pause">
             <FontAwesomeIcon icon={faPause} />
@@ -248,17 +259,18 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
             <FontAwesomeIcon icon={faPlay} />
           </button>
         )}
+        {activeLoop && (
+          activeSegment.end !== duration ? (
+            <button type="button" onClick={handleNextLoop} className="loop-control-arrow">
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+          ) : (
+            <button type="button" className="loop-control-arrow dummy-arrow">
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+          )
+        )}
       </div>
-      {activeLoop && (
-        <div className="btn-row">
-          {activeSegment.start !== 0 ? (
-            <button type="button" onClick={handlePreviousLoop} className="control-btn">Previous loop</button>
-          ) : null}
-          {activeSegment.end !== duration ? (
-            <button type="button" onClick={handleNextLoop} className="control-btn">Next loop</button>
-          ) : null}
-        </div>
-      )}
       <div className="btn-row">
         {activeLoop
           ? (

@@ -274,14 +274,19 @@ body > #root {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	gap: 3rem;
 	margin-top: 1rem;
 }
 
-.video-control-play, .video-control-pause {
+.video-control-play, .video-control-pause, .loop-control-arrow {
 	background-color: transparent;
 	color: #aaaaaa;
 	cursor: pointer;
 	font-size: 1.5rem;
+}
+
+.dummy-arrow {
+	opacity: .3;
 }
 
 .video-timeline {
