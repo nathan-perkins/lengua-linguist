@@ -103,6 +103,12 @@ function VideoWindow({ activeVideo, activeLoop, onSegmentChange }: VideoWindowPr
   const handleStateChange: YouTubeProps['onStateChange'] = (event: YouTubeEvent) => {
     const player = event.target as YouTubePlayer
 
+    if (event.data === 1) {
+      setIsPlaying(true)
+    } else if (event.data === 2 || event.data === 0) {
+      setIsPlaying(false)
+    }
+
     if (intervalRef.current !== undefined) {
       clearInterval(intervalRef.current)
       intervalRef.current = undefined
