@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 
 interface TimelineIndicatorProps {
@@ -10,19 +11,33 @@ function TimelineIndicator({ currentTime, duration }: TimelineIndicatorProps) {
     id: 'timeline-indicator'
   })
 
+  const indicatorRef = useRef<HTMLDivElement>(null)
+  const bar = indicatorRef.current?.parentElement
+  const barWidth = bar ? bar.offsetWidth : 0
+
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0
+  const initialLeftPx = barWidth * (progressPercent / 100)
+  const dragX = transform?.x ?? 0
+
+  const minX = -initialLeftPx
+  const maxX = barWidth - initialLeftPx
+  const clampedX = Math.max(minX, Math.min(maxX, dragX))
+
   const left = `calc(${progressPercent}% - 8px)`
 
   return (
     <div
-      ref={setNodeRef}
+      ref={el => {
+        setNodeRef(el)
+        indicatorRef.current = el
+      }}
       {...listeners}
       {...attributes}
       className="video-timeline-indicator"
       style={{
         left,
         transform: transform
-          ? `translate3d(${transform.x}px, -50%, 0)`
+          ? `translate3d(${clampedX}px, -50%, 0)`
           : 'translateY(-50%)',
         cursor: isDragging ? 'grabbing' : 'grab'
       }}
