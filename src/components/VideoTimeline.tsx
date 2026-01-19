@@ -44,13 +44,13 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
 
   let pendingMarker
 
-  if (pendingSegmentStart) {
+  if (pendingSegmentStart !== null) {
     pendingMarker = (pendingSegmentStart / duration) * 100
   }
 
   return (
     <div className="video-timeline-bar" ref={barRef}>
-      {pendingSegmentStart && (
+      {pendingSegmentStart !== null && (
         <div
           className="video-timeline-tick active-timeline-tick"
           style={{ left: `${pendingMarker}%` }}

@@ -3,7 +3,7 @@ import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 import VideoTimeline from './VideoTimeline'
 import Recorder from './Recorder'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faArrowRight, faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faArrowRight, faPlay, faPause, faRepeat, faGear } from '@fortawesome/free-solid-svg-icons'
 
 interface YouTubePlayer {
   seekTo: (seconds: number, allowSeekAhead: boolean) => void
@@ -242,6 +242,9 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} />
       </div>
       <div className="video-control-btns">
+        <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} >
+          <FontAwesomeIcon icon={faRepeat} />
+        </button>
         {isActiveLoop && activeSegment && (
           activeSegment.start !== 0 ? (
             <button type="button" onClick={handlePreviousLoop} className="loop-control-arrow">
@@ -273,14 +276,9 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
             </button>
           )
         )}
-      </div>
-      <div className="btn-row">
-        {isActiveLoop
-          ? (
-            <button type="button" onClick={handleClearLoops} className="loop-control-btn">Clear loops</button>
-          ) : (
-            <button type="button" onClick={handleStartLoop} className="loop-control-btn">Start loop</button>
-          )}
+        <button type="button" onClick={() => {}} className="options-icon">
+          <FontAwesomeIcon icon={faGear} />
+        </button>
       </div>
       {isActiveLoop && activeVideo && activeSegment ? (
         <Recorder videoId={activeVideo} startSegment={activeSegment.start} endSegment={activeSegment.end} />
