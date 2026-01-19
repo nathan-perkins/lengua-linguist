@@ -35,8 +35,6 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
   const playerRef = useRef<YouTubePlayer | null>(null)
   const intervalRef = useRef<number | undefined>(undefined)
 
-  const segmentLength = 4
-
   const handleReady: YouTubeProps['onReady'] = (event: YouTubeEvent) => {
     const player = event.target as YouTubePlayer
     playerRef.current = player
@@ -192,21 +190,6 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
       if (playerRef.current) {
         playerRef.current.seekTo(segments[prevIndex].start, true)
       }
-    } else {
-      const prevSegmentStartTime = segments.length > 0 ? segments[0].start : 0
-      if (prevSegmentStartTime > 0) {
-        const newSegment = {
-          start: Math.max(0, prevSegmentStartTime - segmentLength),
-          end: prevSegmentStartTime
-        }
-        const updatedSegments = [newSegment, ...segments].sort((a, b) => a.start - b.start)
-        setSegments(updatedSegments)
-        // this will also need to change (see above)
-        setActiveSegmentIndex(0)
-        if (playerRef.current) {
-          playerRef.current.seekTo(newSegment.start, true)
-        }
-      }
     }
   }
 
@@ -248,8 +231,8 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} >
           <FontAwesomeIcon icon={faRepeat} />
         </button>
-        {isActiveLoop && activeSegment && (
-          activeSegment.start !== 0 ? (
+        {isActiveLoop && activeSegment && activeSegmentIndex !== null && (
+          activeSegmentIndex > 0 ? (
             <button type="button" onClick={handlePreviousLoop} className="loop-control-arrow">
               <FontAwesomeIcon icon={faArrowLeft} />
             </button>
