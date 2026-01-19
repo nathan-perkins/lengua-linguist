@@ -11,7 +11,7 @@ interface VideoTimelineProps {
   currentTime: number
   duration: number
   segments?: Segment[]
-  activeSegmentIndex: number
+  activeSegmentIndex: number | null
   pendingSegmentStart: number | null
   onSeek?: (time: number) => void
 }
@@ -63,7 +63,7 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
         const startMarker = (segment.start / duration) * 100
         const endMarker = (segment.end / duration) * 100
         const keyBase = getSegmentKey(segment)
-        const isActive = idx === activeSegmentIndex
+        const isActive = idx === activeSegmentIndex && pendingSegmentStart === null
 
         return (
           <React.Fragment key={keyBase}>

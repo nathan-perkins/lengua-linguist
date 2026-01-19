@@ -27,7 +27,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
   const [isActiveLoop, setIsActiveLoop] = useState<boolean>(false)
   const [pendingSegmentStart, setPendingSegmentStart] = useState<number | null>(null)
   const [segments, setSegments] = useState<Segment[]>([])
-  const [activeSegmentIndex, setActiveSegmentIndex] = useState<number>(0)
+  const [activeSegmentIndex, setActiveSegmentIndex] = useState<number | null>(null)
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number | null>(null)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
@@ -68,7 +68,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
 
   if (!activeVideo) return null
 
-  const activeSegment = segments[activeSegmentIndex]
+  const activeSegment = segments[activeSegmentIndex ?? 0]
 
   const handlePause: YouTubeProps['onPause'] = (event: YouTubeEvent) => {
     const player = event.target as YouTubePlayer
@@ -76,10 +76,20 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     if (!player || duration === 0) return
 
     if (pendingSegmentStart !== null) {
-      const end = player.getCurrentTime()
-      if (end > pendingSegmentStart) {
-        setSegments([...segments, { start: pendingSegmentStart, end }].sort((a, b) => a.start - b.start))
+      const pendingSegmentEnd = player.getCurrentTime()
+
+      if (pendingSegmentEnd <= pendingSegmentStart) return
+
+      const newSegment = {
+        start: pendingSegmentStart,
+        end: pendingSegmentEnd
       }
+      const updatedSegments = [...segments, newSegment].sort((a, b) => a.start - b.start)
+      setSegments(updatedSegments)
+      // this will need to change to be based on an id that's based on start and end times
+      setActiveSegmentIndex(updatedSegments.length - 1)
+      player.seekTo(newSegment.start, true)
+
       setPendingSegmentStart(null)
     } else if (activeSegment && event.data === 2) {
       player.seekTo(activeSegment.start, true)
@@ -105,6 +115,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     if (
       player &&
       activeSegment &&
+      pendingSegmentStart === null &&
       event.data === 1
     ) {
       intervalRef.current = setInterval(() => {
@@ -155,7 +166,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
   }
 
   const handleNextLoop = () => {
-    if (!duration) return
+    if (!playerRef.current || duration === null || activeSegmentIndex === null) return
 
     if (activeSegmentIndex < segments.length - 1) {
       const nextIndex = activeSegmentIndex + 1
@@ -166,23 +177,14 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     } else {
       const lastSegmentEndTime = segments.length > 0 ? segments[segments.length - 1].end : 0
       if (lastSegmentEndTime < duration) {
-        const newSegment = {
-          start: lastSegmentEndTime,
-          end: Math.min(lastSegmentEndTime + segmentLength, duration)
-        }
-        const updatedSegments = [...segments, newSegment].sort((a, b) => a.start - b.start)
-        setSegments(updatedSegments)
-        // this will need to change to be based on an id that's based on start and end times
-        setActiveSegmentIndex(updatedSegments.length - 1)
-        if (playerRef.current) {
-          playerRef.current.seekTo(newSegment.start, true)
-        }
+        playerRef.current.seekTo(lastSegmentEndTime, true)
+        setPendingSegmentStart(lastSegmentEndTime)
       }
     }
   }
 
   const handlePreviousLoop = () => {
-    if (!duration) return
+    if (!duration || activeSegmentIndex === null) return
 
     if (activeSegmentIndex > 0) {
       const prevIndex = activeSegmentIndex - 1
@@ -218,7 +220,8 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
 
   const handleClearLoops = () => {
     setSegments([])
-    setActiveSegmentIndex(0)
+    setPendingSegmentStart(null)
+    setActiveSegmentIndex(null)
     setIsActiveLoop(false)
   }
 
