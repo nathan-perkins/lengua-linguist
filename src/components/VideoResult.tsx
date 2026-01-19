@@ -1,27 +1,15 @@
+import type { VideoOption } from '../App'
+
 interface VideoResultProps {
-  option: {
-    id: { videoId: string }
-    snippet: {
-      title: string
-      thumbnails: {
-        medium: {
-          url: string
-          width: number
-          height: number
-        }
-      }
-      channelTitle: string
-      description: string
-    }
-  }
-  onSelect: (videoId: string) => void
+  option: VideoOption
+  onSelect: (option: VideoOption) => void
 }
 
 function VideoResult({ option, onSelect }: VideoResultProps) {
   return (
     <button
       type="button"
-      onClick={() => onSelect(option.id.videoId)}
+      onClick={() => onSelect(option)}
       className="video-option-btn"
     >
       <img

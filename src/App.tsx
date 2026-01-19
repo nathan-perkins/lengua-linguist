@@ -26,16 +26,41 @@ interface YouTubeSearchResponse {
   }>
 }
 
+export interface VideoOption {
+  id: { videoId: string }
+  snippet: {
+    title: string
+    thumbnails: {
+      medium: {
+        url: string
+        width: number
+        height: number
+      }
+    }
+    channelTitle: string
+    description: string
+  }
+}
+
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [previousQuery, setPreviousQuery] = useState<string>('')
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
+  const [isLoadingVideoOptions, setIsLoadingVideoOptions] = useState<boolean>(false)
+
+  const previousVideo = localStorage.getItem('PREVIOUS_VIDEO')
+  let previousVideoData: VideoOption | null = null
+
+  if (previousVideo) {
+    previousVideoData = JSON.parse(previousVideo) as VideoOption
+  }
 
   const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     setActiveVideo(null)
     setPreviousQuery(searchQuery)
+    setIsLoadingVideoOptions(true)
 
     const { isValid, isEmbed } = validateLink(searchQuery)
 
@@ -65,26 +90,36 @@ function App() {
     }
 
     setSearchQuery('')
+    setIsLoadingVideoOptions(false)
   }
 
   const handleReturnToResults = async () => {
     setActiveVideo(null)
+    setIsLoadingVideoOptions(true)
+
+    if (previousQuery === '') {
+      setVideoOptions([])
+    }
     
     const response = await fetchVideos(previousQuery)
     if (response) {
       const data = await response.json() as YouTubeSearchResponse
       setVideoOptions(data.items || [])
     }
+
+    setIsLoadingVideoOptions(false)
   }
 
-  const handleSelect = (videoId: string) => {
-    setActiveVideo(videoId)
+  const handleSelect = (option: VideoOption) => {
+    localStorage.setItem('PREVIOUS_VIDEO', JSON.stringify(option))
+    setActiveVideo(option.id.videoId)
     setVideoOptions([])
   }
 
   const handleDeselect = () => {
     sessionStorage.clear()
     setActiveVideo(null)
+    setPreviousQuery('')
   }
 
   return (
@@ -111,11 +146,17 @@ function App() {
             </div>
           ) : (
             <div className="video-options-group">
-              {videoOptions.map((option, idx) => (
+              {videoOptions.map((option: VideoOption, idx: number) => (
                 <VideoResult key={option.id.videoId || idx} option={option} onSelect={handleSelect} />
               ))}
             </div>
           )}
+        {previousVideoData && !activeVideo && !videoOptions.length && !isLoadingVideoOptions ? (
+          <div className="previous-video-option">
+            <p className="previous-video-text">Previous video:</p>
+            <VideoResult option={previousVideoData} onSelect={handleSelect} />
+          </div>
+        ) : null}
       </div>
       <div className="app-footer"></div>
     </div>

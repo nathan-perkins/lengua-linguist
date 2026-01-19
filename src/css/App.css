@@ -204,6 +204,17 @@ body > #root {
 	text-overflow: ellipsis;
 }
 
+.previous-video-option {
+	margin-top: 2rem;
+}
+
+.previous-video-text {
+	color: #f6f6f6;
+	text-align: left;
+	margin-bottom: .5rem;
+	margin-left: 1.25rem;
+}
+
 .control-btn {
 	background: none;
 	border: 1px solid #cccccc;
