@@ -48,6 +48,7 @@ function App() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
   const [isLoadingVideoOptions, setIsLoadingVideoOptions] = useState<boolean>(false)
+  const [isNoResults, setIsNoResults] = useState<boolean>(false)
 
   const previousVideo = localStorage.getItem('PREVIOUS_VIDEO')
   let previousVideoData: VideoOption | null = null
@@ -61,6 +62,7 @@ function App() {
     setActiveVideo(null)
     setPreviousQuery(searchQuery)
     setIsLoadingVideoOptions(true)
+    setIsNoResults(false)
 
     const { isValid, isEmbed } = validateLink(searchQuery)
 
@@ -87,6 +89,10 @@ function App() {
     if (response) {
       const data = await response.json() as YouTubeSearchResponse
       setVideoOptions(data.items || [])
+
+      if (data.items.length === 0) {
+        setIsNoResults(true)
+      }
     }
 
     setSearchQuery('')
@@ -114,6 +120,7 @@ function App() {
     localStorage.setItem('PREVIOUS_VIDEO', JSON.stringify(option))
     setActiveVideo(option.id.videoId)
     setVideoOptions([])
+    setIsNoResults(false)
   }
 
   const handleDeselect = () => {
@@ -153,7 +160,7 @@ function App() {
           )}
         {previousVideoData && !activeVideo && !videoOptions.length && !isLoadingVideoOptions ? (
           <div className="previous-video-option">
-            <p className="previous-video-text">Previous video:</p>
+            <p className="previous-video-text">{isNoResults ? 'No results found. Try another search or return to previous video:' : 'Previous video:'}</p>
             <VideoResult option={previousVideoData} onSelect={handleSelect} />
           </div>
         ) : null}
