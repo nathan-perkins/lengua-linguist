@@ -11,6 +11,7 @@ interface YouTubePlayer {
   pauseVideo: () => void
   getCurrentTime: () => number
   getDuration: () => number
+  getPlayerState: () => number
   getIframe: () => HTMLIFrameElement
 }
 
@@ -206,6 +207,13 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     setPendingSegmentStart(null)
     setActiveSegmentIndex(null)
     setIsActiveLoop(false)
+
+    if (!playerRef.current) return
+
+    const playerState = playerRef.current.getPlayerState()
+    if (playerState === 2) {
+      playerRef.current.seekTo(currentTime, true)
+    }
   }
 
   return (
@@ -215,7 +223,6 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           videoId={activeVideo}
           opts={{
             playerVars: {
-              start: activeSegment ? activeSegment.start : undefined,
               rel: 0
             }
           }}
