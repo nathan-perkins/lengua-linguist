@@ -361,6 +361,7 @@ body > #root {
 	border: 2px solid #f6f6f6;
 	box-shadow: 0 0 4px #4285f4;
 	transition: box-shadow 0.1s;
+	touch-action: none;
 }
 
 .video-timeline-tick {
