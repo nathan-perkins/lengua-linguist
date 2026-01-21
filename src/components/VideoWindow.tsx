@@ -65,6 +65,27 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     setActiveSegmentIndex(0)
   }, [activeVideo])
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!playerRef.current) return
+
+      if (event.key === 'ArrowRight') {
+        const currentTime = playerRef.current.getCurrentTime()
+        const duration = playerRef.current.getDuration()
+        playerRef.current.seekTo(Math.min(currentTime + 10, duration), true)
+      }
+
+      if (event.key === 'ArrowLeft') {
+        const currentTime = playerRef.current.getCurrentTime()
+        playerRef.current.seekTo(Math.max(0, currentTime - 10), true)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeVideo])
+
   if (!activeVideo) return null
 
   const activeSegment = segments[activeSegmentIndex ?? 0]
