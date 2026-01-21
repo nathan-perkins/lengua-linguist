@@ -79,6 +79,10 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         const currentTime = playerRef.current.getCurrentTime()
         playerRef.current.seekTo(Math.max(0, currentTime - 10), true)
       }
+
+      if (event.key === ' ') {
+        playerRef.current.playVideo()
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
