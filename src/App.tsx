@@ -135,9 +135,7 @@ function App() {
         <h1>Lengua<span className="accent">Linguist</span></h1>
       </div>
       <div className="app-body">
-        {activeVideo ? (
-          null
-        ) : (
+        {!activeVideo && (
           <QueryForm handleQuery={handleQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         )}
         {activeVideo
@@ -158,14 +156,13 @@ function App() {
               ))}
             </div>
           )}
-        {previousVideoData && !activeVideo && !videoOptions.length && !isLoadingVideoOptions ? (
+        {previousVideoData && !activeVideo && !videoOptions.length && !isLoadingVideoOptions && (
           <div className="previous-video-option">
             <p className="previous-video-text">{isNoResults ? 'No results found. Try another search or return to previous video:' : 'Previous video:'}</p>
             <VideoResult option={previousVideoData} onSelect={handleSelect} />
           </div>
-        ) : null}
+        )}
       </div>
-      <div className="app-footer"></div>
     </div>
   )
 }

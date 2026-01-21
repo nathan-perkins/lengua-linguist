@@ -239,15 +239,9 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           <FontAwesomeIcon icon={faRepeat} />
         </button>
         {isActiveLoop && activeSegment && activeSegmentIndex !== null && (
-          activeSegmentIndex > 0 ? (
-            <button type="button" onClick={handlePreviousLoop} className="loop-control-arrow">
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </button>
-          ) : (
-            <button type="button" className="loop-control-arrow dummy-arrow">
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </button>
-          )
+          <button type="button" onClick={activeSegmentIndex > 0 ? handlePreviousLoop : undefined} className={`loop-control-arrow${activeSegmentIndex > 0 ? '' : ' dummy-arrow'}`}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
         )}
         {isPlaying ? (
           <button type="button" onClick={handlePauseClick} className="video-control-pause">
@@ -259,23 +253,17 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           </button>
         )}
         {isActiveLoop && activeSegment && (
-          activeSegment.end !== duration ? (
-            <button type="button" onClick={handleNextLoop} className="loop-control-arrow">
-              <FontAwesomeIcon icon={faArrowRight} />
-            </button>
-          ) : (
-            <button type="button" className="loop-control-arrow dummy-arrow">
-              <FontAwesomeIcon icon={faArrowRight} />
-            </button>
-          )
+          <button type="button" onClick={activeSegment.end !== duration ? handleNextLoop : undefined} className={`loop-control-arrow${activeSegment.end !== duration ? '' : ' dummy-arrow'}`}>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
         )}
         <button type="button" onClick={() => {}} className="options-icon">
           <FontAwesomeIcon icon={faGear} />
         </button>
       </div>
-      {isActiveLoop && activeVideo && activeSegment ? (
+      {isActiveLoop && activeVideo && activeSegment && (
         <Recorder videoId={activeVideo} startSegment={activeSegment.start} endSegment={activeSegment.end} />
-      ) : null}
+      )}
     </>
   )
 }

@@ -250,6 +250,8 @@ body > #root {
 }
 
 .record-icon {
+	background-color: transparent;
+	color: #aaaaaa;
 	cursor: pointer;
 }
 

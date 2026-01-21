@@ -112,7 +112,9 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
           <button type="button" onClick={handleDelete} className="control-btn audio-btn">Delete</button>
         </div>
       ) : (
-        <FontAwesomeIcon icon={faMicrophone} onClick={handleRecord} className="record-icon" />
+        <button type="button" onClick={handleRecord} className="record-icon">
+          <FontAwesomeIcon icon={faMicrophone} />
+        </button>
       )}
     </div>
   )
