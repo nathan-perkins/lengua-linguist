@@ -36,6 +36,8 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
   const playerRef = useRef<YouTubePlayer | null>(null)
   const intervalRef = useRef<number | undefined>(undefined)
 
+  const activeSegment = segments[activeSegmentIndex ?? 0]
+
   const handleReady: YouTubeProps['onReady'] = (event: YouTubeEvent) => {
     const player = event.target as YouTubePlayer
     playerRef.current = player
@@ -69,30 +71,35 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!playerRef.current) return
 
-      if (event.key === 'ArrowRight') {
+      if (event.key === 'ArrowRight' && !activeSegment) {
         const currentTime = playerRef.current.getCurrentTime()
         const duration = playerRef.current.getDuration()
         playerRef.current.seekTo(Math.min(currentTime + 10, duration), true)
       }
 
-      if (event.key === 'ArrowLeft') {
+      if (event.key === 'ArrowLeft' && !activeSegment) {
         const currentTime = playerRef.current.getCurrentTime()
         playerRef.current.seekTo(Math.max(0, currentTime - 10), true)
       }
 
       if (event.key === ' ') {
-        playerRef.current.playVideo()
+        event.preventDefault()
+        const playerState = playerRef.current.getPlayerState()
+        
+        if (playerState === 1) {
+          handlePauseClick()
+        } else {
+          handlePlay()
+        }
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
 
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [activeVideo])
+  }, [activeVideo, activeSegment])
 
   if (!activeVideo) return null
-
-  const activeSegment = segments[activeSegmentIndex ?? 0]
 
   const handlePause: YouTubeProps['onPause'] = (event: YouTubeEvent) => {
     const player = event.target as YouTubePlayer
