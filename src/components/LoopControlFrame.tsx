@@ -9,21 +9,21 @@ interface Segment {
 interface LoopControlFrameProps {
   currentTime: number
   duration: number
-  controlSegments: Segment[]
+  segments: Segment[]
   activeSegmentIndex: number | null
   pendingSegmentStart: number | null
   onSeek?: (time: number) => void
   loopController: boolean
 }
 
-function LoopControlFrame({ currentTime, duration, controlSegments, activeSegmentIndex, pendingSegmentStart, onSeek, loopController }: LoopControlFrameProps) {
+function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, loopController }: LoopControlFrameProps) {
   return (
     <div className="loop-control-frame">
       <div className="control-timeline">
         <VideoTimeline
           currentTime={currentTime}
           duration={duration}
-          segments={controlSegments}
+          segments={segments}
           activeSegmentIndex={activeSegmentIndex}
           pendingSegmentStart={pendingSegmentStart}
           onSeek={onSeek}

@@ -252,17 +252,6 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     }
   }
 
-  const getSurroundingSegments = (segments: Segment[], activeIndex: number | null) => {
-    if (activeIndex === null || segments.length === 0) return []
-
-    const result = []
-    if (activeIndex > 0) result.push(segments[activeIndex - 1])
-    result.push(segments[activeIndex])
-    if (activeIndex < segments.length - 1) result.push(segments[activeIndex + 1])
-    
-    return result
-  }
-
   return (
     <>
       <div className="video-window">
@@ -309,7 +298,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         </button>
       </div>
       {isActiveLoop && (
-        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} controlSegments={getSurroundingSegments(segments, activeSegmentIndex)} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} loopController={true} />
+        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} loopController={true} />
       )}
       {isActiveLoop && activeVideo && activeSegment && (
         <Recorder videoId={activeVideo} startSegment={activeSegment.start} endSegment={activeSegment.end} />

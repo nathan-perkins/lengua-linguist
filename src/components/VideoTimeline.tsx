@@ -33,53 +33,24 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
   let controllerDuration = 0
 
   if (loopController && segments && segments.length > 0) {
-    if (segments.length === 3) {
-      // [previousSegment, activeSegment, nextSegment]
-      controllerStart = segments[0].start
-      controllerEnd = segments[segments.length - 1].end
-
-      controllerDuration = controllerEnd - controllerStart
-      progressPercent = controllerDuration > 0
-        ? ((currentTime - controllerStart) / controllerDuration) * 100
-        : 0
-
-      progressPercent = Math.max(0, Math.min(progressPercent, 100))
-    } else if (segments.length === 2 && activeSegmentIndex === segments[0].index) {
-      // [activeSegment, nextSegment]
-      const activeSegmentLength = segments[1].end - segments[1].start
-      controllerStart = Math.max(0, segments[0].start - activeSegmentLength)
-      controllerEnd = segments[1].end
-
-      controllerDuration = controllerEnd - controllerStart
-      progressPercent = controllerDuration > 0
-        ? ((currentTime - controllerStart) / controllerDuration) * 100
-        : 0
-
-      progressPercent = Math.max(0, Math.min(progressPercent, 100))
-    } else if (segments.length === 2 && activeSegmentIndex === segments[1].index) {
-      // [previousSegment, activeSegment]
-      const activeSegmentLength = segments[1].end - segments[1].start
-      controllerStart = segments[0].start
-      controllerEnd = Math.min(segments[1].end + activeSegmentLength, duration)
-
-      controllerDuration = controllerEnd - controllerStart
-      progressPercent = controllerDuration > 0
-        ? ((currentTime - controllerStart) / controllerDuration) * 100
-        : 0
-
-      progressPercent = Math.max(0, Math.min(progressPercent, 100))
-    } else if (segments.length === 1) {
-      // [activeSegment]
+    if (activeSegmentIndex === segments[0].index) {
       const activeSegmentLength = segments[0].end - segments[0].start
-      controllerStart = Math.max(0, segments[0].start - activeSegmentLength)
-      controllerEnd = Math.min(segments[0].end + activeSegmentLength, duration)
+      controllerStart = Math.max(0, segments[0].start - activeSegmentLength / 2)
+      controllerEnd = Math.min(segments[0].end + activeSegmentLength / 2, duration)
 
       controllerDuration = controllerEnd - controllerStart
       progressPercent = controllerDuration > 0
         ? ((currentTime - controllerStart) / controllerDuration) * 100
         : 0
-      
-      progressPercent = Math.max(0, Math.min(progressPercent, 100))
+    } else if (activeSegmentIndex !== null && activeSegmentIndex > segments[0].index) {
+      const activeSegmentLength = segments[activeSegmentIndex].end - segments[activeSegmentIndex].start
+      controllerStart = Math.max(0, segments[activeSegmentIndex].start - activeSegmentLength / 2)
+      controllerEnd = Math.min(segments[activeSegmentIndex].end + activeSegmentLength / 2, duration)
+
+      controllerDuration = controllerEnd - controllerStart
+      progressPercent = controllerDuration > 0
+        ? ((currentTime - controllerStart) / controllerDuration) * 100
+        : 0
     }
   } else {
     progressPercent = (currentTime / duration) * 100
