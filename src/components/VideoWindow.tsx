@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 import VideoTimeline from './VideoTimeline'
+import LoopControlFrame from './LoopControlFrame'
 import Recorder from './Recorder'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faArrowRight, faPlay, faPause, faRepeat, faGear } from '@fortawesome/free-solid-svg-icons'
@@ -16,6 +17,7 @@ interface YouTubePlayer {
 }
 
 interface Segment {
+  index: number
   start: number
   end: number
 }
@@ -112,10 +114,12 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
       if (pendingSegmentEnd <= pendingSegmentStart) return
 
       const newSegment = {
+        index: segments.length,
         start: pendingSegmentStart,
         end: pendingSegmentEnd
       }
       const updatedSegments = [...segments, newSegment].sort((a, b) => a.start - b.start)
+      updatedSegments.forEach((segment, idx) => segment.index = idx)
       setSegments(updatedSegments)
       // this will need to change to be based on an id that's based on start and end times
       setActiveSegmentIndex(updatedSegments.length - 1)
@@ -248,6 +252,17 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     }
   }
 
+  const getSurroundingSegments = (segments: Segment[], activeIndex: number | null) => {
+    if (activeIndex === null || segments.length === 0) return []
+
+    const result = []
+    if (activeIndex > 0) result.push(segments[activeIndex - 1])
+    result.push(segments[activeIndex])
+    if (activeIndex < segments.length - 1) result.push(segments[activeIndex + 1])
+    
+    return result
+  }
+
   return (
     <>
       <div className="video-window">
@@ -293,6 +308,9 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           <FontAwesomeIcon icon={faGear} />
         </button>
       </div>
+      {isActiveLoop && (
+        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} controlSegments={getSurroundingSegments(segments, activeSegmentIndex)} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} loopController={true} />
+      )}
       {isActiveLoop && activeVideo && activeSegment && (
         <Recorder videoId={activeVideo} startSegment={activeSegment.start} endSegment={activeSegment.end} />
       )}
