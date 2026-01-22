@@ -13,10 +13,11 @@ interface LoopControlFrameProps {
   activeSegmentIndex: number | null
   pendingSegmentStart: number | null
   onSeek?: (time: number) => void
+  onSegmentUpdate?: (index: number, newStart: number, newEnd: number) => void
   loopController: boolean
 }
 
-function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, loopController }: LoopControlFrameProps) {
+function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, onSegmentUpdate, loopController }: LoopControlFrameProps) {
   return (
     <div className="loop-control-frame">
       <div className="control-timeline">
@@ -27,6 +28,7 @@ function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex,
           activeSegmentIndex={activeSegmentIndex}
           pendingSegmentStart={pendingSegmentStart}
           onSeek={onSeek}
+          onSegmentUpdate={onSegmentUpdate}
           loopController={loopController}
         />
       </div>

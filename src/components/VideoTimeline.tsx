@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import TimelineIndicator from './TimelineIndicator'
 import { DndContext, type DragEndEvent } from '@dnd-kit/core'
+import TimelineTick from './TimelineTick'
 
 interface Segment {
   index: number
@@ -15,6 +16,7 @@ interface VideoTimelineProps {
   activeSegmentIndex: number | null
   pendingSegmentStart: number | null
   onSeek?: (time: number) => void
+  onSegmentUpdate?: (index: number, newStart: number, newEnd: number) => void
   loopController?: boolean
 }
 
@@ -22,7 +24,7 @@ function getSegmentKey(segment: Segment) {
   return `${segment.start}-${segment.end}`
 }
 
-function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, loopController }: VideoTimelineProps) {
+function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, onSegmentUpdate, loopController }: VideoTimelineProps) {
   const barRef = useRef<HTMLDivElement>(null)
 
   if (duration <= 0) return
@@ -60,7 +62,7 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
     ? controllerDuration
     : duration
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleIndicatorDragEnd = (event: DragEndEvent) => {
     if (!timelineDuration || !barRef.current) return
 
     if (
@@ -78,6 +80,64 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
     }
   }
 
+  const handleMarkerDragEnd = (
+    event: DragEndEvent,
+    segmentIndex: number,
+    markerType: 'start' | 'end'
+  ) => {
+    if (!timelineDuration || !barRef.current || !segments) return
+
+    if (
+      event.activatorEvent &&
+      'clientX' in event.activatorEvent &&
+      typeof (event.activatorEvent as MouseEvent).clientX === 'number'
+    ) {
+      const rect = barRef.current.getBoundingClientRect()
+      const transform = event?.delta.x ?? 0
+
+      const segment = segments.find(segment => segment.index === segmentIndex)
+      if (!segment) return
+
+      const initialLeft = (
+        markerType === 'start'
+          ? segment.start
+          : segment.end
+      ) / timelineDuration * rect.width
+
+      const finalLeft = initialLeft + transform
+      const percent = Math.max(0, Math.min(1, finalLeft / rect.width))
+      const newTime = percent * timelineDuration
+      
+      if (!onSegmentUpdate) return
+      
+      if (markerType === 'start') {
+        onSegmentUpdate(segmentIndex, newTime, segment.end)
+      } else {
+        onSegmentUpdate(segmentIndex, segment.start, newTime)
+      }
+    }
+  }
+
+  const parseTickId = (id: string) => {
+    // id format: "segment-<index>-start" or "segment-<index>-end"
+    const match = id.match(/^segment-(\d+)-(start|end)$/)
+    if (!match) return null
+    return { segmentIndex: Number(match[1]), markerType: match[2] as 'start' | 'end' }
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    // Indicator drag
+    if (event.active.id === 'timeline-indicator') {
+      handleIndicatorDragEnd(event)
+      return
+    }
+    // Tick drag
+    const tickInfo = parseTickId(String(event.active.id))
+    if (tickInfo) {
+      handleMarkerDragEnd(event, tickInfo.segmentIndex, tickInfo.markerType)
+    }
+  }
+
   let pendingMarker
 
   if (pendingSegmentStart !== null) {
@@ -91,46 +151,46 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
   const showIndicator = indicatorTime >= 0 && indicatorTime <= timelineDuration
 
   return (
-    <div className="video-timeline-bar" ref={barRef}>
-      {pendingSegmentStart !== null && (
-        <div
-          className="video-timeline-tick active-timeline-tick"
-          style={{ left: `${pendingMarker}%` }}
-          aria-label={`Pending segment start at ${pendingMarker}s`}
-        />
-      )}
-      {segments && segments.map((segment, idx) => {
-        const startMarker = ((segment.start - controllerStart) / timelineDuration) * 100
-        const endMarker = ((segment.end - controllerStart) / timelineDuration) * 100
-        const keyBase = getSegmentKey(segment)
-        const isActive = loopController
-          ? activeSegmentIndex === segment.index
-          : idx === activeSegmentIndex && pendingSegmentStart === null
+    <DndContext onDragEnd={handleDragEnd}>
+      <div className="video-timeline-bar" ref={barRef}>
+        {pendingSegmentStart !== null && (
+          <div
+            className="video-timeline-tick active-timeline-tick"
+            style={{ left: `${pendingMarker}%` }}
+            aria-label={`Pending segment start at ${pendingMarker}s`}
+          />
+        )}
+        {segments && segments.map((segment, idx) => {
+          const startMarker = ((segment.start - controllerStart) / timelineDuration) * 100
+          const endMarker = ((segment.end - controllerStart) / timelineDuration) * 100
+          const keyBase = getSegmentKey(segment)
+          const isActive = loopController
+            ? activeSegmentIndex === segment.index
+            : idx === activeSegmentIndex && pendingSegmentStart === null
 
-        return (
-          <React.Fragment key={keyBase}>
-            <div
-              className={`video-timeline-tick${isActive ? ' active-timeline-tick' : ''}`}
-              style={{ left: `${startMarker}%` }}
-              aria-label={`Segment start at ${segment.start}s`}
-              key={`${keyBase}-start`}
-            />
-            <div
-              className={`video-timeline-tick${isActive ? ' active-timeline-tick' : ''}`}
-              style={{ left: `${endMarker}%` }}
-              aria-label={`Segment end at ${segment.end}s`}
-              key={`${keyBase}-end`}
-            />
-          </React.Fragment>
-        )
-      })}
-      <div className="video-timeline-progress" style={{ width: `${progressPercent}%` }} />
-      <DndContext onDragEnd={handleDragEnd}>
+          return (
+            <React.Fragment key={keyBase}>
+              <TimelineTick
+                id={`segment-${segment.index}-start`}
+                leftPercent={startMarker}
+                isActive={isActive}
+                ariaLabel={`Segment start at ${segment.start}s`}
+              />
+              <TimelineTick
+                id={`segment-${segment.index}-end`}
+                leftPercent={endMarker}
+                isActive={isActive}
+                ariaLabel={`Segment end at ${segment.end}s`}
+              />
+            </React.Fragment>
+          )
+        })}
+        <div className="video-timeline-progress" style={{ width: `${progressPercent}%` }} />
         {showIndicator && (
           <TimelineIndicator currentTime={loopController && segments && segments.length > 0 ? currentTime - controllerStart : currentTime} duration={timelineDuration} />
         )}
-      </DndContext>
-    </div>
+      </div>
+    </DndContext>
   )
 }
 

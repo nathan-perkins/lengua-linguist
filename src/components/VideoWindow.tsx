@@ -252,6 +252,16 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     }
   }
 
+  const handleSegmentUpdate = (index: number, newStart: number, newEnd: number) => {
+    setSegments(prevSegments => 
+      prevSegments.map(segment =>
+        segment.index === index
+          ? { ...segment, start: Math.min(newStart, newEnd), end: Math.max(newStart, newEnd) }
+          : segment
+      )
+    )
+  }
+
   return (
     <>
       <div className="video-window">
@@ -268,7 +278,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         />
       </div>
       <div className="video-timeline">
-          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} />
+          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} />
       </div>
       <div className="video-control-btns">
         <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} >
@@ -298,7 +308,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         </button>
       </div>
       {isActiveLoop && (
-        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} loopController={true} />
+        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} loopController={true} />
       )}
       {isActiveLoop && activeVideo && activeSegment && (
         <Recorder videoId={activeVideo} startSegment={activeSegment.start} endSegment={activeSegment.end} />
