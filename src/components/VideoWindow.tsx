@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 import VideoTimeline from './VideoTimeline'
 import LoopControlFrame from './LoopControlFrame'
-import Recorder from './Recorder'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faArrowRight, faPlay, faPause, faRepeat, faGear } from '@fortawesome/free-solid-svg-icons'
 
@@ -308,10 +307,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         </button>
       </div>
       {isActiveLoop && (
-        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} loopController={true} />
-      )}
-      {isActiveLoop && activeVideo && activeSegment && (
-        <Recorder videoId={activeVideo} startSegment={activeSegment.start} endSegment={activeSegment.end} />
+        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} activeVideo={activeVideo} loopController={true} />
       )}
     </>
   )

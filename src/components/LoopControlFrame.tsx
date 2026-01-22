@@ -1,4 +1,5 @@
 import VideoTimeline from './VideoTimeline'
+import Recorder from './Recorder'
 
 interface Segment {
   index: number
@@ -14,10 +15,11 @@ interface LoopControlFrameProps {
   pendingSegmentStart: number | null
   onSeek?: (time: number) => void
   onSegmentUpdate?: (index: number, newStart: number, newEnd: number) => void
+  activeVideo: string
   loopController: boolean
 }
 
-function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, onSegmentUpdate, loopController }: LoopControlFrameProps) {
+function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, onSegmentUpdate, activeVideo, loopController }: LoopControlFrameProps) {
   return (
     <div className="loop-control-frame">
       <div className="control-timeline">
@@ -31,6 +33,9 @@ function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex,
           onSegmentUpdate={onSegmentUpdate}
           loopController={loopController}
         />
+        {activeSegmentIndex !== null && (
+          <Recorder videoId={activeVideo} startSegment={segments[activeSegmentIndex].start} endSegment={segments[activeSegmentIndex].end} />
+        )}
       </div>
     </div>
   )
