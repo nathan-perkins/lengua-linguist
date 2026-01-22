@@ -33,7 +33,7 @@ function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex,
           onSegmentUpdate={onSegmentUpdate}
           loopController={loopController}
         />
-        {activeSegmentIndex !== null && (
+        {typeof activeSegmentIndex === 'number' && segments[activeSegmentIndex] && (
           <Recorder videoId={activeVideo} startSegment={segments[activeSegmentIndex].start} endSegment={segments[activeSegmentIndex].end} />
         )}
       </div>
