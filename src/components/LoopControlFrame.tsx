@@ -14,7 +14,7 @@ interface LoopControlFrameProps {
   activeSegmentIndex: number | null
   pendingSegmentStart: number | null
   onSeek?: (time: number) => void
-  onSegmentUpdate?: (index: number, newStart: number, newEnd: number) => void
+  onSegmentUpdate?: (index: number, newEnd: number) => void
   activeVideo: string
   loopController: boolean
 }

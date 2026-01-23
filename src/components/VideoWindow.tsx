@@ -251,11 +251,11 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     }
   }
 
-  const handleSegmentUpdate = (index: number, newStart: number, newEnd: number) => {
+  const handleSegmentUpdate = (index: number, newEnd: number) => {
     setSegments(prevSegments => 
       prevSegments.map(segment =>
         segment.index === index
-          ? { ...segment, start: Math.min(newStart, newEnd), end: Math.max(newStart, newEnd) }
+          ? { ...segment, end: Math.max(newEnd, segment.start) }
           : segment
       )
     )

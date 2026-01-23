@@ -16,7 +16,7 @@ interface VideoTimelineProps {
   activeSegmentIndex: number | null
   pendingSegmentStart: number | null
   onSeek?: (time: number) => void
-  onSegmentUpdate?: (index: number, newStart: number, newEnd: number) => void
+  onSegmentUpdate?: (index: number, newEnd: number) => void
   loopController?: boolean
 }
 
@@ -80,11 +80,7 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
     }
   }
 
-  const handleMarkerDragEnd = (
-    event: DragEndEvent,
-    segmentIndex: number,
-    markerType: 'start' | 'end'
-  ) => {
+  const handleMarkerDragEnd = (event: DragEndEvent, segmentIndex: number) => {
     if (!timelineDuration || !barRef.current || !segments) return
 
     if (
@@ -98,31 +94,23 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
       const segment = segments.find(segment => segment.index === segmentIndex)
       if (!segment) return
 
-      const initialLeft = (
-        markerType === 'start'
-          ? segment.start
-          : segment.end
-      ) / timelineDuration * rect.width
-
+      const initialLeft = (segment.end) / timelineDuration * rect.width
       const finalLeft = initialLeft + transform
       const percent = Math.max(0, Math.min(1, finalLeft / rect.width))
-      const newTime = percent * timelineDuration
+      let newEnd = percent * timelineDuration
       
-      if (!onSegmentUpdate) return
-      
-      if (markerType === 'start') {
-        onSegmentUpdate(segmentIndex, newTime, segment.end)
-      } else {
-        onSegmentUpdate(segmentIndex, segment.start, newTime)
+      if (onSegmentUpdate) {
+        newEnd = Math.max(newEnd, segment.start)
+        onSegmentUpdate(segmentIndex, newEnd)
       }
     }
   }
 
   const parseTickId = (id: string) => {
     // id format: "segment-<index>-start" or "segment-<index>-end"
-    const match = id.match(/^segment-(\d+)-(start|end)$/)
+    const match = id.match(/^segment-(\d+)-(end)$/)
     if (!match) return null
-    return { segmentIndex: Number(match[1]), markerType: match[2] as 'start' | 'end' }
+    return { segmentIndex: Number(match[1]) }
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -134,7 +122,7 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
     // Tick drag
     const tickInfo = parseTickId(String(event.active.id))
     if (tickInfo) {
-      handleMarkerDragEnd(event, tickInfo.segmentIndex, tickInfo.markerType)
+      handleMarkerDragEnd(event, tickInfo.segmentIndex)
     }
   }
 
@@ -149,6 +137,8 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
     : currentTime
 
   const showIndicator = indicatorTime >= 0 && indicatorTime <= timelineDuration
+
+  const barWidth = barRef.current?.offsetWidth ?? 0
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
@@ -181,6 +171,9 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
                 leftPercent={endMarker}
                 isActive={isActive}
                 ariaLabel={`Segment end at ${segment.end}s`}
+                draggable={segment.index === segments.length - 1}
+                minLeftPercent={startMarker}
+                barWidth={barWidth}
               />
             </React.Fragment>
           )
