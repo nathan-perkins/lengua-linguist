@@ -117,7 +117,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         index: segments.length,
         start: pendingSegmentStart,
         end: pendingSegmentEnd,
-        name: `Loop ${segments.length}`
+        name: `Loop ${segments.length + 1}`
       }
       const updatedSegments = [...segments, newSegment].sort((a, b) => a.start - b.start)
       updatedSegments.forEach((segment, idx) => segment.index = idx)
@@ -282,9 +282,13 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           onStateChange={handleStateChange}
         />
       </div>
-      <div className="video-timeline">
+      {isActiveLoop ? (
+        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} activeVideo={activeVideo} loopController={true} />
+      ) : (
+        <div className="video-timeline">
           <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} />
-      </div>
+        </div>
+      )}
       <div className="video-control-btns">
         <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} >
           <FontAwesomeIcon icon={faRepeat} />
@@ -312,9 +316,6 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           <FontAwesomeIcon icon={faGear} />
         </button>
       </div>
-      {isActiveLoop && (
-        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} activeVideo={activeVideo} loopController={true} />
-      )}
     </>
   )
 }
