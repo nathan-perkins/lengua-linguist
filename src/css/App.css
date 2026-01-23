@@ -402,6 +402,18 @@ body > #root {
 	width: 90%;
 	margin: 0 auto;
 	overflow-x: auto;
-	padding-top: 1rem;
+	padding-top: 2rem;
 	padding-bottom: 1rem;
+}
+
+.video-timeline-time-marker {
+	position: absolute;
+	top: -2rem;
+	font-size: .75rem;
+	background-color: transparent;
+	color: #f6f6f6;
+	padding: .5rem;
+	border-radius: 4px;
+	pointer-events: 'none';
+	z-index: 4;
 }

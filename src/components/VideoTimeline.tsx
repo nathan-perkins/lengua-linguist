@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
-import TimelineIndicator from './TimelineIndicator'
 import { DndContext, type DragEndEvent } from '@dnd-kit/core'
+import TimelineIndicator from './TimelineIndicator'
 import TimelineTick from './TimelineTick'
 
 interface Segment {
@@ -160,6 +160,22 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
 
           return (
             <React.Fragment key={keyBase}>
+              {loopController && isActive && (
+                <>
+                  <div
+                    className="video-timeline-time-marker"
+                    style={{ left: `calc(${startMarker}% - ${segment.start < .1 ? '.5rem' : '1.2rem'})` }}
+                  >
+                    {segment.start === 0 ? '0s' : `${segment.start.toFixed(2)}s`}
+                  </div>
+                  <div
+                    className="video-timeline-time-marker"
+                    style={{ left: `calc(${endMarker}% - ${segment.end < .1 ? '.5rem' : '1.2rem'})` }}
+                  >
+                    {segment.end === 0 ? '0s' : `${segment.end.toFixed(2)}s`}
+                  </div>
+                </>
+              )}
               <TimelineTick
                 id={`segment-${segment.index}-start`}
                 leftPercent={startMarker}
