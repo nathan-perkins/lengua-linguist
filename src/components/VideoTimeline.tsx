@@ -7,6 +7,7 @@ interface Segment {
   index: number
   start: number
   end: number
+  name?: string
 }
 
 interface VideoTimelineProps {
@@ -16,7 +17,7 @@ interface VideoTimelineProps {
   activeSegmentIndex: number | null
   pendingSegmentStart: number | null
   onSeek?: (time: number) => void
-  onSegmentUpdate?: (index: number, newEnd: number) => void
+  onSegmentUpdate?: (index: number, newEnd: number, newName?: string) => void
   loopController?: boolean
 }
 

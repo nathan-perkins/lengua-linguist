@@ -19,6 +19,7 @@ interface Segment {
   index: number
   start: number
   end: number
+  name?: string
 }
 
 interface VideoWindowProps {
@@ -115,7 +116,8 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
       const newSegment = {
         index: segments.length,
         start: pendingSegmentStart,
-        end: pendingSegmentEnd
+        end: pendingSegmentEnd,
+        name: `Loop ${segments.length}`
       }
       const updatedSegments = [...segments, newSegment].sort((a, b) => a.start - b.start)
       updatedSegments.forEach((segment, idx) => segment.index = idx)
@@ -251,11 +253,15 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
     }
   }
 
-  const handleSegmentUpdate = (index: number, newEnd: number) => {
+  const handleSegmentUpdate = (index: number, newEnd: number, newName?: string) => {
     setSegments(prevSegments => 
       prevSegments.map(segment =>
         segment.index === index
-          ? { ...segment, end: Math.max(newEnd, segment.start) }
+          ? {
+            ...segment,
+            end: Math.max(newEnd, segment.start),
+            name: newName !== undefined ? newName : segment.name
+          }
           : segment
       )
     )

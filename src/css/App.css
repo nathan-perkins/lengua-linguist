@@ -394,6 +394,7 @@ body > #root {
 	height: 14rem;
 	margin-top: 1rem;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
@@ -416,4 +417,31 @@ body > #root {
 	border-radius: 4px;
 	pointer-events: 'none';
 	z-index: 4;
+}
+
+.loop-name-field {
+	position: relative;
+	text-align: center;
+	margin: 0.5rem 0;
+}
+
+.video-loop-name {
+	cursor: pointer;
+}
+
+.name-edit-popup {
+	position: absolute;
+	top: -4rem;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #555555;
+	/* border: 1px solid #cccccc; */
+	border-radius: 8px;
+	padding: 1rem;
+	z-index: 10;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, .15);
+}
+
+.name-edit-input {
+	padding: .5rem 1rem;
 }
