@@ -201,7 +201,7 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
             </React.Fragment>
           )
         })}
-        {pendingSegmentStart !== null && (
+        {pendingSegmentStart !== null && loopController && (
           <>
             <div
               className="video-timeline-time-marker"

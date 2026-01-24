@@ -284,7 +284,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
           onStateChange={handleStateChange}
         />
       </div>
-      {isActiveLoop ? (
+      {isActiveLoop && segments.length > 0 ? (
         <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} activeVideo={activeVideo} loopController={true} />
       ) : (
         <div className="video-timeline">
