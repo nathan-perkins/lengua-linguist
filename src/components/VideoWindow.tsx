@@ -19,6 +19,7 @@ interface Segment {
   index: number
   start: number
   end: number
+  initialEnd: number
   name?: string
 }
 
@@ -117,6 +118,7 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         index: segments.length,
         start: pendingSegmentStart,
         end: pendingSegmentEnd,
+        initialEnd: pendingSegmentEnd,
         name: `Loop ${segments.length + 1}`
       }
       const updatedSegments = [...segments, newSegment].sort((a, b) => a.start - b.start)

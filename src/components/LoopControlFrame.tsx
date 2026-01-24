@@ -7,6 +7,7 @@ interface Segment {
   index: number
   start: number
   end: number
+  initialEnd: number
   name?: string
 }
 

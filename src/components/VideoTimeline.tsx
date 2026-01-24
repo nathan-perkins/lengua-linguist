@@ -7,6 +7,7 @@ interface Segment {
   index: number
   start: number
   end: number
+  initialEnd: number
   name?: string
 }
 
@@ -36,20 +37,14 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
   let controllerDuration = 0
 
   if (loopController && segments && segments.length > 0) {
-    if (activeSegmentIndex === segments[0].index) {
-      const activeSegmentLength = segments[0].end - segments[0].start
-      controllerStart = Math.max(0, segments[0].start - activeSegmentLength / 2)
-      controllerEnd = Math.min(segments[0].end + activeSegmentLength / 2, duration)
+    const segment = typeof activeSegmentIndex === 'number'
+      ? segments[activeSegmentIndex]
+      : segments[0]
 
-      controllerDuration = controllerEnd - controllerStart
-      progressPercent = controllerDuration > 0
-        ? ((currentTime - controllerStart) / controllerDuration) * 100
-        : 0
-    } else if (activeSegmentIndex !== null && activeSegmentIndex > segments[0].index) {
-      const activeSegmentLength = segments[activeSegmentIndex].end - segments[activeSegmentIndex].start
-      controllerStart = Math.max(0, segments[activeSegmentIndex].start - activeSegmentLength / 2)
-      controllerEnd = Math.min(segments[activeSegmentIndex].end + activeSegmentLength / 2, duration)
-
+    if (segment && typeof activeSegmentIndex === 'number') {
+      const fixedLength = segment.initialEnd - segment.start
+      controllerStart = Math.max(0, segment.start - fixedLength / 2)
+      controllerEnd = Math.min(segment.initialEnd + fixedLength / 2, duration)
       controllerDuration = controllerEnd - controllerStart
       progressPercent = controllerDuration > 0
         ? ((currentTime - controllerStart) / controllerDuration) * 100
@@ -95,13 +90,18 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
       const segment = segments.find(segment => segment.index === segmentIndex)
       if (!segment) return
 
-      const initialLeft = (segment.end) / timelineDuration * rect.width
-      const finalLeft = initialLeft + transform
+      const initialLeft = ((segment.end - controllerStart) / timelineDuration) * rect.width
+      const maxPercent = .95
+      const maxAllowedControllerEnd = controllerStart + maxPercent * timelineDuration
+      const maxLeft = maxPercent * rect.width
+      const finalLeft = Math.min(initialLeft + transform, maxLeft)
       const percent = Math.max(0, Math.min(1, finalLeft / rect.width))
-      let newEnd = percent * timelineDuration
+      let newEnd = controllerStart + percent * timelineDuration
+
+      newEnd = Math.max(newEnd, segment.start)
+      newEnd = Math.min(newEnd, maxAllowedControllerEnd)
       
       if (onSegmentUpdate) {
-        newEnd = Math.max(newEnd, segment.start)
         onSegmentUpdate(segmentIndex, newEnd)
       }
     }
@@ -159,6 +159,9 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
             ? activeSegmentIndex === segment.index
             : idx === activeSegmentIndex && pendingSegmentStart === null
 
+          const maxPercent = 0.95
+          const maxLeftPercent = maxPercent * 100
+
           return (
             <React.Fragment key={keyBase}>
               {loopController && isActive && (
@@ -190,6 +193,7 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
                 ariaLabel={`Segment end at ${segment.end}s`}
                 draggable={segment.index === segments.length - 1}
                 minLeftPercent={startMarker}
+                maxLeftPercent={maxLeftPercent}
                 barWidth={barWidth}
               />
             </React.Fragment>

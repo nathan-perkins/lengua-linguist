@@ -7,19 +7,21 @@ interface TimelineTickProps {
   id: string
   draggable?: boolean
   minLeftPercent?: number
+  maxLeftPercent?: number
   barWidth?: number
 }
 
-function TimelineTick({ leftPercent, isActive, ariaLabel, id, draggable = false, minLeftPercent, barWidth }: TimelineTickProps) {
+function TimelineTick({ leftPercent, isActive, ariaLabel, id, draggable = false, minLeftPercent, maxLeftPercent, barWidth }: TimelineTickProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id })
 
   const dragX = transform?.x ?? 0
 
   let clampedX = dragX
-  if (draggable && typeof minLeftPercent === 'number' && typeof barWidth === 'number') {
+  if (draggable && typeof minLeftPercent === 'number' && typeof maxLeftPercent === 'number' && typeof barWidth === 'number') {
     const percentWidth = leftPercent - minLeftPercent
     const minX = -percentWidth / 100 * barWidth
-    clampedX = Math.max(minX, dragX)
+    const maxX = ((maxLeftPercent - leftPercent) / 100) * barWidth
+    clampedX = Math.max(minX, Math.min(dragX, maxX))
   }
 
   return (
