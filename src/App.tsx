@@ -141,11 +141,11 @@ function App() {
         {activeVideo
           ? (
             <div className="active-window">
-              <button type="button" onClick={handleReturnToResults} className="search-return-btn">
+              <button type="button" onClick={handleReturnToResults} className="search-return-btn" title="Return to previous search">
                 <FontAwesomeIcon icon={faArrowLeft} />
               </button>
               <VideoWindow activeVideo={activeVideo} />
-              <button type="button" onClick={handleDeselect} className="video-deselect-btn">
+              <button type="button" onClick={handleDeselect} className="video-deselect-btn" title="Deselect video">
                 <FontAwesomeIcon icon={faXmark} />
               </button>
             </div>
