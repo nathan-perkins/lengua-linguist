@@ -155,9 +155,11 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
           const startMarker = ((segment.start - controllerStart) / timelineDuration) * 100
           const endMarker = ((segment.end - controllerStart) / timelineDuration) * 100
           const keyBase = getSegmentKey(segment)
-          const isActive = loopController
+          const isActive = pendingSegmentStart === null && (
+            (loopController
             ? activeSegmentIndex === segment.index
-            : idx === activeSegmentIndex && pendingSegmentStart === null
+            : idx === activeSegmentIndex)
+          )
 
           const maxPercent = 0.95
           const maxLeftPercent = maxPercent * 100
@@ -199,6 +201,21 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
             </React.Fragment>
           )
         })}
+        {pendingSegmentStart !== null && (
+          <>
+            <div
+              className="video-timeline-time-marker"
+              style={{ left: `calc(${pendingMarker}% - ${pendingSegmentStart < .1 ? '.5rem' : '1.2rem'})` }}
+            >
+              {pendingSegmentStart === 0 ? '0s' : `${pendingSegmentStart.toFixed(2)}s`}
+            </div>
+            <div
+              className="video-timeline-tick active-timeline-tick"
+              style={{ left: `${pendingMarker}%` }}
+              aria-label={`Pending segment start at ${pendingMarker}s`}
+            />
+          </>
+        )} 
         <div className="video-timeline-progress" style={{ width: `${progressPercent}%` }} />
         {showIndicator && (
           <TimelineIndicator currentTime={loopController && segments && segments.length > 0 ? currentTime - controllerStart : currentTime} duration={timelineDuration} />
