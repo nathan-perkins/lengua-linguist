@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import type { VideoOption } from '../App'
 
 interface VideoResultProps {
@@ -6,6 +7,15 @@ interface VideoResultProps {
 }
 
 function VideoResult({ option, onSelect }: VideoResultProps) {
+  const [showDescription, setShowDescription] = useState<boolean>(() => window.innerWidth >= 1150)
+
+  useEffect(() => {
+    const handleResize = () => setShowDescription(window.innerWidth >= 1150)
+    window.addEventListener('resize', handleResize)
+
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <button
       type="button"
@@ -20,7 +30,9 @@ function VideoResult({ option, onSelect }: VideoResultProps) {
       <div className="video-option-info">
         <h3 className="video-option-title">{option.snippet.title}</h3>
         <p className="video-option-channel">{option.snippet.channelTitle}</p>
-        <p className="video-option-description">{option.snippet.description}</p>
+        {showDescription && (
+          <p className="video-option-description">{option.snippet.description}</p>
+        )}
       </div>
     </button>
   )

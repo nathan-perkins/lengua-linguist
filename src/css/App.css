@@ -202,6 +202,7 @@ body > #root {
 	color: #cccccc;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	line-clamp: 3;
 }
 
 .previous-video-option {
