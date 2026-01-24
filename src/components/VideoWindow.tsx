@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 import VideoTimeline from './VideoTimeline'
 import LoopControlFrame from './LoopControlFrame'
+import OptionsPopup from './OptionsPopup'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faArrowRight, faPlay, faPause, faRepeat, faGear } from '@fortawesome/free-solid-svg-icons'
 
@@ -25,9 +26,11 @@ interface Segment {
 
 interface VideoWindowProps {
   activeVideo: string | null
+  showButtonTitles: boolean
+  setShowButtonTitles: (show: boolean) => void
 }
 
-function VideoWindow({ activeVideo }: VideoWindowProps) {
+function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: VideoWindowProps) {
   const [isActiveLoop, setIsActiveLoop] = useState<boolean>(false)
   const [pendingSegmentStart, setPendingSegmentStart] = useState<number | null>(null)
   const [segments, setSegments] = useState<Segment[]>([])
@@ -35,8 +38,10 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [duration, setDuration] = useState<number | null>(null)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const [showOptions, setShowOptions] = useState<boolean>(false)
 
   const playerRef = useRef<YouTubePlayer | null>(null)
+  const optionsRef = useRef<HTMLButtonElement>(null)
   const intervalRef = useRef<number | undefined>(undefined)
 
   const activeSegment = segments[activeSegmentIndex ?? 0]
@@ -292,31 +297,36 @@ function VideoWindow({ activeVideo }: VideoWindowProps) {
         </div>
       )}
       <div className="video-control-btns">
-        <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} title={isActiveLoop ? 'Exit loop sequence' : 'Enter loop sequence'} >
+        <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} title={showButtonTitles && isActiveLoop ? 'Exit loop sequence' : 'Enter loop sequence'} >
           <FontAwesomeIcon icon={faRepeat} />
         </button>
         {isActiveLoop && activeSegment && activeSegmentIndex !== null && (
-          <button type="button" onClick={activeSegmentIndex > 0 ? handlePreviousLoop : undefined} className={`loop-control-arrow${activeSegmentIndex > 0 ? '' : ' dummy-arrow'}`} title={activeSegmentIndex > 0 ? 'Previous loop' : ''}>
+          <button type="button" onClick={activeSegmentIndex > 0 ? handlePreviousLoop : undefined} className={`loop-control-arrow${activeSegmentIndex > 0 ? '' : ' dummy-arrow'}`} title={showButtonTitles && activeSegmentIndex > 0 ? 'Previous loop' : ''}>
             <FontAwesomeIcon icon={faArrowLeft} />
           </button>
         )}
         {isPlaying ? (
-          <button type="button" onClick={handlePauseClick} className="video-control-pause" title="Pause video">
+          <button type="button" onClick={handlePauseClick} className="video-control-pause" title={showButtonTitles ? 'Pause video' : undefined}>
             <FontAwesomeIcon icon={faPause} />
           </button>
         ) : (
-          <button type="button" onClick={handlePlay} className="video-control-play" title="Play video">
+          <button type="button" onClick={handlePlay} className="video-control-play" title={showButtonTitles ? 'Play video' : undefined}>
             <FontAwesomeIcon icon={faPlay} />
           </button>
         )}
         {isActiveLoop && activeSegment && (
-          <button type="button" onClick={activeSegment.end !== duration ? handleNextLoop : undefined} className={`loop-control-arrow${activeSegment.end !== duration ? '' : ' dummy-arrow'}`} title={activeSegment.end !== duration ? 'Next loop' : ''}>
+          <button type="button" onClick={activeSegment.end !== duration ? handleNextLoop : undefined} className={`loop-control-arrow${activeSegment.end !== duration ? '' : ' dummy-arrow'}`} title={showButtonTitles && activeSegment.end !== duration ? 'Next loop' : ''}>
             <FontAwesomeIcon icon={faArrowRight} />
           </button>
         )}
-        <button type="button" onClick={() => {}} className="options-icon" title="Options">
-          <FontAwesomeIcon icon={faGear} />
-        </button>
+        <div className="options-btn-container">
+          <button type="button" ref={optionsRef} onClick={() => setShowOptions(prev => !prev)} className={`options-icon${showOptions ? ' active-control-icon' : ''}`} title={showButtonTitles ? 'Options' : undefined}>
+            <FontAwesomeIcon icon={faGear} />
+          </button>
+          {showOptions && (
+            <OptionsPopup showButtonTitles={showButtonTitles} setShowButtonTitles={setShowButtonTitles} setShowOptions={setShowOptions} optionsRef={optionsRef} />
+          )}
+        </div>
       </div>
     </>
   )

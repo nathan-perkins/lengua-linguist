@@ -49,6 +49,7 @@ function App() {
   const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
   const [isLoadingVideoOptions, setIsLoadingVideoOptions] = useState<boolean>(false)
   const [isNoResults, setIsNoResults] = useState<boolean>(false)
+  const [showButtonTitles, setShowButtonTitles] = useState<boolean>(false)
 
   const previousVideo = localStorage.getItem('PREVIOUS_VIDEO')
   let previousVideoData: VideoOption | null = null
@@ -141,11 +142,11 @@ function App() {
         {activeVideo
           ? (
             <div className="active-window">
-              <button type="button" onClick={handleReturnToResults} className="search-return-btn" title="Return to previous search">
+              <button type="button" onClick={handleReturnToResults} className="search-return-btn" title={showButtonTitles ? 'Return to previous search' : undefined}>
                 <FontAwesomeIcon icon={faArrowLeft} />
               </button>
-              <VideoWindow activeVideo={activeVideo} />
-              <button type="button" onClick={handleDeselect} className="video-deselect-btn" title="Deselect video">
+              <VideoWindow activeVideo={activeVideo} showButtonTitles={showButtonTitles} setShowButtonTitles={setShowButtonTitles} />
+              <button type="button" onClick={handleDeselect} className="video-deselect-btn" title={showButtonTitles ? 'Deselect video' : undefined}>
                 <FontAwesomeIcon icon={faXmark} />
               </button>
             </div>
