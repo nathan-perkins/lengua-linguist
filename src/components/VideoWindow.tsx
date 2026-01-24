@@ -77,6 +77,15 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      ) {
+        return
+      }
+
       if (!playerRef.current) return
 
       if (event.key === 'ArrowRight' && !activeSegment) {
