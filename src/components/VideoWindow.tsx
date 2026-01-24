@@ -297,7 +297,7 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
         </div>
       )}
       <div className="video-control-btns">
-        <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} title={showButtonTitles && isActiveLoop ? 'Exit loop sequence' : 'Enter loop sequence'} >
+        <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} title={showButtonTitles ? isActiveLoop ? 'Exit loop sequence' : 'Enter loop sequence' : undefined} >
           <FontAwesomeIcon icon={faRepeat} />
         </button>
         {isActiveLoop && activeSegment && activeSegmentIndex !== null && (

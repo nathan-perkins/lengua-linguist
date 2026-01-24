@@ -217,7 +217,7 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
           </>
         )} 
         <div className="video-timeline-progress" style={{ width: `${progressPercent}%` }} />
-        {showIndicator && (
+        {!loopController && showIndicator && (
           <TimelineIndicator currentTime={loopController && segments && segments.length > 0 ? currentTime - controllerStart : currentTime} duration={timelineDuration} />
         )}
       </div>
