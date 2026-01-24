@@ -490,3 +490,23 @@ body > #root {
 .options-popup-checkbox {
 	accent-color: #e47711;
 }
+
+.recorder-audio-row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+}
+
+.recorder-delete-btn {
+	background-color: transparent;
+	color: #eeeeee;
+	cursor: pointer;
+	padding: .5rem;
+	border-radius: 50%;
+	transition: background-color 0.2s;
+}
+
+.recorder-delete-btn:hover {
+	background-color: #333333;
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMicrophone, faStop } from '@fortawesome/free-solid-svg-icons'
+import { faMicrophone, faStop, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 interface RecorderProps {
   videoId: string
@@ -107,9 +107,11 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
           <span>🔴 Recording...</span>
         </div>
       ) : audioUrl ? (
-        <div>
+        <div className="recorder-audio-row">
           <audio src={audioUrl} controls />
-          <button type="button" onClick={handleDelete} className="control-btn audio-btn">Delete</button>
+          <button type="button" onClick={handleDelete} className="recorder-delete-btn">
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
         </div>
       ) : (
         <button type="button" onClick={handleRecord} className="record-icon">
