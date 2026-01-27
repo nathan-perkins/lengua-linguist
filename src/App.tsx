@@ -60,6 +60,7 @@ function App() {
 
   const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
+    setVideoOptions([])
     setActiveVideo(null)
     setPreviousQuery(searchQuery)
     setIsLoadingVideoOptions(true)
