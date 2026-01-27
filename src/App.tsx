@@ -79,14 +79,28 @@ function App() {
       }
 
       if (videoId) {
+        const response = await fetchVideos({ videoId })
+
+        if (!response) return
+
+        const data = await response.json() as YouTubeSearchResponse
+        if (data.items && data.items.length > 0) {
+          const video = data.items[0]
+          const videoOption: VideoOption = {
+            ...video,
+            id: { videoId: typeof video.id === 'string' ? video.id : video.id.videoId },
+          }
+          localStorage.setItem('PREVIOUS_VIDEO', JSON.stringify(videoOption))
+        }
         setActiveVideo(videoId)
         setVideoOptions([])
         setSearchQuery('')
+        setIsLoadingVideoOptions(false)
         return
       }
     }
 
-    const response = await fetchVideos(searchQuery)
+    const response = await fetchVideos({ searchQuery })
     if (response) {
       const data = await response.json() as YouTubeSearchResponse
       setVideoOptions(data.items || [])
@@ -108,7 +122,7 @@ function App() {
       setVideoOptions([])
     }
     
-    const response = await fetchVideos(previousQuery)
+    const response = await fetchVideos({ searchQuery: previousQuery })
     if (response) {
       const data = await response.json() as YouTubeSearchResponse
       setVideoOptions(data.items || [])
@@ -128,6 +142,8 @@ function App() {
     sessionStorage.clear()
     setActiveVideo(null)
     setPreviousQuery('')
+    setVideoOptions([])
+    console.log(previousVideoData)
   }
 
   return (
