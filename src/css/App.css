@@ -157,6 +157,17 @@ body > #root {
 	padding: .5rem 1rem;
 }
 
+.secondary-btn {
+	background-color: transparent;
+	color: rgba(226, 226, 226, .8);
+	cursor: pointer;
+	margin-top: .5rem;
+}
+
+.secondary-btn:hover {
+	color: #4285f4;
+}
+
 .video-options-group {
 	margin-bottom: 2rem;
 }

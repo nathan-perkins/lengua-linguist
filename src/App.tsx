@@ -58,7 +58,7 @@ function App() {
     previousVideoData = JSON.parse(previousVideo) as VideoOption
   }
 
-  const handleQuery = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleQuery = async (e: React.ChangeEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault()
     setVideoOptions([])
     setActiveVideo(null)
