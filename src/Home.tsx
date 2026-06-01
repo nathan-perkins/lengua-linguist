@@ -9,9 +9,9 @@ function Home() {
       <Link to="/app">
         <button type="button" className="action-btn">Get Started</button>
       </Link>
-      <Link to="/new">
+      {/* <Link to="/new">
         <button type="button" className="secondary-btn">Try New Interface</button>
-      </Link>
+      </Link> */}
     </div>
   )
 }
