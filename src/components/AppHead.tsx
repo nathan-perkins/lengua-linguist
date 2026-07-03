@@ -14,7 +14,7 @@ interface IAppHeadProps {
 export default function AppHead({ ref, setHeadHeight }: IAppHeadProps) {
   useLayoutEffect(() => {
     setHeadHeight(ref.current?.offsetHeight ?? 0)
-  }, [])
+  })
 
   return (
     <div ref={ref} className="app-head-container">
