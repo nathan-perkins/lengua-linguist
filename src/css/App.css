@@ -151,7 +151,8 @@ body > #root {
 }
 
 .action-btn {
-	background-color: #e47711;
+	background-color: #4285f4;
+	color: #fcfcfc;
 	border-radius: 100px;
 	cursor: pointer;
 	padding: .5rem 1rem;
