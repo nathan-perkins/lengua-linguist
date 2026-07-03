@@ -7,9 +7,12 @@ interface TimelineIndicatorProps {
 }
 
 function TimelineIndicator({ currentTime, duration }: TimelineIndicatorProps) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: 'timeline-indicator'
-  })
+  const {
+ attributes, listeners, setNodeRef, transform, isDragging 
+} =
+    useDraggable({
+      id: 'timeline-indicator'
+    })
 
   const indicatorRef = useRef<HTMLDivElement>(null)
   const bar = indicatorRef.current?.parentElement
@@ -27,7 +30,7 @@ function TimelineIndicator({ currentTime, duration }: TimelineIndicatorProps) {
 
   return (
     <div
-      ref={el => {
+      ref={(el) => {
         setNodeRef(el)
         indicatorRef.current = el
       }}

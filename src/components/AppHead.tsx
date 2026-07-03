@@ -1,4 +1,9 @@
-import { useLayoutEffect, type Dispatch, type RefObject, type SetStateAction } from 'react'
+import {
+  useLayoutEffect,
+  type Dispatch,
+  type RefObject,
+  type SetStateAction
+} from 'react'
 import '../css/AppHead.css'
 
 interface IAppHeadProps {

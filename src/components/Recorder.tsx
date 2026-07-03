@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMicrophone, faStop, faXmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faMicrophone,
+  faStop,
+  faXmark
+} from '@fortawesome/free-solid-svg-icons'
 
 interface RecorderProps {
   videoId: string
@@ -9,7 +13,9 @@ interface RecorderProps {
 }
 
 function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
-  const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'prompt'>('prompt')
+  const [permissionStatus, setPermissionStatus] = useState<
+    'granted' | 'denied' | 'prompt'
+  >('prompt')
   const [isRecording, setIsRecording] = useState<boolean>(false)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
 
@@ -30,20 +36,26 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
 
   const handleRecord = async () => {
     if (permissionStatus === 'denied') {
-      alert('You denied microphone access. Please enable it in your browser settings.')
+      alert(
+        'You denied microphone access. Please enable it in your browser settings.'
+      )
       return
     }
 
     if (permissionStatus === 'prompt') {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true
+        })
         streamRef.current = stream
         setPermissionStatus('granted')
         startRecording(stream)
       } catch (error) {
         console.error('Microphone access denied:', error)
         setPermissionStatus('denied')
-        alert('Microphone access was denied. Please grant permission to record.')
+        alert(
+          'Microphone access was denied. Please grant permission to record.'
+        )
       }
     } else {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -75,7 +87,7 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
       reader.readAsDataURL(audioBlob)
 
       if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop())
+        streamRef.current.getTracks().forEach((track) => track.stop())
         streamRef.current = null
       }
     }
@@ -103,18 +115,30 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
     <div className="recorder-panel">
       {isRecording ? (
         <div className="recorder-popup">
-          <FontAwesomeIcon icon={faStop} onClick={handleStopRecord} className="record-icon" />
+          <FontAwesomeIcon
+            icon={faStop}
+            onClick={handleStopRecord}
+            className="record-icon"
+          />
           <span>🔴 Recording...</span>
         </div>
       ) : audioUrl ? (
         <div className="recorder-audio-row">
           <audio src={audioUrl} controls />
-          <button type="button" onClick={handleDelete} className="recorder-delete-btn">
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="recorder-delete-btn"
+          >
             <FontAwesomeIcon icon={faXmark} />
           </button>
         </div>
       ) : (
-        <button type="button" onClick={handleRecord} className="record-icon">
+        <button
+          type="button"
+          onClick={() => handleRecord}
+          className="record-icon"
+        >
           <FontAwesomeIcon icon={faMicrophone} />
         </button>
       )}

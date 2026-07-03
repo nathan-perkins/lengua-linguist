@@ -23,7 +23,17 @@ interface LoopControlFrameProps {
   loopController: boolean
 }
 
-function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, onSegmentUpdate, activeVideo, loopController }: LoopControlFrameProps) {
+function LoopControlFrame({
+  currentTime,
+  duration,
+  segments,
+  activeSegmentIndex,
+  pendingSegmentStart,
+  onSeek,
+  onSegmentUpdate,
+  activeVideo,
+  loopController
+}: LoopControlFrameProps) {
   const [isEditingName, setIsEditingName] = useState<boolean>(false)
   const [nameInput, setNameInput] = useState<string>('')
 
@@ -51,13 +61,17 @@ function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex,
       <div className="loop-name-field">
         {activeSegment && (
           <>
-            <p className="video-loop-name" onClick={handleNameClick} title="Click to edit name">
+            <p
+              className="video-loop-name"
+              onClick={handleNameClick}
+              title="Click to edit name"
+            >
               {activeSegment.name ?? `Loop ${activeSegment.index + 1}`}
             </p>
             {isEditingName && (
               <LoopNameEditPopup
                 initialValue={nameInput}
-                onSave={newName => {
+                onSave={(newName) => {
                   handleNameSave(newName)
                 }}
                 onCancel={() => setIsEditingName(false)}
@@ -77,9 +91,14 @@ function LoopControlFrame({ currentTime, duration, segments, activeSegmentIndex,
           onSegmentUpdate={onSegmentUpdate}
           loopController={loopController}
         />
-        {typeof activeSegmentIndex === 'number' && segments[activeSegmentIndex] && (
-          <Recorder videoId={activeVideo} startSegment={segments[activeSegmentIndex].start} endSegment={segments[activeSegmentIndex].end} />
-        )}
+        {typeof activeSegmentIndex === 'number' &&
+          segments[activeSegmentIndex] && (
+            <Recorder
+              videoId={activeVideo}
+              startSegment={segments[activeSegmentIndex].start}
+              endSegment={segments[activeSegmentIndex].end}
+            />
+          )}
       </div>
     </div>
   )

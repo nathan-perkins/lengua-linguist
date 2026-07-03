@@ -1,22 +1,27 @@
+import { type SubmitEventHandler } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 interface QueryFormProps {
-  handleQuery: React.FormEventHandler<HTMLFormElement>
+  handleQuery: SubmitEventHandler<HTMLFormElement>
   searchQuery: string
   setSearchQuery: (value: string) => void
 }
 
-function QueryForm({ handleQuery, searchQuery, setSearchQuery}: QueryFormProps) {
+function QueryForm({
+  handleQuery,
+  searchQuery,
+  setSearchQuery
+}: QueryFormProps) {
   return (
     <div className="query-form-container">
       <p>Select a YouTube video</p>
       <form onSubmit={handleQuery} className="query-form">
         <div className="search-wrapper">
           <input
-            type="text" 
-            className="search-label" 
-            value={searchQuery} 
+            type="text"
+            className="search-label"
+            value={searchQuery}
             onChange={({ target }) => setSearchQuery(target.value)}
           />
           <button type="submit" className="search-icon-btn">

@@ -11,8 +11,12 @@ interface TimelineTickProps {
   barWidth?: number
 }
 
-function TimelineTick({ leftPercent, isActive, ariaLabel, id, draggable = false, minLeftPercent, maxLeftPercent, barWidth }: TimelineTickProps) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id })
+function TimelineTick({
+ leftPercent, isActive, ariaLabel, id, draggable = false, minLeftPercent, maxLeftPercent, barWidth 
+}: TimelineTickProps) {
+  const {
+ attributes, listeners, setNodeRef, transform, isDragging 
+} = useDraggable({ id })
 
   const dragX = transform?.x ?? 0
 

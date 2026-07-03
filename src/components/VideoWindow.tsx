@@ -4,7 +4,9 @@ import VideoTimeline from './VideoTimeline'
 import LoopControlFrame from './LoopControlFrame'
 import OptionsPopup from './OptionsPopup'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faArrowRight, faPlay, faPause, faRepeat, faGear } from '@fortawesome/free-solid-svg-icons'
+import {
+ faArrowLeft, faArrowRight, faPlay, faPause, faRepeat, faGear 
+} from '@fortawesome/free-solid-svg-icons'
 
 interface YouTubePlayer {
   seekTo: (seconds: number, allowSeekAhead: boolean) => void
@@ -74,6 +76,20 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
     setCurrentTime(0)
     setActiveSegmentIndex(0)
   }, [activeVideo])
+
+  const handlePlay = () => {
+    if (playerRef.current) {
+      playerRef.current.playVideo()
+      setIsPlaying(true)
+    }
+  }
+
+  const handlePauseClick = () => {
+    if (playerRef.current) {
+      playerRef.current.pauseVideo()
+      setIsPlaying(false)
+    }
+  }
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -203,20 +219,6 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
     }
   }
 
-  const handlePlay = () => {
-    if (playerRef.current) {
-      playerRef.current.playVideo()
-      setIsPlaying(true)
-    }
-  }
-
-  const handlePauseClick = () => {
-    if (playerRef.current) {
-      playerRef.current.pauseVideo()
-      setIsPlaying(false)
-    }
-  }
-
   const handleNextLoop = () => {
     if (!playerRef.current || duration === null || activeSegmentIndex === null) return
 
@@ -341,4 +343,4 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
   )
 }
 
-export default VideoWindow
+export default VideoWindow 

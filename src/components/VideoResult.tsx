@@ -38,4 +38,4 @@ function VideoResult({ option, onSelect }: VideoResultProps) {
   )
 }
 
-export default VideoResult
+export default VideoResult 

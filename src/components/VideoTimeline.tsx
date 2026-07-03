@@ -26,14 +26,16 @@ function getSegmentKey(segment: Segment) {
   return `${segment.start}-${segment.end}`
 }
 
-function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, onSegmentUpdate, loopController }: VideoTimelineProps) {
+function VideoTimeline({
+ currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, onSegmentUpdate, loopController 
+}: VideoTimelineProps) {
   const barRef = useRef<HTMLDivElement>(null)
 
   if (duration <= 0) return
 
   let progressPercent = 0
   let controllerStart = 0
-  let controllerEnd = 0
+  let controllerEnd
   let controllerDuration = 0
 
   if (loopController && segments && segments.length > 0) {
@@ -225,4 +227,4 @@ function VideoTimeline({ currentTime, duration, segments, activeSegmentIndex, pe
   )
 }
 
-export default VideoTimeline
+export default VideoTimeline 

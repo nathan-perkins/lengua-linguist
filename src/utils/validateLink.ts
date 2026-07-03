@@ -8,4 +8,4 @@ export function validateLink(searchQuery: string): { isValid: boolean, isEmbed: 
     isValid: isValid,
     isEmbed: isEmbed
   }
-}
+} 

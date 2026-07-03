@@ -9,11 +9,16 @@ interface OptionsPopupProps {
   optionsRef: React.RefObject<HTMLButtonElement | null>
 }
 
-function OptionsPopup({ showButtonTitles, setShowButtonTitles, setShowOptions, optionsRef }: OptionsPopupProps) {
+function OptionsPopup({
+  showButtonTitles,
+  setShowButtonTitles,
+  setShowOptions,
+  optionsRef
+}: OptionsPopupProps) {
   const popupRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleClickOutside =(event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         popupRef.current &&
         !popupRef.current.contains(event.target as Node) &&
@@ -46,7 +51,7 @@ function OptionsPopup({ showButtonTitles, setShowButtonTitles, setShowOptions, o
         <input
           type="checkbox"
           checked={showButtonTitles}
-          onChange={e => setShowButtonTitles(e.target.checked)}
+          onChange={(e) => setShowButtonTitles(e.target.checked)}
           className="options-popup-checkbox"
         />
         <span>Show Button Titles</span>

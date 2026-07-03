@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type SubmitEvent } from 'react'
 import { fetchVideos } from './services/fetchVideos'
 import { validateLink } from './utils/validateLink'
 import VideoWindow from './components/VideoWindow'
@@ -46,8 +46,11 @@ function App() {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [previousQuery, setPreviousQuery] = useState<string>('')
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
-  const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
-  const [isLoadingVideoOptions, setIsLoadingVideoOptions] = useState<boolean>(false)
+  const [videoOptions, setVideoOptions] = useState<
+    YouTubeSearchResponse['items']
+  >([])
+  const [isLoadingVideoOptions, setIsLoadingVideoOptions] =
+    useState<boolean>(false)
   const [isNoResults, setIsNoResults] = useState<boolean>(false)
   const [showButtonTitles, setShowButtonTitles] = useState<boolean>(false)
 
@@ -58,7 +61,9 @@ function App() {
     previousVideoData = JSON.parse(previousVideo) as VideoOption
   }
 
-  const handleQuery = async (e: React.ChangeEvent<HTMLFormElement>): Promise<void> => {
+  const handleQuery = async (
+    e: SubmitEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault()
     setVideoOptions([])
     setActiveVideo(null)
@@ -69,27 +74,26 @@ function App() {
     const { isValid, isEmbed } = validateLink(searchQuery)
 
     if (isValid) {
-      let videoId: string | null = null
-
-      if (isEmbed) {
-        const match = searchQuery.match(/embed\/([\w-]+)/)
-        videoId = match ? match[1] : null
-      } else {
-        const match = searchQuery.match(/(?:v=|\/v\/|youtu\.be\/|\/watch\?v=|\/live\/|\/shorts\/|\/embed\/)?([\w-]{11})/)
-        videoId = match ? match[1] : null
-      }
+      const videoId = isEmbed
+        ? (searchQuery.match(/embed\/([\w-]+)/)?.[1] ?? null)
+        : (searchQuery.match(
+            /(?:v=|\/v\/|youtu\.be\/|\/watch\?v=|\/live\/|\/shorts\/|\/embed\/)?([\w-]{11})/
+          )?.[1] ?? null)
 
       if (videoId) {
         const response = await fetchVideos({ videoId })
 
         if (!response) return
 
-        const data = await response.json() as YouTubeSearchResponse
+        const data = (await response.json()) as YouTubeSearchResponse
         if (data.items && data.items.length > 0) {
           const video = data.items[0]
           const videoOption: VideoOption = {
             ...video,
-            id: { videoId: typeof video.id === 'string' ? video.id : video.id.videoId },
+            id: {
+              videoId:
+                typeof video.id === 'string' ? video.id : video.id.videoId
+            }
           }
           localStorage.setItem('PREVIOUS_VIDEO', JSON.stringify(videoOption))
         }
@@ -103,7 +107,7 @@ function App() {
 
     const response = await fetchVideos({ searchQuery })
     if (response) {
-      const data = await response.json() as YouTubeSearchResponse
+      const data = (await response.json()) as YouTubeSearchResponse
       setVideoOptions(data.items || [])
 
       if (data.items.length === 0) {
@@ -122,10 +126,10 @@ function App() {
     if (previousQuery === '') {
       setVideoOptions([])
     }
-    
+
     const response = await fetchVideos({ searchQuery: previousQuery })
     if (response) {
-      const data = await response.json() as YouTubeSearchResponse
+      const data = (await response.json()) as YouTubeSearchResponse
       setVideoOptions(data.items || [])
     }
 
@@ -150,36 +154,66 @@ function App() {
   return (
     <div className="container">
       <div className="app-header">
-        <h1>Lengua<span className="accent">Linguist</span></h1>
+        <h1>
+          Lengua<span className="accent">Linguist</span>
+        </h1>
       </div>
       <div className="app-body">
         {!activeVideo && (
-          <QueryForm handleQuery={handleQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <QueryForm
+            handleQuery={(e) => void handleQuery(e)}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
         )}
-        {activeVideo
-          ? (
-            <div className="active-window">
-              <button type="button" onClick={handleReturnToResults} className="search-return-btn" title={showButtonTitles ? 'Return to previous search' : undefined}>
-                <FontAwesomeIcon icon={faArrowLeft} />
-              </button>
-              <VideoWindow activeVideo={activeVideo} showButtonTitles={showButtonTitles} setShowButtonTitles={setShowButtonTitles} />
-              <button type="button" onClick={handleDeselect} className="video-deselect-btn" title={showButtonTitles ? 'Deselect video' : undefined}>
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-            </div>
-          ) : (
-            <div className="video-options-group">
-              {videoOptions.map((option: VideoOption, idx: number) => (
-                <VideoResult key={option.id.videoId || idx} option={option} onSelect={handleSelect} />
-              ))}
-            </div>
-          )}
-        {previousVideoData && !activeVideo && !videoOptions.length && !isLoadingVideoOptions && (
-          <div className="previous-video-option">
-            <p className="previous-video-text">{isNoResults ? 'No results found. Try another search or return to previous video:' : 'Previous video:'}</p>
-            <VideoResult option={previousVideoData} onSelect={handleSelect} />
+        {activeVideo ? (
+          <div className="active-window">
+            <button
+              type="button"
+              onClick={() => handleReturnToResults}
+              className="search-return-btn"
+              title={showButtonTitles ? 'Return to previous search' : undefined}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </button>
+            <VideoWindow
+              activeVideo={activeVideo}
+              showButtonTitles={showButtonTitles}
+              setShowButtonTitles={setShowButtonTitles}
+            />
+            <button
+              type="button"
+              onClick={handleDeselect}
+              className="video-deselect-btn"
+              title={showButtonTitles ? 'Deselect video' : undefined}
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+          </div>
+        ) : (
+          <div className="video-options-group">
+            {videoOptions.map((option: VideoOption, idx: number) => (
+              <VideoResult
+                key={option.id.videoId || idx}
+                option={option}
+                onSelect={handleSelect}
+              />
+            ))}
           </div>
         )}
+        {previousVideoData &&
+          !activeVideo &&
+          !videoOptions.length &&
+          !isLoadingVideoOptions && (
+            <div className="previous-video-option">
+              <p className="previous-video-text">
+                {isNoResults
+                  ? 'No results found. Try another search or return to previous video:'
+                  : 'Previous video:'}
+              </p>
+              <VideoResult option={previousVideoData} onSelect={handleSelect} />
+            </div>
+          )}
       </div>
     </div>
   )
