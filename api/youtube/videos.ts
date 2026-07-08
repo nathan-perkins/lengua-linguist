@@ -15,26 +15,24 @@ export default {
       }
 
       const { searchParams } = new URL(request.url)
-      const searchQuery = searchParams.get('q')?.trim()
+      const videoId = searchParams.get('id')?.trim()
 
-      if (!searchQuery) {
-        console.error('Missing query param: q')
-        return Response.json({ error: 'Malformatted request' }, { status: 400 })
+      if (!videoId) {
+        console.error('Missing query params: id')
+        return Response.json({ error: 'Missing query param id' }, { status: 400 })
       }
 
-      const upstream = new URL('search', apiUrl)
+      const upstream = new URL('videos', apiUrl)
       upstream.searchParams.set('key', apiKey)
-      upstream.searchParams.set('type', 'video')
+      upstream.searchParams.set('id', videoId)
       upstream.searchParams.set('part', 'snippet')
-      upstream.searchParams.set('q', searchQuery)
-      upstream.searchParams.set('maxResults', '10')
 
       const response = await fetch(upstream)
       const data = await response.json()
 
       return Response.json(data, { status: response.status })
     } catch (error) {
-      console.error('search function failed', error)
+      console.error('video function failed', error)
       return Response.json({ error: 'Internal server error' }, { status: 500 })
     }
   }
