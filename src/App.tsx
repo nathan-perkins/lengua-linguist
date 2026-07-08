@@ -1,4 +1,4 @@
-import { useEffect, useState, type SubmitEvent } from 'react'
+import { useState, type SubmitEvent } from 'react'
 import { fetchVideos } from './services/fetchVideos'
 import { validateLink } from './utils/validateLink'
 import VideoWindow from './components/VideoWindow'
@@ -61,16 +61,6 @@ function App() {
     previousVideoData = JSON.parse(previousVideo) as VideoOption
   }
 
-  useEffect(() => {
-    async function callServer() {
-      const response = await fetch('/api/hello')
-      const data = await response.json()
-      console.log(data)
-    }
-
-    void callServer()
-  }, [])
-
   const handleQuery = async (
     e: SubmitEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -116,13 +106,22 @@ function App() {
     }
 
     const response = await fetchVideos({ searchQuery })
+    console.log(response)
     if (response) {
       const data = (await response.json()) as YouTubeSearchResponse
-      setVideoOptions(data.items || [])
 
-      if (data.items.length === 0) {
-        setIsNoResults(true)
+      if (!response.ok) {
+        console.error('search failed', data)
+        setVideoOptions([])
+        setIsNoResults(false)
+        setIsLoadingVideoOptions(false)
+        return
       }
+
+      const items = Array.isArray(data.items) ? data.items : []
+      setVideoOptions(items)
+
+      if (items.length === 0) setIsNoResults(true)
     }
 
     setSearchQuery('')

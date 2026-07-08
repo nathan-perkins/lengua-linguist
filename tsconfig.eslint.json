@@ -1,6 +1,13 @@
 {
   "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+  "types": [
+    "vite/client",
+    "vitest/globals",
+    "@testing-library/jest-dom",
+    "node"
+  ]
+  },
   "include": ["src", "api", "testSetup.ts", "vite.config.ts", "eslint.config.js"],
   "exclude": ["dist", "node_modules"]
 }
-
