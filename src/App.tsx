@@ -1,4 +1,4 @@
-import { useState, type SubmitEvent } from 'react'
+import { useEffect, useState, type SubmitEvent } from 'react'
 import { fetchVideos } from './services/fetchVideos'
 import { validateLink } from './utils/validateLink'
 import VideoWindow from './components/VideoWindow'
@@ -60,6 +60,16 @@ function App() {
   if (previousVideo) {
     previousVideoData = JSON.parse(previousVideo) as VideoOption
   }
+
+  useEffect(() => {
+    async function callServer() {
+      const response = await fetch('/api/hello')
+      const data = await response.json()
+      console.log(data)
+    }
+
+    void callServer()
+  }, [])
 
   const handleQuery = async (
     e: SubmitEvent<HTMLFormElement>

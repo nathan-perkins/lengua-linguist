@@ -26,10 +26,8 @@ export default defineConfig([
         ...globals.node
       },
       parserOptions: {
-        project: [
-          './tsconfig.node.json',
-          './tsconfig.app.json'
-        ]
+        tsconfigRootDir: import.meta.dirname,
+        project: ['./tsconfig.eslint.json']
       }
     },
     plugins: {

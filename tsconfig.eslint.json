@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["src", "api", "testSetup.ts", "vite.config.ts", "eslint.config.js"],
+  "exclude": ["dist", "node_modules"]
+}
+
