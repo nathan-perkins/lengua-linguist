@@ -106,7 +106,6 @@ function App() {
     }
 
     const response = await fetchVideos({ searchQuery })
-    console.log(response)
     if (response) {
       const data = (await response.json()) as YouTubeSearchResponse
 
@@ -157,7 +156,6 @@ function App() {
     setActiveVideo(null)
     setPreviousQuery('')
     setVideoOptions([])
-    console.log(previousVideoData)
   }
 
   return (

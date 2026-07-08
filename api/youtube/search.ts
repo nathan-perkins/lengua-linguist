@@ -28,8 +28,6 @@ export default {
       upstream.searchParams.set('q', searchQuery)
       upstream.searchParams.set('maxResults', '10')
 
-
-      console.log(upstream)
       const response = await fetch(upstream)
       const data = await response.json()
 
