@@ -27,16 +27,10 @@ describe('fetchVideos', () => {
     const requestedUrl = getRequestUrl(firstArg)
     expect(requestedUrl).toContain('/api/youtube/search')
     expect(requestedUrl).toContain('q=learn%20spanish')
-
     expect(result).toBe(response)
   })
 
-  it('calls the video endpoint when videoId is provided', async () => {
-    Object.assign(import.meta.env, {
-      VITE_YOUTUBE_DATA_API_KEY: 'test-key',
-      VITE_YOUTUBE_DATA_API_URL: 'https://youtube.test'
-    })
-
+  it('calls the internal video endpoint when videoId is provided', async () => {
     const response = new Response(JSON.stringify({ items: [] }), { status: 200 })
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response)
 
@@ -48,7 +42,7 @@ describe('fetchVideos', () => {
     expect(firstArg).toBeDefined()
 
     const requestedUrl = getRequestUrl(firstArg)
-    expect(requestedUrl).toContain('/videos')
+    expect(requestedUrl).toContain('/api/youtube/videos')
     expect(requestedUrl).toContain('id=abc123')
     expect(result).toBe(response)
   })
