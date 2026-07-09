@@ -1,4 +1,5 @@
 import { useState, type SubmitEvent } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { fetchVideos } from './services/fetchVideos'
 import { validateLink } from './utils/validateLink'
 import VideoWindow from './components/VideoWindow'
@@ -49,8 +50,6 @@ function App() {
   const [videoOptions, setVideoOptions] = useState<
     YouTubeSearchResponse['items']
   >([])
-  const [isLoadingVideoOptions, setIsLoadingVideoOptions] =
-    useState<boolean>(false)
   const [isNoResults, setIsNoResults] = useState<boolean>(false)
   const [showButtonTitles, setShowButtonTitles] = useState<boolean>(false)
 
@@ -61,6 +60,12 @@ function App() {
     previousVideoData = JSON.parse(previousVideo) as VideoOption
   }
 
+  const fetchVideosMutation = useMutation({
+    mutationFn: fetchVideos
+  })
+
+  const isLoadingVideoOptions = fetchVideosMutation.isPending
+
   const handleQuery = async (
     e: SubmitEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -68,7 +73,6 @@ function App() {
     setVideoOptions([])
     setActiveVideo(null)
     setPreviousQuery(searchQuery)
-    setIsLoadingVideoOptions(true)
     setIsNoResults(false)
 
     const { isValid, isEmbed } = validateLink(searchQuery)
@@ -81,7 +85,7 @@ function App() {
           )?.[1] ?? null)
 
       if (videoId) {
-        const response = await fetchVideos({ videoId })
+        const response = await fetchVideosMutation.mutateAsync({ videoId })
 
         if (!response) return
 
@@ -100,12 +104,11 @@ function App() {
         setActiveVideo(videoId)
         setVideoOptions([])
         setSearchQuery('')
-        setIsLoadingVideoOptions(false)
         return
       }
     }
 
-    const response = await fetchVideos({ searchQuery })
+    const response = await fetchVideosMutation.mutateAsync({ searchQuery })
     if (response) {
       const data = (await response.json()) as YouTubeSearchResponse
 
@@ -113,7 +116,6 @@ function App() {
         console.error('search failed', data)
         setVideoOptions([])
         setIsNoResults(false)
-        setIsLoadingVideoOptions(false)
         return
       }
 
@@ -124,24 +126,20 @@ function App() {
     }
 
     setSearchQuery('')
-    setIsLoadingVideoOptions(false)
   }
 
   const handleReturnToResults = async () => {
     setActiveVideo(null)
-    setIsLoadingVideoOptions(true)
 
     if (previousQuery === '') {
       setVideoOptions([])
     }
 
-    const response = await fetchVideos({ searchQuery: previousQuery })
+    const response = await fetchVideosMutation.mutateAsync({ searchQuery: previousQuery })
     if (response) {
       const data = (await response.json()) as YouTubeSearchResponse
       setVideoOptions(data.items || [])
     }
-
-    setIsLoadingVideoOptions(false)
   }
 
   const handleSelect = (option: VideoOption) => {
@@ -177,7 +175,7 @@ function App() {
           <div className="active-window">
             <button
               type="button"
-              onClick={() => handleReturnToResults}
+              onClick={() => void handleReturnToResults()}
               className="search-return-btn"
               title={showButtonTitles ? 'Return to previous search' : undefined}
             >
