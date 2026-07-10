@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev:vite": "vite",
+    "dev:api": "vercel dev --listen 3000",
+    "dev": "concurrently -n vite,api -c blue,green \"npm:dev:vite\" \"npm:dev:api\"",
     "build": "tsc -b && vite build",
     "test": "vitest",
     "lint": "eslint .",
