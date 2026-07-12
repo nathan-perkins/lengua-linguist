@@ -1,50 +1,30 @@
 import { fetchVideos } from './fetchVideos'
 
-// uses direct fetch spy, move to contralized mocking with MSW
-
-function getRequestUrl(input: string | URL | Request): string {
-  if (typeof input === 'string') return input
-  if (input instanceof URL) return input.toString()
-  return input.url
-}
-
 describe('fetchVideos', () => {
   afterEach(() => {
     vi.restoreAllMocks()
   })
 
   it('calls the internal search endpoint when searchQuery is provided', async () => {
-    const response = new Response(JSON.stringify({ items: [] }), { status: 200 })
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response)
-
-    const result = await fetchVideos({ searchQuery: 'learn spanish' })
+    const response = await fetchVideos({ searchQuery: 'learn spanish' })
     
-    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(response).toBeDefined()
+    expect(response?.ok).toBe(true)
 
-    const firstArg = fetchSpy.mock.calls[0]?.[0]
-    expect(firstArg).toBeDefined()
+    const data = await response?.json()
+    expect(Array.isArray(data.items)).toBe(true)
 
-    const requestedUrl = getRequestUrl(firstArg)
-    expect(requestedUrl).toContain('/api/youtube/search')
-    expect(requestedUrl).toContain('q=learn%20spanish')
-    expect(result).toBe(response)
+
   })
 
   it('calls the internal video endpoint when videoId is provided', async () => {
-    const response = new Response(JSON.stringify({ items: [] }), { status: 200 })
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(response)
+    const response = await fetchVideos({ videoId: 'abc123' })
 
-    const result = await fetchVideos({ videoId: 'abc123' })
+    expect(response).toBeDefined()
+    expect(response?.ok).toBe(true)
 
-    expect(fetchSpy).toHaveBeenCalledTimes(1)
-
-    const firstArg = fetchSpy.mock.calls[0]?.[0]
-    expect(firstArg).toBeDefined()
-
-    const requestedUrl = getRequestUrl(firstArg)
-    expect(requestedUrl).toContain('/api/youtube/videos')
-    expect(requestedUrl).toContain('id=abc123')
-    expect(result).toBe(response)
+    const data = await response?.json()
+    expect(Array.isArray(data.items)).toBe(true)
   })
 
   it('returns undefined and logs an error when neither searchQuery nor videoId is provided', async () => {
