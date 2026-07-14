@@ -5,7 +5,7 @@ describe('fetchVideos', () => {
     vi.restoreAllMocks()
   })
 
-  it('calls the internal search endpoint when searchQuery is provided', async () => {
+  it('should call the internal search endpoint when searchQuery is provided', async () => {
     const response = await fetchVideos({ searchQuery: 'learn spanish' })
     
     expect(response).toBeDefined()
@@ -17,7 +17,7 @@ describe('fetchVideos', () => {
 
   })
 
-  it('calls the internal video endpoint when videoId is provided', async () => {
+  it('should call the internal video endpoint when videoId is provided', async () => {
     const response = await fetchVideos({ videoId: 'abc123' })
 
     expect(response).toBeDefined()
@@ -27,7 +27,7 @@ describe('fetchVideos', () => {
     expect(Array.isArray(data.items)).toBe(true)
   })
 
-  it('returns undefined and logs an error when neither searchQuery nor videoId is provided', async () => {
+  it('should return undefined and logs an error when neither searchQuery nor videoId is provided', async () => {
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     const result = await fetchVideos({})

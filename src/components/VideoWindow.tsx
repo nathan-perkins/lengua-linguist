@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import {
+ useState, useEffect, useRef, type Dispatch, type SetStateAction 
+} from 'react'
 import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 import VideoTimeline from './VideoTimeline'
 import LoopControlFrame from './LoopControlFrame'
@@ -29,7 +31,7 @@ interface Segment {
 interface VideoWindowProps {
   activeVideo: string | null
   showButtonTitles: boolean
-  setShowButtonTitles: (show: boolean) => void
+  setShowButtonTitles: Dispatch<SetStateAction<boolean>>
 }
 
 function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: VideoWindowProps) {
