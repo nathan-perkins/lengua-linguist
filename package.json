@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "license": "UNLICENSE",
   "scripts": {
     "dev:vite": "vite",
     "dev:api": "vercel dev --listen 3000",
