@@ -91,4 +91,28 @@ describe('VideoWindow', () => {
     expect(await screen.findByLabelText(/segment end at 22s/i)).toBeInTheDocument()
 
   })
+
+  it('should exit loop sequence and discard loops when loop control button is clicked twice', async () => {
+    const { user } = renderVideoWindow()
+
+    const enterLoopSequenceButton = screen.getByRole('button', { name: /enter loop sequence/i })
+    await user.click(enterLoopSequenceButton)
+
+    const playButton = screen.getByRole('button', { name: /play video/i })
+    await user.click(playButton)
+
+    const pauseButton = screen.getByRole('button', { name: /pause video/i })
+    await user.click(pauseButton)
+
+    expect(await screen.findByLabelText(/segment start at 10s/i)).toBeInTheDocument()
+    expect(await screen.findByLabelText(/segment end at 22s/i)).toBeInTheDocument()
+
+    const exitLoopSequenceButton = screen.getByRole('button', { name: /exit loop sequence/i })
+    await user.click(exitLoopSequenceButton)
+
+    expect(screen.queryByLabelText(/segment start at 10s/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/segment end at 22s/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/pending segment start/i)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /enter loop sequence/i })).toBeInTheDocument()
+  })
 })
