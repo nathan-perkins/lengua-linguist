@@ -1,4 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { useState } from 'react'
+import {
+ act, render, screen, waitFor 
+} from '@testing-library/react'
 import VideoTimeline from './VideoTimeline'
 
 let capturedOnDragEnd: ((event: any) => void) | undefined
@@ -37,7 +40,38 @@ function setupTimelineBarMetrics() {
   })
 }
 
+function MockVideoTimeline() {
+  const [segments, setSegments] = useState([
+    {
+      index: 0,
+      start: 10,
+      end: 22,
+      initialEnd: 22 
+    }
+  ])
+
+  return (
+    <VideoTimeline
+      currentTime={10}
+      duration={120}
+      segments={segments}
+      activeSegmentIndex={0}
+      pendingSegmentStart={null}
+      loopController={true}
+      onSegmentUpdate={(index, newEnd) => {
+        setSegments(prev =>
+          prev.map(segment => (segment.index === index ? {...segment, end: newEnd } : segment))
+        )
+      }}
+    />
+  )
+}
+
 describe('VideoTimeline', () => {
+  beforeEach(() => {
+    capturedOnDragEnd = undefined
+  })
+
   it('should call onSegmentUpdate with computed end time when drag ends', () => {
     const onSegmentUpdate = vi.fn()
 
@@ -63,14 +97,40 @@ describe('VideoTimeline', () => {
     expect(screen.getByLabelText(/segment end at 22s/i)).toBeInTheDocument()
     setupTimelineBarMetrics()
 
-    capturedOnDragEnd?.({
-      active: { id: 'segment-0-end' },
-      delta: { x: 120 },
-      activatorEvent: { clientX: 700 }
+    act(() => {
+      expect(capturedOnDragEnd).toBeDefined()
+      capturedOnDragEnd?.({
+        active: { id: 'segment-0-end' },
+        delta: { x: 120 },
+        activatorEvent: { clientX: 700 }
+      })
     })
 
     expect(onSegmentUpdate).toHaveBeenCalledTimes(1)
     const [, newEnd] = onSegmentUpdate.mock.calls[0]
     expect(newEnd).toBeCloseTo(24.88, 2)
+  })
+
+  it('should re-render with updated segment end', async () => {
+    render(<MockVideoTimeline />)
+
+    expect(screen.getByLabelText(/segment end at 22s/i)).toBeInTheDocument()
+    setupTimelineBarMetrics()
+
+    act(() => {
+      expect(capturedOnDragEnd).toBeDefined()
+      capturedOnDragEnd?.({
+        active: { id: 'segment-0-end' },
+        delta: { x: 120 },
+        activatorEvent: { clientX: 700 }
+      })
+    })
+
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/segment end at 22s/i)).not.toBeInTheDocument()
+    })
+
+    expect(await screen.findByLabelText(/segment end at 24\.88s/i)).toBeInTheDocument()
+
   })
 })
