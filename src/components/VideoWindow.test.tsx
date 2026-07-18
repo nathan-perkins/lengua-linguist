@@ -85,8 +85,6 @@ describe('VideoWindow', () => {
     const pauseButton = screen.getByRole('button', { name: /pause video/i })
     await user.click(pauseButton)
 
-    screen.debug()
-
     expect(await screen.findByLabelText(/segment start at 10s/i)).toBeInTheDocument()
     expect(await screen.findByLabelText(/segment end at 22s/i)).toBeInTheDocument()
 
