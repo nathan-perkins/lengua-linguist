@@ -133,4 +133,44 @@ describe('VideoTimeline', () => {
     expect(await screen.findByLabelText(/segment end at 24\.88s/i)).toBeInTheDocument()
 
   })
+
+  it('should only allow editing the last loop end tick', () => {
+    render(
+      <VideoTimeline
+        currentTime={14}
+        duration={120}
+        segments={[
+          {
+            index: 0,
+            start: 10,
+            end: 14,
+            initialEnd: 14
+          },
+          {
+            index: 1,
+            start: 14,
+            end: 18,
+            initialEnd: 18
+          }
+        ]}
+        activeSegmentIndex={1}
+        pendingSegmentStart={null}
+        onSegmentUpdate={vi.fn()}
+        loopController={true}
+      />
+    )
+
+    const firstLoopEndTick = screen.getByLabelText(/segment end at 14s/i)
+    const lastLoopEndTick = screen.getByLabelText(/segment end at 18s/i)
+
+    expect(firstLoopEndTick).not.toHaveAttribute('role', 'button')
+    expect(firstLoopEndTick).not.toHaveAttribute('aria-roledescription', 'draggable')
+    expect(firstLoopEndTick).toHaveStyle({ cursor: 'default' })
+
+    expect(lastLoopEndTick).toHaveAttribute('role', 'button')
+    expect(lastLoopEndTick).toHaveAttribute('aria-roledescription', 'draggable')
+    expect(lastLoopEndTick).toHaveStyle({ cursor: 'grab' })
+
+    expect(screen.getAllByRole('button', { name: /segment end at/i })).toHaveLength(1)
+  })
 })
