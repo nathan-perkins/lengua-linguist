@@ -74,11 +74,6 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
     }
   }, [isPlaying])
 
-  useEffect(() => {
-    setCurrentTime(0)
-    setActiveSegmentIndex(0)
-  }, [activeVideo])
-
   const handlePlay = () => {
     if (playerRef.current) {
       playerRef.current.playVideo()
