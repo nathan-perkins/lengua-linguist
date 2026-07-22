@@ -17,9 +17,6 @@ function Home() {
           Get Started
         </button>
       </Link>
-      {/* <Link to="/new">
-        <button type="button" className="secondary-btn">Try New Interface</button>
-      </Link> */}
     </div>
   )
 }
