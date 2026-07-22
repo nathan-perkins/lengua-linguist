@@ -136,7 +136,7 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
       ) : (
         <button
           type="button"
-          onClick={handleRecord}
+          onClick={() => void handleRecord()}
           className="record-icon"
         >
           <FontAwesomeIcon icon={faMicrophone} />
