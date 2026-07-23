@@ -158,21 +158,38 @@ describe('Recorder', () => {
   })
 
   it('should swap saved audio when segment props change', () => {
-    const firstKey = getSegmentKey(TEST_VIDEO_ID, 10, 14)
-    const secondKey = getSegmentKey(TEST_VIDEO_ID, 14, 18)
+    const firstStart = 10
+    const firstEnd = 14
+    const secondStart = 14
+    const secondEnd = 18
+
+    const firstKey = getSegmentKey(TEST_VIDEO_ID, firstStart, firstEnd)
+    const secondKey = getSegmentKey(TEST_VIDEO_ID, secondStart, secondEnd)
 
     sessionStorage.setItem(firstKey, 'data:audio/webm;base64,first')
     sessionStorage.setItem(secondKey, 'data:audio/webm;base64,second')
 
     const { rerender } = render(
-      <Recorder videoId={TEST_VIDEO_ID} startSegment={10} endSegment={14} />
+      <Recorder
+        key={`${TEST_VIDEO_ID}-${firstStart}-${firstEnd}`}
+        videoId={TEST_VIDEO_ID}
+        startSegment={firstStart}
+        endSegment={firstEnd}
+      />
     )
 
     let audio = document.querySelector('audio')
     expect(audio).toBeInTheDocument()
     expect(audio).toHaveAttribute('src', 'data:audio/webm;base64,first')
 
-    rerender(<Recorder videoId={TEST_VIDEO_ID} startSegment={14} endSegment={18} />)
+    rerender(
+      <Recorder
+        key={`${TEST_VIDEO_ID}-${secondStart}-${secondEnd}`}
+        videoId={TEST_VIDEO_ID}
+        startSegment={secondStart}
+        endSegment={secondEnd}
+      />
+    )
 
     audio = document.querySelector('audio')
     expect(audio).toBeInTheDocument()

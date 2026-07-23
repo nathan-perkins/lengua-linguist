@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faMicrophone,
@@ -17,22 +17,14 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
     'granted' | 'denied' | 'prompt'
   >('prompt')
   const [isRecording, setIsRecording] = useState<boolean>(false)
-  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const segmentKey = `recording-${videoId}-${startSegment}-${endSegment}`
+  const [audioUrl, setAudioUrl] = useState<string | null>(() =>
+    sessionStorage.getItem(segmentKey)
+  )
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const streamRef = useRef<MediaStream | null>(null)
-
-  const segmentKey = `recording-${videoId}-${startSegment}-${endSegment}`
-
-  useEffect(() => {
-    const savedRecording = sessionStorage.getItem(segmentKey)
-    if (savedRecording) {
-      setAudioUrl(savedRecording)
-    } else {
-      setAudioUrl(null)
-    }
-  }, [segmentKey])
 
   const handleRecord = async () => {
     if (permissionStatus === 'denied') {

@@ -94,6 +94,7 @@ function LoopControlFrame({
         {typeof activeSegmentIndex === 'number' &&
           segments[activeSegmentIndex] && (
             <Recorder
+              key={`${activeVideo}-${segments[activeSegmentIndex].start}-${segments[activeSegmentIndex].end}`}
               videoId={activeVideo}
               startSegment={segments[activeSegmentIndex].start}
               endSegment={segments[activeSegmentIndex].end}
