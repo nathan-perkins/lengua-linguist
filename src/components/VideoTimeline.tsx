@@ -1,4 +1,6 @@
-import React, { useRef } from 'react'
+import React, {
+ useCallback, useLayoutEffect, useRef, useState 
+} from 'react'
 import { DndContext, type DragEndEvent } from '@dnd-kit/core'
 import TimelineIndicator from './TimelineIndicator'
 import TimelineTick from './TimelineTick'
@@ -30,8 +32,38 @@ function VideoTimeline({
  currentTime, duration, segments, activeSegmentIndex, pendingSegmentStart, onSeek, onSegmentUpdate, loopController 
 }: VideoTimelineProps) {
   const barRef = useRef<HTMLDivElement>(null)
+  const [barWidth, setBarWidth] = useState(0)
 
-  if (duration <= 0) return
+  const measureBar = useCallback(() => {
+    if (barRef.current) {
+      setBarWidth(barRef.current.offsetWidth)
+    }
+  }, [])
+
+  useLayoutEffect(() => {
+    measureBar()
+
+    if (!barRef.current) return
+
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', measureBar)
+      return () => {
+        window.removeEventListener('resize', measureBar)
+      }
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      measureBar()
+    })
+
+    resizeObserver.observe(barRef.current)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [measureBar])
+
+  if (duration <= 0) return null
 
   let progressPercent = 0
   let controllerStart = 0
@@ -140,8 +172,6 @@ function VideoTimeline({
     : currentTime
 
   const showIndicator = indicatorTime >= 0 && indicatorTime <= timelineDuration
-
-  const barWidth = barRef.current?.offsetWidth ?? 0
 
   return (
     <DndContext onDragEnd={handleDragEnd}>

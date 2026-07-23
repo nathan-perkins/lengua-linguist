@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 
 interface TimelineIndicatorProps {
@@ -15,8 +15,37 @@ function TimelineIndicator({ currentTime, duration }: TimelineIndicatorProps) {
     })
 
   const indicatorRef = useRef<HTMLDivElement>(null)
-  const bar = indicatorRef.current?.parentElement
-  const barWidth = bar ? bar.offsetWidth : 0
+  const [barWidth, setBarWidth] = useState(0)
+
+  useLayoutEffect(() => {
+    const updateBarWidth = () => {
+      const bar = indicatorRef.current?.parentElement
+      setBarWidth(bar?.offsetWidth ?? 0)
+    }
+
+    updateBarWidth()
+
+    const bar = indicatorRef.current?.parentElement
+    if (!bar) return
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        updateBarWidth()
+      })
+
+      resizeObserver.observe(bar)
+
+      return () => {
+        resizeObserver.disconnect()
+      }
+    }
+
+    window.addEventListener('resize', updateBarWidth)
+
+    return () => {
+      window.removeEventListener('resize', updateBarWidth)
+    }
+  }, [])
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0
   const initialLeftPx = barWidth * (progressPercent / 100)
