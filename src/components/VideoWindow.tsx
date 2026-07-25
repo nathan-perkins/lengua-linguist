@@ -1,5 +1,5 @@
 import {
- useState, useEffect, useRef, type Dispatch, type SetStateAction 
+ useState, useEffect, useRef, type Dispatch, type SetStateAction
 } from 'react'
 import YouTube, { type YouTubeEvent, type YouTubeProps } from 'react-youtube'
 import VideoTimeline from './VideoTimeline'
@@ -7,7 +7,12 @@ import LoopControlFrame from './LoopControlFrame'
 import OptionsPopup from './OptionsPopup'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
- faArrowLeft, faArrowRight, faPlay, faPause, faRepeat, faGear 
+  faArrowLeft,
+  faArrowRight,
+  faPlay,
+  faPause,
+  faRepeat,
+  faGear
 } from '@fortawesome/free-solid-svg-icons'
 
 interface YouTubePlayer {
@@ -91,11 +96,7 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement
-      if (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable
-      ) {
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return
       }
 
@@ -115,7 +116,7 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
       if (event.key === ' ') {
         event.preventDefault()
         const playerState = playerRef.current.getPlayerState()
-        
+
         if (playerState === 1) {
           handlePauseClick()
         } else {
@@ -149,7 +150,7 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
         name: `Loop ${segments.length + 1}`
       }
       const updatedSegments = [...segments, newSegment].sort((a, b) => a.start - b.start)
-      updatedSegments.forEach((segment, idx) => segment.index = idx)
+      updatedSegments.forEach((segment, idx) => (segment.index = idx))
       setSegments(updatedSegments)
       // this will need to change to be based on an id that's based on start and end times
       setActiveSegmentIndex(updatedSegments.length - 1)
@@ -177,12 +178,7 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
       intervalRef.current = undefined
     }
 
-    if (
-      player &&
-      activeSegment &&
-      pendingSegmentStart === null &&
-      event.data === 1
-    ) {
+    if (player && activeSegment && pendingSegmentStart === null && event.data === 1) {
       intervalRef.current = setInterval(() => {
         const currentTime = player.getCurrentTime()
         if (currentTime >= activeSegment.end) {
@@ -269,14 +265,14 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
   }
 
   const handleSegmentUpdate = (index: number, newEnd: number, newName?: string) => {
-    setSegments(prevSegments => 
-      prevSegments.map(segment =>
+    setSegments((prevSegments) =>
+      prevSegments.map((segment) =>
         segment.index === index
           ? {
-            ...segment,
-            end: Math.max(newEnd, segment.start),
-            name: newName !== undefined ? newName : segment.name
-          }
+              ...segment,
+              end: Math.max(newEnd, segment.start),
+              name: newName !== undefined ? newName : segment.name
+            }
           : segment
       )
     )
@@ -298,41 +294,101 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
         />
       </div>
       {isActiveLoop && segments.length > 0 ? (
-        <LoopControlFrame currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} activeVideo={activeVideo} loopController={true} />
+        <LoopControlFrame
+          currentTime={currentTime}
+          duration={duration ?? 0}
+          segments={segments}
+          activeSegmentIndex={activeSegmentIndex}
+          pendingSegmentStart={pendingSegmentStart}
+          onSeek={handleSeek}
+          onSegmentUpdate={handleSegmentUpdate}
+          activeVideo={activeVideo}
+          loopController={true}
+        />
       ) : (
         <div className="video-timeline">
-          <VideoTimeline currentTime={currentTime} duration={duration ?? 0} segments={segments} activeSegmentIndex={activeSegmentIndex} pendingSegmentStart={pendingSegmentStart} onSeek={handleSeek} onSegmentUpdate={handleSegmentUpdate} />
+          <VideoTimeline
+            currentTime={currentTime}
+            duration={duration ?? 0}
+            segments={segments}
+            activeSegmentIndex={activeSegmentIndex}
+            pendingSegmentStart={pendingSegmentStart}
+            onSeek={handleSeek}
+            onSegmentUpdate={handleSegmentUpdate}
+          />
         </div>
       )}
       <div className="video-control-btns">
-        <button type="button" onClick={isActiveLoop ? handleClearLoops : handleStartLoop} className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`} title={showButtonTitles ? isActiveLoop ? 'Exit loop sequence' : 'Enter loop sequence' : undefined} >
+        <button
+          type="button"
+          onClick={isActiveLoop ? handleClearLoops : handleStartLoop}
+          className={`loop-control-icon${isActiveLoop ? ' active-control-icon' : ''}`}
+          title={
+            showButtonTitles
+              ? isActiveLoop
+                ? 'Exit loop sequence'
+                : 'Enter loop sequence'
+              : undefined
+          }
+        >
           <FontAwesomeIcon icon={faRepeat} />
         </button>
         {isActiveLoop && activeSegment && activeSegmentIndex !== null && (
-          <button type="button" onClick={activeSegmentIndex > 0 ? handlePreviousLoop : undefined} className={`loop-control-arrow${activeSegmentIndex > 0 ? '' : ' dummy-arrow'}`} title={showButtonTitles && activeSegmentIndex > 0 ? 'Previous loop' : ''}>
+          <button
+            type="button"
+            onClick={activeSegmentIndex > 0 ? handlePreviousLoop : undefined}
+            className={`loop-control-arrow${activeSegmentIndex > 0 ? '' : ' dummy-arrow'}`}
+            title={showButtonTitles && activeSegmentIndex > 0 ? 'Previous loop' : ''}
+          >
             <FontAwesomeIcon icon={faArrowLeft} />
           </button>
         )}
         {isPlaying ? (
-          <button type="button" onClick={handlePauseClick} className="video-control-pause" title={showButtonTitles ? 'Pause video' : undefined}>
+          <button
+            type="button"
+            onClick={handlePauseClick}
+            className="video-control-pause"
+            title={showButtonTitles ? 'Pause video' : undefined}
+          >
             <FontAwesomeIcon icon={faPause} />
           </button>
         ) : (
-          <button type="button" onClick={handlePlay} className="video-control-play" title={showButtonTitles ? 'Play video' : undefined}>
+          <button
+            type="button"
+            onClick={handlePlay}
+            className="video-control-play"
+            title={showButtonTitles ? 'Play video' : undefined}
+          >
             <FontAwesomeIcon icon={faPlay} />
           </button>
         )}
         {isActiveLoop && activeSegment && (
-          <button type="button" onClick={activeSegment.end !== duration ? handleNextLoop : undefined} className={`loop-control-arrow${activeSegment.end !== duration ? '' : ' dummy-arrow'}`} title={showButtonTitles && activeSegment.end !== duration ? 'Next loop' : ''}>
+          <button
+            type="button"
+            onClick={activeSegment.end !== duration ? handleNextLoop : undefined}
+            className={`loop-control-arrow${activeSegment.end !== duration ? '' : ' dummy-arrow'}`}
+            title={showButtonTitles && activeSegment.end !== duration ? 'Next loop' : ''}
+          >
             <FontAwesomeIcon icon={faArrowRight} />
           </button>
         )}
         <div className="options-btn-container">
-          <button type="button" ref={optionsRef} onClick={() => setShowOptions(prev => !prev)} className={`options-icon${showOptions ? ' active-control-icon' : ''}`} title={showButtonTitles ? 'Options' : undefined}>
+          <button
+            type="button"
+            ref={optionsRef}
+            onClick={() => setShowOptions((prev) => !prev)}
+            className={`options-icon${showOptions ? ' active-control-icon' : ''}`}
+            title={showButtonTitles ? 'Options' : undefined}
+          >
             <FontAwesomeIcon icon={faGear} />
           </button>
           {showOptions && (
-            <OptionsPopup showButtonTitles={showButtonTitles} setShowButtonTitles={setShowButtonTitles} setShowOptions={setShowOptions} optionsRef={optionsRef} />
+            <OptionsPopup
+              showButtonTitles={showButtonTitles}
+              setShowButtonTitles={setShowButtonTitles}
+              setShowOptions={setShowOptions}
+              optionsRef={optionsRef}
+            />
           )}
         </div>
       </div>
@@ -340,4 +396,4 @@ function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: Vid
   )
 }
 
-export default VideoWindow 
+export default VideoWindow

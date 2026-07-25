@@ -9,7 +9,7 @@ describe('validateLink', () => {
 
   it('returns valid for a normal YouTube watch URL', () => {
     const result = validateLink('https://www.youtube.com/watch?v=ScMzIvxBSi4')
-    
+
     expect(result).toEqual({
       isValid: true,
       isEmbed: false

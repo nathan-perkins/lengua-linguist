@@ -50,14 +50,13 @@ export const handlers = [
     const searchQuery = url.searchParams.get('q')?.trim()
 
     if (!searchQuery) {
-      return HttpResponse.json(
-        { error: 'Missing query param q' },
-        { status: 400 }
-      )
+      return HttpResponse.json({ error: 'Missing query param q' }, { status: 400 })
     }
 
     if (searchQuery.toLowerCase() === 'no-results') {
-      return HttpResponse.json({ items: [] } satisfies YouTubeSearchResponse)
+      return HttpResponse.json({
+        items: []
+      } satisfies YouTubeSearchResponse)
     }
 
     return HttpResponse.json(searchSuccess)
@@ -67,10 +66,7 @@ export const handlers = [
     const videoId = url.searchParams.get('id')?.trim()
 
     if (!videoId) {
-      return HttpResponse.json(
-        { error: 'Missing query param id' },
-        { status: 400 }
-      )
+      return HttpResponse.json({ error: 'Missing query param id' }, { status: 400 })
     }
 
     return HttpResponse.json(videoSuccess(videoId))

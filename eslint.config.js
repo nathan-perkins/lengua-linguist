@@ -4,20 +4,14 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
+import react from 'eslint-plugin-react'
 
 export default defineConfig([
   {
-    ignores: [
-      'dist',
-      'eslint.config.js',
-      'vite.config.ts'
-    ]
+    ignores: ['dist', 'eslint.config.js', 'vite.config.ts']
   },
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommendedTypeChecked
-    ],
+    extends: [js.configs.recommended, ...tseslint.configs.recommendedTypeChecked],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
@@ -31,15 +25,16 @@ export default defineConfig([
       }
     },
     plugins: {
+      react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true }
-      ],
+
+      'react/jsx-max-props-per-line': ['error', { maximum: 1, when: 'multiline' }],
+      'react/jsx-first-prop-new-line': ['error', 'multiline-multiprop'],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }
@@ -60,15 +55,12 @@ export default defineConfig([
           }
         }
       ],
-      quotes: [
-        'error',
-        'single',
-        { avoidEscape: true, allowTemplateLiterals: true }
-      ],
+      quotes: ['error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
       'jsx-quotes': ['error', 'prefer-double'],
       semi: ['error', 'never'],
       'comma-dangle': ['error', 'never'],
       'eol-last': ['error', 'always'],
+      'no-trailing-spaces': 'error',
       'object-curly-newline': [
         'error',
         {
@@ -96,7 +88,10 @@ export default defineConfig([
       ],
       'object-property-newline': [
         'error',
-        { allowAllPropertiesOnSameLine: true }
+        {
+          allowAllPropertiesOnSameLine: false,
+          allowMultiplePropertiesPerLine: false
+        }
       ],
       'array-bracket-newline': ['error', { multiline: true, minItems: 4 }],
       'array-element-newline': ['error', { multiline: true, minItems: 4 }]
@@ -107,5 +102,5 @@ export default defineConfig([
     rules: {
       'react-refresh/only-export-components': 'off'
     }
-  },
+  }
 ])

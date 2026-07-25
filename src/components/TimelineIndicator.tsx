@@ -8,11 +8,10 @@ interface TimelineIndicatorProps {
 
 function TimelineIndicator({ currentTime, duration }: TimelineIndicatorProps) {
   const {
- attributes, listeners, setNodeRef, transform, isDragging 
-} =
-    useDraggable({
-      id: 'timeline-indicator'
-    })
+    attributes, listeners, setNodeRef, transform, isDragging
+  } = useDraggable({
+    id: 'timeline-indicator'
+  })
 
   const indicatorRef = useRef<HTMLDivElement>(null)
   const [barWidth, setBarWidth] = useState(0)
@@ -68,9 +67,7 @@ function TimelineIndicator({ currentTime, duration }: TimelineIndicatorProps) {
       className="video-timeline-indicator"
       style={{
         left,
-        transform: transform
-          ? `translate3d(${clampedX}px, -50%, 0)`
-          : 'translateY(-50%)',
+        transform: transform ? `translate3d(${clampedX}px, -50%, 0)` : 'translateY(-50%)',
         cursor: isDragging ? 'grabbing' : 'grab'
       }}
       role="slider"

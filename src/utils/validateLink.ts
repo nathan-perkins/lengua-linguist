@@ -1,5 +1,9 @@
-export function validateLink(searchQuery: string): { isValid: boolean, isEmbed: boolean } {
-  const urlRegExp: RegExp = /^((?:https?:)\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|live\/|v\/)?)([\w-]+)(\S+)?$/
+export function validateLink(searchQuery: string): {
+  isValid: boolean
+  isEmbed: boolean
+} {
+  const urlRegExp: RegExp =
+    /^((?:https?:)\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu.be))(\/(?:[\w-]+\?v=|embed\/|live\/|v\/)?)([\w-]+)(\S+)?$/
 
   const isValid: boolean = urlRegExp.test(searchQuery)
   const isEmbed: boolean = searchQuery.includes('embed')
@@ -8,4 +12,4 @@ export function validateLink(searchQuery: string): { isValid: boolean, isEmbed: 
     isValid: isValid,
     isEmbed: isEmbed
   }
-} 
+}

@@ -145,9 +145,7 @@ describe('Recorder', () => {
     // Re-render with saved recording visible
     renderRecorder()
 
-    const deleteButton = document.querySelector(
-      '.recorder-delete-btn'
-    ) as HTMLButtonElement
+    const deleteButton = document.querySelector('.recorder-delete-btn') as HTMLButtonElement
     expect(deleteButton).toBeInTheDocument()
 
     await user.click(deleteButton)
@@ -202,7 +200,9 @@ describe('Recorder', () => {
 
     await user.click(screen.getByRole('button'))
 
-    expect(mockGetUserMedia).toHaveBeenCalledWith({ audio: true })
+    expect(mockGetUserMedia).toHaveBeenCalledWith({
+      audio: true
+    })
     expect(screen.getByText(/recording/i)).toBeInTheDocument()
     expect(MockMediaRecorder.instances).toHaveLength(1)
     expect(MockMediaRecorder.instances[0].start).toHaveBeenCalledTimes(1)
@@ -214,10 +214,8 @@ describe('Recorder', () => {
     mockGetUserMedia.mockResolvedValueOnce(mockStream)
 
     await user.click(screen.getByRole('button'))
-    
-    const stopIcon = document.querySelector(
-      '.recorder-popup .record-icon'
-    ) as HTMLElement
+
+    const stopIcon = document.querySelector('.recorder-popup .record-icon') as HTMLElement
     expect(stopIcon).toBeInTheDocument()
 
     await user.click(stopIcon)

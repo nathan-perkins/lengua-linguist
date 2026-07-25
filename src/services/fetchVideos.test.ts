@@ -6,19 +6,21 @@ describe('fetchVideos', () => {
   })
 
   it('should call the internal search endpoint when searchQuery is provided', async () => {
-    const response = await fetchVideos({ searchQuery: 'learn spanish' })
-    
+    const response = await fetchVideos({
+      searchQuery: 'learn spanish'
+    })
+
     expect(response).toBeDefined()
     expect(response?.ok).toBe(true)
 
     const data = await response?.json()
     expect(Array.isArray(data.items)).toBe(true)
-
-
   })
 
   it('should call the internal video endpoint when videoId is provided', async () => {
-    const response = await fetchVideos({ videoId: 'abc123' })
+    const response = await fetchVideos({
+      videoId: 'abc123'
+    })
 
     expect(response).toBeDefined()
     expect(response?.ok).toBe(true)
