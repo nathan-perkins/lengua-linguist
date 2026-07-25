@@ -12,7 +12,7 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
   const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'prompt'>(
     'prompt'
   )
-  const [isRecording, setIsRecording] = useState<boolean>(false)
+  const [isRecording, setIsRecording] = useState(false)
   const segmentKey = `recording-${videoId}-${startSegment}-${endSegment}`
   const [audioUrl, setAudioUrl] = useState<string | null>(() => sessionStorage.getItem(segmentKey))
 

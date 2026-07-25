@@ -40,14 +40,14 @@ interface VideoWindowProps {
 }
 
 function VideoWindow({ activeVideo, showButtonTitles, setShowButtonTitles }: VideoWindowProps) {
-  const [isActiveLoop, setIsActiveLoop] = useState<boolean>(false)
+  const [isActiveLoop, setIsActiveLoop] = useState(false)
   const [pendingSegmentStart, setPendingSegmentStart] = useState<number | null>(null)
   const [segments, setSegments] = useState<Segment[]>([])
   const [activeSegmentIndex, setActiveSegmentIndex] = useState<number | null>(null)
-  const [currentTime, setCurrentTime] = useState<number>(0)
+  const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState<number | null>(null)
-  const [isPlaying, setIsPlaying] = useState<boolean>(false)
-  const [showOptions, setShowOptions] = useState<boolean>(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [showOptions, setShowOptions] = useState(false)
 
   const playerRef = useRef<YouTubePlayer | null>(null)
   const optionsRef = useRef<HTMLButtonElement>(null)

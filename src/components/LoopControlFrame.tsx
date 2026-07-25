@@ -34,8 +34,8 @@ function LoopControlFrame({
   activeVideo,
   loopController
 }: LoopControlFrameProps) {
-  const [isEditingName, setIsEditingName] = useState<boolean>(false)
-  const [nameInput, setNameInput] = useState<string>('')
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [nameInput, setNameInput] = useState('')
 
   const activeSegment =
     typeof activeSegmentIndex === 'number' && segments[activeSegmentIndex]

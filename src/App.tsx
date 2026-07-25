@@ -44,12 +44,12 @@ export interface VideoOption {
 }
 
 function App() {
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const [previousQuery, setPreviousQuery] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [previousQuery, setPreviousQuery] = useState('')
   const [activeVideo, setActiveVideo] = useState<string | null>(null)
   const [videoOptions, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
-  const [isNoResults, setIsNoResults] = useState<boolean>(false)
-  const [showButtonTitles, setShowButtonTitles] = useState<boolean>(false)
+  const [isNoResults, setIsNoResults] = useState(false)
+  const [showButtonTitles, setShowButtonTitles] = useState(false)
 
   const previousVideo = localStorage.getItem('PREVIOUS_VIDEO')
   let previousVideoData: VideoOption | null = null
