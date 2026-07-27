@@ -1,10 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faMicrophone,
-  faStop,
-  faXmark
-} from '@fortawesome/free-solid-svg-icons'
+import { faMicrophone, faStop, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 interface RecorderProps {
   videoId: string
@@ -13,32 +9,20 @@ interface RecorderProps {
 }
 
 function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
-  const [permissionStatus, setPermissionStatus] = useState<
-    'granted' | 'denied' | 'prompt'
-  >('prompt')
-  const [isRecording, setIsRecording] = useState<boolean>(false)
-  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const [permissionStatus, setPermissionStatus] = useState<'granted' | 'denied' | 'prompt'>(
+    'prompt'
+  )
+  const [isRecording, setIsRecording] = useState(false)
+  const segmentKey = `recording-${videoId}-${startSegment}-${endSegment}`
+  const [audioUrl, setAudioUrl] = useState<string | null>(() => sessionStorage.getItem(segmentKey))
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const streamRef = useRef<MediaStream | null>(null)
 
-  const segmentKey = `recording-${videoId}-${startSegment}-${endSegment}`
-
-  useEffect(() => {
-    const savedRecording = sessionStorage.getItem(segmentKey)
-    if (savedRecording) {
-      setAudioUrl(savedRecording)
-    } else {
-      setAudioUrl(null)
-    }
-  }, [segmentKey])
-
   const handleRecord = async () => {
     if (permissionStatus === 'denied') {
-      alert(
-        'You denied microphone access. Please enable it in your browser settings.'
-      )
+      alert('You denied microphone access. Please enable it in your browser settings.')
       return
     }
 
@@ -53,12 +37,12 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
       } catch (error) {
         console.error('Microphone access denied:', error)
         setPermissionStatus('denied')
-        alert(
-          'Microphone access was denied. Please grant permission to record.'
-        )
+        alert('Microphone access was denied. Please grant permission to record.')
       }
     } else {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true
+      })
       streamRef.current = stream
       startRecording(stream)
     }
@@ -76,7 +60,9 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
     }
 
     mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
+      const audioBlob = new Blob(audioChunksRef.current, {
+        type: 'audio/webm'
+      })
 
       const reader = new FileReader()
       reader.onloadend = () => {
@@ -115,30 +101,18 @@ function Recorder({ videoId, startSegment, endSegment }: RecorderProps) {
     <div className="recorder-panel">
       {isRecording ? (
         <div className="recorder-popup">
-          <FontAwesomeIcon
-            icon={faStop}
-            onClick={handleStopRecord}
-            className="record-icon"
-          />
+          <FontAwesomeIcon icon={faStop} onClick={handleStopRecord} className="record-icon" />
           <span>🔴 Recording...</span>
         </div>
       ) : audioUrl ? (
         <div className="recorder-audio-row">
           <audio src={audioUrl} controls />
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="recorder-delete-btn"
-          >
+          <button type="button" onClick={handleDelete} className="recorder-delete-btn">
             <FontAwesomeIcon icon={faXmark} />
           </button>
         </div>
       ) : (
-        <button
-          type="button"
-          onClick={handleRecord}
-          className="record-icon"
-        >
+        <button type="button" onClick={() => void handleRecord()} className="record-icon">
           <FontAwesomeIcon icon={faMicrophone} />
         </button>
       )}

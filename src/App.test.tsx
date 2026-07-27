@@ -39,8 +39,16 @@ describe('App integration', () => {
 
     await searchVideo(user, 'kriiispy')
 
-    expect(await screen.findByRole('button', { name: /nu disciples/i })).toBeInTheDocument()
-    expect(await screen.findByRole('button', { name: /gods timing/i })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', {
+        name: /nu disciples/i
+      })
+    ).toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', {
+        name: /gods timing/i
+      })
+    ).toBeInTheDocument()
   })
 
   it('should render VideoWindow with the correct video when user selects an option', async () => {
@@ -48,11 +56,13 @@ describe('App integration', () => {
 
     await searchVideo(user, 'kriiispy')
 
-    const selectedOption = screen.getByRole('button', { name: /nu disciples/i })
+    const selectedOption = screen.getByRole('button', {
+      name: /nu disciples/i
+    })
     await user.click(selectedOption)
 
     expect(await screen.findByText(/video player loaded/i)).toBeInTheDocument()
-    
+
     expect(screen.queryByLabelText(/explore target language videos/i)).not.toBeInTheDocument()
 
     const saved = localStorage.getItem('PREVIOUS_VIDEO')

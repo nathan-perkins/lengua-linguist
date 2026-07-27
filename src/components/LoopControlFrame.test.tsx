@@ -56,7 +56,9 @@ describe('LoopControlFrame', () => {
     await user.clear(nameInput)
     await user.type(nameInput, 'Intro loop')
 
-    const saveButton = screen.getByRole('button', { name: /save/i })
+    const saveButton = screen.getByRole('button', {
+      name: /save/i
+    })
     await user.click(saveButton)
 
     expect(onSegmentUpdate).toHaveBeenCalledWith(0, 22, 'Intro loop')
@@ -72,7 +74,9 @@ describe('LoopControlFrame', () => {
     await user.clear(nameInput)
     await user.type(nameInput, 'Intro loop')
 
-    const cancelButton = screen.getByRole('button', { name: /cancel/i })
+    const cancelButton = screen.getByRole('button', {
+      name: /cancel/i
+    })
     await user.click(cancelButton)
 
     expect(onSegmentUpdate).not.toHaveBeenCalled()

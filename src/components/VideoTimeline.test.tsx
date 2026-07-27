@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
- act, render, screen, waitFor 
+ act, render, screen, waitFor
 } from '@testing-library/react'
 import VideoTimeline from './VideoTimeline'
 
@@ -10,7 +10,7 @@ vi.mock('@dnd-kit/core', async () => {
   const actual = await vi.importActual<any>('@dnd-kit/core')
   return {
     ...actual,
-    DndContext: ({ onDragEnd, children}: any) => {
+    DndContext: ({ onDragEnd, children }: any) => {
       capturedOnDragEnd = onDragEnd
       return <div>{children}</div>
     }
@@ -24,7 +24,7 @@ function setupTimelineBarMetrics() {
 
   Object.defineProperty(bar, 'offsetWidth', {
     value: 1000,
-    configurable: true 
+    configurable: true
   })
 
   vi.spyOn(bar, 'getBoundingClientRect').mockReturnValue({
@@ -46,7 +46,7 @@ function MockVideoTimeline() {
       index: 0,
       start: 10,
       end: 22,
-      initialEnd: 22 
+      initialEnd: 22
     }
   ])
 
@@ -59,8 +59,11 @@ function MockVideoTimeline() {
       pendingSegmentStart={null}
       loopController={true}
       onSegmentUpdate={(index, newEnd) => {
-        setSegments(prev =>
-          prev.map(segment => (segment.index === index ? {...segment, end: newEnd } : segment))
+        setSegments((prev) =>
+          prev.map((segment) => (segment.index === index ? {
+            ...segment,
+            end: newEnd
+          } : segment))
         )
       }}
     />
@@ -131,7 +134,6 @@ describe('VideoTimeline', () => {
     })
 
     expect(await screen.findByLabelText(/segment end at 24\.88s/i)).toBeInTheDocument()
-
   })
 
   it('should only allow editing the last loop end tick', () => {
@@ -165,12 +167,18 @@ describe('VideoTimeline', () => {
 
     expect(firstLoopEndTick).not.toHaveAttribute('role', 'button')
     expect(firstLoopEndTick).not.toHaveAttribute('aria-roledescription', 'draggable')
-    expect(firstLoopEndTick).toHaveStyle({ cursor: 'default' })
+    expect(firstLoopEndTick).toHaveStyle({
+      cursor: 'default'
+    })
 
     expect(lastLoopEndTick).toHaveAttribute('role', 'button')
     expect(lastLoopEndTick).toHaveAttribute('aria-roledescription', 'draggable')
     expect(lastLoopEndTick).toHaveStyle({ cursor: 'grab' })
 
-    expect(screen.getAllByRole('button', { name: /segment end at/i })).toHaveLength(1)
+    expect(
+      screen.getAllByRole('button', {
+        name: /segment end at/i
+      })
+    ).toHaveLength(1)
   })
 })

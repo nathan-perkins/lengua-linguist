@@ -6,11 +6,7 @@ interface LoopNameEditPopupProps {
   onCancel: () => void
 }
 
-function LoopNameEditPopup({
-  initialValue,
-  onSave,
-  onCancel
-}: LoopNameEditPopupProps) {
+function LoopNameEditPopup({ initialValue, onSave, onCancel }: LoopNameEditPopupProps) {
   const [value, setValue] = useState(initialValue)
   const inputRef = useRef<HTMLInputElement>(null)
   const popupRef = useRef<HTMLDivElement>(null)
@@ -21,10 +17,7 @@ function LoopNameEditPopup({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(event.target as Node)
-      ) {
+      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
         onCancel()
       }
     }
@@ -52,11 +45,7 @@ function LoopNameEditPopup({
         className="name-edit-input"
       />
       <div className="btn-row">
-        <button
-          type="button"
-          onClick={() => onSave(value)}
-          className="control-btn"
-        >
+        <button type="button" onClick={() => onSave(value)} className="control-btn">
           Save
         </button>
         <button type="button" onClick={onCancel} className="control-btn">

@@ -32,7 +32,9 @@ export default {
       const response = await fetch(upstream)
       const data = await response.json()
 
-      return Response.json(data, { status: response.status })
+      return Response.json(data, {
+        status: response.status
+      })
     } catch (error) {
       console.error('video function failed', error)
       return Response.json({ error: 'Internal server error' }, { status: 500 })

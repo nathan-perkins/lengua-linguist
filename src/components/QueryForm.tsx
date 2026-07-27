@@ -8,11 +8,7 @@ interface QueryFormProps {
   setSearchQuery: Dispatch<SetStateAction<string>>
 }
 
-function QueryForm({
-  handleQuery,
-  searchQuery,
-  setSearchQuery
-}: QueryFormProps) {
+function QueryForm({ handleQuery, searchQuery, setSearchQuery }: QueryFormProps) {
   return (
     <div className="query-form-container">
       <form onSubmit={handleQuery} className="query-form">

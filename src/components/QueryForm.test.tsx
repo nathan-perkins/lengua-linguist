@@ -18,7 +18,7 @@ function MockQueryForm({ handleQuery }: { handleQuery: SubmitEventHandler<HTMLFo
 describe('QueryForm', () => {
   it('should update the input value and submit the form', async () => {
     const user = userEvent.setup()
-    const handleQuery = vi.fn<SubmitEventHandler<HTMLFormElement>>(e => {
+    const handleQuery = vi.fn<SubmitEventHandler<HTMLFormElement>>((e) => {
       e.preventDefault()
     })
 

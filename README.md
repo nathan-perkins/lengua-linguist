@@ -34,3 +34,4 @@ LenguaLinguist helps you improve your accent by shadowing native speakers on You
 
 ```bash
 npm install
+```

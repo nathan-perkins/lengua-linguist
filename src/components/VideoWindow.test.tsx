@@ -20,13 +20,22 @@ vi.mock('react-youtube', () => {
     getIframe: vi.fn(() => document.createElement('iframe')),
     playVideo: vi.fn(() => {
       yt.playerState = 1
-      yt.onStateChangeRef?.({ target: mockPlayer, data: 1 })
+      yt.onStateChangeRef?.({
+        target: mockPlayer,
+        data: 1
+      })
     }),
     pauseVideo: vi.fn(() => {
       yt.playerState = 2
       yt.currentTime += 4
-      yt.onStateChangeRef?.({ target: mockPlayer, data: 2 })
-      yt.onPauseRef?.({ target: mockPlayer, data: 2 })
+      yt.onStateChangeRef?.({
+        target: mockPlayer,
+        data: 2
+      })
+      yt.onPauseRef?.({
+        target: mockPlayer,
+        data: 2
+      })
     })
   }
 
@@ -38,7 +47,10 @@ vi.mock('react-youtube', () => {
     return <div>Mock YouTube Player</div>
   }
 
-  return { __esModule: true, default: MockYouTube }
+  return {
+    __esModule: true,
+    default: MockYouTube
+  }
 })
 
 function renderVideoWindow() {
@@ -66,33 +78,55 @@ describe('VideoWindow', () => {
   it('should toggle loop control title after click', async () => {
     const { user } = renderVideoWindow()
 
-    const loopControlButton = screen.getByRole('button', { name: /enter loop sequence/i })
+    const loopControlButton = screen.getByRole('button', {
+      name: /enter loop sequence/i
+    })
     await user.click(loopControlButton)
 
-    expect(await screen.findByRole('button', { name: /exit loop sequence/i })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', {
+        name: /exit loop sequence/i
+      })
+    ).toBeInTheDocument()
   })
 
   it('should create a pending segment when loop control button is clicked once', async () => {
     const { user } = renderVideoWindow()
 
-    const loopControlButton = screen.getByRole('button', { name: /enter loop sequence/i })
+    const loopControlButton = screen.getByRole('button', {
+      name: /enter loop sequence/i
+    })
     await user.click(loopControlButton)
 
-    expect(screen.getByRole('generic', { name: /pending segment start/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('generic', {
+        name: /pending segment start/i
+      })
+    ).toBeInTheDocument()
   })
 
   it('should finish loop creation after loop control button is clicked and pause button is clicked', async () => {
     const { user } = renderVideoWindow()
 
-    const loopControlButton = screen.getByRole('button', { name: /enter loop sequence/i })
+    const loopControlButton = screen.getByRole('button', {
+      name: /enter loop sequence/i
+    })
     await user.click(loopControlButton)
 
-    expect(screen.getByRole('generic', { name: /pending segment start/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('generic', {
+        name: /pending segment start/i
+      })
+    ).toBeInTheDocument()
 
-    const playButton = screen.getByRole('button', { name: /play video/i })
+    const playButton = screen.getByRole('button', {
+      name: /play video/i
+    })
     await user.click(playButton)
 
-    const pauseButton = screen.getByRole('button', { name: /pause video/i })
+    const pauseButton = screen.getByRole('button', {
+      name: /pause video/i
+    })
     await user.click(pauseButton)
 
     expect(await screen.findByLabelText(/segment start at 10s/i)).toBeInTheDocument()
@@ -102,16 +136,24 @@ describe('VideoWindow', () => {
   it('should create a pending loop when next is clicked on the last active loop', async () => {
     const { user } = renderVideoWindow()
 
-    const loopControlButton = screen.getByRole('button', { name: /enter loop sequence/i })
+    const loopControlButton = screen.getByRole('button', {
+      name: /enter loop sequence/i
+    })
     await user.click(loopControlButton)
 
-    const playButton = screen.getByRole('button', { name: /play video/i })
+    const playButton = screen.getByRole('button', {
+      name: /play video/i
+    })
     await user.click(playButton)
 
-    const pauseButton = screen.getByRole('button', { name: /pause video/i })
+    const pauseButton = screen.getByRole('button', {
+      name: /pause video/i
+    })
     await user.click(pauseButton)
 
-    const nextButton = screen.getByRole('button', { name: /next loop/i })
+    const nextButton = screen.getByRole('button', {
+      name: /next loop/i
+    })
     await user.click(nextButton)
 
     expect(screen.getAllByLabelText(/pending segment start/i).length).toBeGreaterThan(0)
@@ -120,7 +162,11 @@ describe('VideoWindow', () => {
   it('should navigate between existing loops with previous and next buttons', async () => {
     const { user } = renderVideoWindow()
 
-    await user.click(screen.getByRole('button', { name: /enter loop sequence/i }))
+    await user.click(
+      screen.getByRole('button', {
+        name: /enter loop sequence/i
+      })
+    )
 
     // Create loop 1: 10 -> 14
     await user.click(screen.getByRole('button', { name: /play video/i }))
@@ -138,13 +184,21 @@ describe('VideoWindow', () => {
 
     // Confirm loop 2 is now active
     expect(await screen.findByText('Loop 2')).toBeInTheDocument()
-    expect(await screen.findByRole('button', { name: /previous loop/i })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', {
+        name: /previous loop/i
+      })
+    ).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /next loop/i })).toBeInTheDocument()
 
     // Move back to loop 1
     await user.click(screen.getByRole('button', { name: /previous loop/i }))
     expect(await screen.findByText('Loop 1')).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /previous loop/i })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', {
+        name: /previous loop/i
+      })
+    ).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /next loop/i })).toBeInTheDocument()
 
     // Move forward to loop 2 again
@@ -160,10 +214,14 @@ describe('VideoWindow', () => {
     const enterLoopSequenceButton = screen.getByRole('button', { name: /enter loop sequence/i })
     await user.click(enterLoopSequenceButton)
 
-    const playButton = screen.getByRole('button', { name: /play video/i })
+    const playButton = screen.getByRole('button', {
+      name: /play video/i
+    })
     await user.click(playButton)
 
-    const pauseButton = screen.getByRole('button', { name: /pause video/i })
+    const pauseButton = screen.getByRole('button', {
+      name: /pause video/i
+    })
     await user.click(pauseButton)
 
     expect(await screen.findByLabelText(/segment start at 10s/i)).toBeInTheDocument()
@@ -175,6 +233,10 @@ describe('VideoWindow', () => {
     expect(screen.queryByLabelText(/segment start at 10s/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/segment end at 22s/i)).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/pending segment start/i)).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /enter loop sequence/i })).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', {
+        name: /enter loop sequence/i
+      })
+    ).toBeInTheDocument()
   })
 })

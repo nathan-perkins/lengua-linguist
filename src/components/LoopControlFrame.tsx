@@ -34,8 +34,8 @@ function LoopControlFrame({
   activeVideo,
   loopController
 }: LoopControlFrameProps) {
-  const [isEditingName, setIsEditingName] = useState<boolean>(false)
-  const [nameInput, setNameInput] = useState<string>('')
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [nameInput, setNameInput] = useState('')
 
   const activeSegment =
     typeof activeSegmentIndex === 'number' && segments[activeSegmentIndex]
@@ -61,11 +61,7 @@ function LoopControlFrame({
       <div className="loop-name-field">
         {activeSegment && (
           <>
-            <p
-              className="video-loop-name"
-              onClick={handleNameClick}
-              title="Click to edit name"
-            >
+            <p className="video-loop-name" onClick={handleNameClick} title="Click to edit name">
               {activeSegment.name ?? `Loop ${activeSegment.index + 1}`}
             </p>
             {isEditingName && (
@@ -91,14 +87,14 @@ function LoopControlFrame({
           onSegmentUpdate={onSegmentUpdate}
           loopController={loopController}
         />
-        {typeof activeSegmentIndex === 'number' &&
-          segments[activeSegmentIndex] && (
-            <Recorder
-              videoId={activeVideo}
-              startSegment={segments[activeSegmentIndex].start}
-              endSegment={segments[activeSegmentIndex].end}
-            />
-          )}
+        {typeof activeSegmentIndex === 'number' && segments[activeSegmentIndex] && (
+          <Recorder
+            key={`${activeVideo}-${segments[activeSegmentIndex].start}-${segments[activeSegmentIndex].end}`}
+            videoId={activeVideo}
+            startSegment={segments[activeSegmentIndex].start}
+            endSegment={segments[activeSegmentIndex].end}
+          />
+        )}
       </div>
     </div>
   )

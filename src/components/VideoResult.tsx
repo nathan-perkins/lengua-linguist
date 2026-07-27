@@ -17,11 +17,7 @@ function VideoResult({ option, onSelect }: VideoResultProps) {
   }, [])
 
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(option)}
-      className="video-option-btn"
-    >
+    <button type="button" onClick={() => onSelect(option)} className="video-option-btn">
       <img
         src={option.snippet.thumbnails.medium.url}
         alt={option.snippet.title}
@@ -38,4 +34,4 @@ function VideoResult({ option, onSelect }: VideoResultProps) {
   )
 }
 
-export default VideoResult 
+export default VideoResult
