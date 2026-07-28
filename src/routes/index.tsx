@@ -1,6 +1,10 @@
-import { Link } from 'react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 
-function Home() {
+export const Route = createFileRoute('/')({
+  component: Index
+})
+
+function Index() {
   return (
     <div className="container home-container">
       <h1 className="home-heading">
@@ -18,5 +22,3 @@ function Home() {
     </div>
   )
 }
-
-export default Home
