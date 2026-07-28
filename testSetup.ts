@@ -1,15 +1,15 @@
-import {
-  expect, beforeAll, afterEach, afterAll
-} from 'vitest'
-import { cleanup } from '@testing-library/react'
-import * as matchers from '@testing-library/jest-dom/matchers'
-import { server } from './src/mocks/node'
+// import {
+//   expect, beforeAll, afterEach, afterAll
+// } from 'vitest'
+// import { cleanup } from '@testing-library/react'
+// import * as matchers from '@testing-library/jest-dom/matchers'
+// import { server } from './src/mocks/node'
 
-expect.extend(matchers)
+// expect.extend(matchers)
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
-afterEach(() => {
-  server.resetHandlers()
-  cleanup()
-})
-afterAll(() => server.close())
+// beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
+// afterEach(() => {
+//   server.resetHandlers()
+//   cleanup()
+// })
+// afterAll(() => server.close())
