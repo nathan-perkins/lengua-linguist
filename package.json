@@ -43,8 +43,8 @@
     "msw": "^2.15.0",
     "typescript": "~6.0.3",
     "vite": "catalog:",
-    "vitest": "catalog:",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   },
   "devEngines": {
     "packageManager": {

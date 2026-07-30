@@ -1,7 +1,3 @@
 export default function App() {
-  return (
-    <div>
-      workspace
-    </div>
-  )
+  return <div>workspace</div>
 }
