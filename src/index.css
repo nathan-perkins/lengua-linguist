@@ -9,7 +9,7 @@
   --text: #2e2e2e;
   --text-muted: #595959;
   --border: #dddddd;
-  --accent: #4285f4;
+  --accent: #74a2ed;
   --shadow-soft: 0 12px 35px rgba(46, 46, 46, 0.08);
   --shadow-card: 0 18px 40px rgba(46, 46, 46, 0.1);
   --radius-lg: 18px;
@@ -25,7 +25,7 @@
     --text: #fcfcfc;
     --text-muted: #d8d8d8;
     --border: #505050;
-    --accent: #4285f4;
+    --accent: #74a2ed;
     --shadow-soft: 0 14px 36px rgba(0, 0, 0, 0.35);
     --shadow-card: 0 20px 48px rgba(0, 0, 0, 0.42);
   }
