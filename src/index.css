@@ -4,7 +4,7 @@
 
 :root {
   --bg: #fcfcfc;
-  --bg-elevated: #ffffff;
+  --bg-elevated: #fefefe;
   --bg-muted: #f3f3f3;
   --text: #2e2e2e;
   --text-muted: #595959;
@@ -14,7 +14,7 @@
   --shadow-card: 0 18px 40px rgba(46, 46, 46, 0.1);
   --radius-lg: 18px;
   --radius-md: 12px;
-  --max-width: 1080px;
+  --max-width: 74rem;
 }
 
 @media (prefers-color-scheme: dark) {
