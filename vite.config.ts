@@ -160,7 +160,8 @@ export default defineConfig({
       {
         files: ['src/routes/**/*.tsx'],
         rules: {
-          'react/only-export-components': 'off'
+          'react/only-export-components': 'off',
+          'typescript/only-throw-error': 'off'
         }
       }
     ],
