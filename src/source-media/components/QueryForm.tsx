@@ -1,30 +1,44 @@
 import React, { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import type { YouTubeSearchResponse, VideoOption } from '../types'
-import { fetchVideos } from '../services/fetchVideos'
+import { useQuery, queryOptions } from '@tanstack/react-query'
+import type { VideoOption } from '../types'
+import { videosQueryById, videosQueryByQuery } from '../queries'
 import { validateLink } from '../utils/validateLink'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import '../css/QueryForm.css'
 
 type QueryFormProps = {
-  setVideoOptions: React.Dispatch<React.SetStateAction<YouTubeSearchResponse['items']>>
+  setVideoOptions: React.Dispatch<React.SetStateAction<VideoOption[]>>
   setActiveVideo: React.Dispatch<React.SetStateAction<string | null>>
 }
 
-export default function QueryForm({ setVideoOptions, setActiveVideo }: QueryFormProps) {
+export default function QueryForm({
+  // setVideoOptions,
+  setActiveVideo
+}: QueryFormProps) {
   const [searchQuery, setSearchQuery] = useState('')
+  const [activeQuery, setActiveQuery] = useState('')
+  const [activeIdQuery, setActiveIdQuery] = useState('')
 
-  const fetchVideosMutation = useMutation({
-    mutationFn: fetchVideos
-  })
+  const videoQueryOptions = activeIdQuery
+    ? videosQueryById(activeIdQuery)
+    : activeQuery
+      ? videosQueryByQuery(activeQuery)
+      : queryOptions({
+          queryKey: ['youtube-search', 'idle'],
+          queryFn: async (): Promise<VideoOption[]> => [],
+          enabled: false
+        })
 
-  const handleQuery = async (e: React.SubmitEvent<HTMLFormElement>): Promise<void> => {
+  const { data: videos = [], isError } = useQuery(videoQueryOptions)
+
+  const handleQuery = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setVideoOptions([])
+
+    const input = searchQuery.trim()
+    if (!input) return
+
     setActiveVideo(null)
-    // setPreviousQuery(searchQuery)
-    // setIsNoResults(false)
 
     const { isValid, isEmbed } = validateLink(searchQuery)
 
@@ -36,49 +50,20 @@ export default function QueryForm({ setVideoOptions, setActiveVideo }: QueryForm
           )?.[1] ?? null)
 
       if (videoId) {
-        const response = await fetchVideosMutation.mutateAsync({ videoId })
-
-        if (!response) return
-
-        const data = (await response.json()) as YouTubeSearchResponse
-        if (data.items && data.items.length > 0) {
-          const video = data.items[0]
-          const videoOption: VideoOption = {
-            ...video,
-            id: {
-              videoId: typeof video.id === 'string' ? video.id : video.id.videoId
-            }
-          }
-          localStorage.setItem('PREVIOUS_VIDEO', JSON.stringify(videoOption))
-        }
+        setActiveQuery('')
+        setActiveIdQuery(videoId)
         setActiveVideo(videoId)
-        setVideoOptions([])
         setSearchQuery('')
         return
       }
     }
 
-    const response = await fetchVideosMutation.mutateAsync({
-      searchQuery
-    })
-    if (response) {
-      const data = (await response.json()) as YouTubeSearchResponse
-
-      if (!response.ok) {
-        console.error('search failed', data)
-        setVideoOptions([])
-        // setIsNoResults(false)
-        return
-      }
-
-      const items = Array.isArray(data.items) ? data.items : []
-      setVideoOptions(items)
-
-      // if (items.length === 0) setIsNoResults(true)
-    }
-
+    setActiveIdQuery('')
+    setActiveQuery(input)
     setSearchQuery('')
   }
+
+  if (isError) return
 
   return (
     <form onSubmit={(e) => void handleQuery(e)} className="query-form">
@@ -97,6 +82,12 @@ export default function QueryForm({ setVideoOptions, setActiveVideo }: QueryForm
           </button>
         </div>
       </label>
+
+      <ul>
+        {videos.map((video) => (
+          <li key={video.id.videoId}>{video.snippet.title}</li>
+        ))}
+      </ul>
     </form>
   )
 }

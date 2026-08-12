@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import type { YouTubeSearchResponse } from '../types'
+import type { VideoOption } from '../types'
 import QueryForm from '../components/QueryForm'
 import '../css/SourceMedia.css'
 
 export default function SourceMedia() {
-  const [, setVideoOptions] = useState<YouTubeSearchResponse['items']>([])
+  const [, setVideoOptions] = useState<VideoOption[]>([])
   const [, setActiveVideo] = useState<string | null>(null)
 
   return (
