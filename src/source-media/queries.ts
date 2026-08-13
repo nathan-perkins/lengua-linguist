@@ -1,19 +1,15 @@
 import { queryOptions } from '@tanstack/react-query'
+import type { VideoOption, VideoQueryMode } from './types'
 import { fetchVideosByQuery } from './services/fetchVideosByQuery'
 import { fetchVideosById } from './services/fetchVideosById'
 
-export const videosQueryById = (activeIdQuery: string) =>
+export const createVideoQueryOptions = (query: string, mode: VideoQueryMode) =>
   queryOptions({
-    queryKey: ['youtube-search', activeIdQuery],
-    queryFn: () => fetchVideosById(activeIdQuery),
-    enabled: !!activeIdQuery,
-    staleTime: Infinity
-  })
-
-export const videosQueryByQuery = (activeQuery: string) =>
-  queryOptions({
-    queryKey: ['youtube-search', activeQuery],
-    queryFn: () => fetchVideosByQuery(activeQuery),
-    enabled: !!activeQuery,
-    staleTime: Infinity
+    queryKey: ['youtube-search', query],
+    enabled: mode !== 'idle',
+    queryFn: async (): Promise<VideoOption[]> => {
+      if (mode === 'id') return fetchVideosById(query)
+      if (mode === 'query') return fetchVideosByQuery(query)
+      return []
+    }
   })

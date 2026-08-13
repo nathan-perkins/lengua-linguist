@@ -13,3 +13,5 @@ export type VideoOption = {
     description: string
   }
 }
+
+export type VideoQueryMode = 'idle' | 'id' | 'query'

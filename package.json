@@ -3,10 +3,11 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "packageManager": "pnpm@11.18.0",
   "license": "UNLICENSE",
   "scripts": {
-    "dev:vite": "vp dev",
-    "dev:api": "vercel dev --listen 3000",
+    "dev:vite": "vp dev --port 5173",
+    "dev:api": "COREPACK_ENABLE_STRICT=0 ENABLE_EXPERIMENTAL_COREPACK=1 vercel dev --listen 3000 --yes",
     "dev": "concurrently -n vite,api -c blue,green \"pnpm:dev:vite\" \"pnpm:dev:api\"",
     "build": "tsc -b && vp build",
     "test": "vp test",
@@ -45,12 +46,5 @@
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
-  },
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "11.18.0",
-      "onFail": "download"
-    }
   }
 }
