@@ -7,7 +7,6 @@
   "license": "UNLICENSE",
   "scripts": {
     "dev": "vp dev",
-    "vercel-dev": "vercel dev --listen 3000",
     "build": "vp build",
     "test": "vp test",
     "lint": "vp lint .",
@@ -43,6 +42,7 @@
     "msw": "^2.15.0",
     "typescript": "~6.0.3",
     "vite": "catalog:",
+    "vite-plugin-vercel": "^11.1.1",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
   }

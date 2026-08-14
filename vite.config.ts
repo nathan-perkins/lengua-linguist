@@ -1,5 +1,6 @@
 import { defineConfig, lazyPlugins } from 'vite-plus'
 import react from '@vitejs/plugin-react'
+import vercel from 'vite-plugin-vercel/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 
 // https://vite.dev/config/
@@ -190,13 +191,11 @@ export default defineConfig({
       target: 'react',
       autoCodeSplitting: true
     }),
+    vercel(),
     react()
   ]),
   server: {
-    port: 5173,
-    proxy: {
-      '/api': 'http://localhost:3000'
-    }
+    port: 5173
   },
   test: {
     globals: true,
