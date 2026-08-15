@@ -1,7 +1,13 @@
 import { defineConfig, lazyPlugins } from 'vite-plus'
+import { loadEnv } from 'vite-plus'
 import react from '@vitejs/plugin-react'
 import vercel from 'vite-plugin-vercel/vite'
+import { getVercelEntries } from 'vite-plugin-vercel'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
+
+const entries = await getVercelEntries('src/api', { destination: 'api' })
+
+Object.assign(process.env, loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), ''))
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -191,7 +197,7 @@ export default defineConfig({
       target: 'react',
       autoCodeSplitting: true
     }),
-    vercel(),
+    vercel({ entries }),
     react()
   ]),
   server: {
