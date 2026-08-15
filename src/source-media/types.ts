@@ -1,5 +1,6 @@
 export type VideoOption = {
-  id: { videoId: string }
+  kind: string
+  id: { kind: string; videoId: string }
   snippet: {
     title: string
     thumbnails: {
