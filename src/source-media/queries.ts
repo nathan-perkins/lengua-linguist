@@ -11,5 +11,6 @@ export const createVideoQueryOptions = (query: string, mode: VideoQueryMode) =>
       if (mode === 'id') return fetchVideosById(query)
       if (mode === 'query') return fetchVideosByQuery(query)
       return []
-    }
+    },
+    staleTime: Infinity
   })
