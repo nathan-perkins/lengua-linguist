@@ -63,6 +63,10 @@ export const handlers = [
     const url = new URL(request.url)
     const idQuery = url.searchParams.get('id')
 
+    if (!idQuery) {
+      return HttpResponse.json({ error: 'Missing query param id' }, { status: 400 })
+    }
+
     const items = mockVideos
       .filter((video) => video.id === idQuery)
       .map((video) => toVideoOption(video, 'youtube#video'))

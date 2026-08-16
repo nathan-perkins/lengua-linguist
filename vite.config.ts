@@ -165,6 +165,12 @@ export default defineConfig({
         }
       },
       {
+        files: ['**/*.{test,spec}.{ts,tsx}'],
+        env: {
+          vitest: true
+        }
+      },
+      {
         files: ['src/routes/**/*.tsx'],
         rules: {
           'react/only-export-components': 'off',
