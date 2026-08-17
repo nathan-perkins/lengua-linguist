@@ -1,8 +1,8 @@
-import { fetchVideosById } from './fetchVideosById'
+import { fetchVideosByIds } from './fetchVideosByIds'
 
 describe('fetchVideosByQuery', () => {
   it('should call the internal videos endpoint when videoId is provided', async () => {
-    const videoResponse = await fetchVideosById('pG0zn5Hvse8')
+    const videoResponse = await fetchVideosByIds(['pG0zn5Hvse8'])
 
     expect(videoResponse).toBeDefined()
     expect(Array.isArray(videoResponse)).toBe(true)
@@ -10,10 +10,10 @@ describe('fetchVideosByQuery', () => {
   })
 
   it('should return an error when no videoId is provided', async () => {
-    await expect(fetchVideosById('')).rejects.toThrow('Failed to fetch videos')
+    await expect(fetchVideosByIds([''])).rejects.toThrow('Failed to fetch videos')
   })
 
   it('should return an empty array when videoId is not found', async () => {
-    await expect(fetchVideosById('unkown-id')).resolves.toEqual([])
+    await expect(fetchVideosByIds(['unkown-id'])).resolves.toEqual([])
   })
 })

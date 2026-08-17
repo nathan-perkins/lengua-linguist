@@ -1,8 +1,8 @@
-import type { VideoOption } from '../types'
+import type { SearchResponse } from '../types'
 import '../css/VideoOption.css'
 
 type VideoOptionProps = {
-  video: VideoOption
+  video: SearchResponse
   lastViewed: boolean
 }
 
@@ -21,7 +21,7 @@ export default function VideoOption({ video, lastViewed }: VideoOptionProps) {
 }
 
 type BaseOptionProps = {
-  video: VideoOption
+  video: SearchResponse
 }
 
 function BaseOption({ video }: BaseOptionProps) {
