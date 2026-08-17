@@ -1,0 +1,18 @@
+.video-option-container {
+  background: var(--bg-elevated);
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+
+  img {
+    max-width: 16rem;
+  }
+}
+
+.info {
+  h3 {
+    margin-bottom: 0.5rem;
+  }
+}
