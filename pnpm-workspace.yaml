@@ -1,4 +1,6 @@
 allowBuilds:
+  core-js: set this to true or false
+  jsonpath: set this to true or false
   msw: true
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.6

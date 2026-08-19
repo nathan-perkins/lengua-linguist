@@ -1,7 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
 import type { SearchResponse, VideoResponse, QueryStatus } from './types'
-import { fetchVideosByQuery } from './services/fetchVideosByQuery'
-import { fetchVideosByIds } from './services/fetchVideosByIds'
+import { fetchVideosByQuery, fetchVideosByIds } from './services/videoService'
 
 export const createSearchQueryOptions = (query: string, status: QueryStatus) =>
   queryOptions({
