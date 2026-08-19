@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useSearchQuery } from '../hooks/useSearchQuery'
+import { useSearch } from '../hooks/useSearch'
 import QueryForm from '../components/QueryForm'
 import VideoOption from '../components/VideoOption'
 import '../css/SourceMedia.css'
 
 export default function SourceMedia() {
   const [submittedQuery, setSubmittedQuery] = useState('')
-  const { videos, isError, error } = useSearchQuery(submittedQuery)
+  const { videos, isError, error } = useSearch(submittedQuery)
 
   if (isError) throw new Error(String(error))
 
