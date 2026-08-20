@@ -1,8 +1,8 @@
-import { fetchVideosByQuery, fetchVideosByIds } from './videoService'
+import { youtubeService, fetchVideosByIds } from './youtubeService'
 
 describe('fetchVideosByQuery', () => {
   it('should call the internal search endpoint when searchQuery is provided', async () => {
-    const videos = await fetchVideosByQuery('kriiispy')
+    const videos = await youtubeService.search('kriiispy')
 
     expect(videos).toBeDefined()
     expect(Array.isArray(videos)).toBe(true)
@@ -10,7 +10,7 @@ describe('fetchVideosByQuery', () => {
   })
 
   it('should return empty array when searchQuery is empty', async () => {
-    await expect(fetchVideosByQuery('')).rejects.toThrow('Failed to fetch videos')
+    await expect(youtubeService.search('')).rejects.toThrow('Failed to fetch videos')
   })
 })
 

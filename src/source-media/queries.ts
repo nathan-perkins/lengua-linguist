@@ -1,12 +1,13 @@
 import { queryOptions } from '@tanstack/react-query'
-import type { SearchResponse, VideoResponse, QueryStatus } from './types'
-import { fetchVideosByQuery, fetchVideosByIds } from './services/videoService'
+import type { VideoResponse, QueryStatus } from './types'
+import { fetchVideosByIds, youtubeService } from './services/youtubeService'
+import type { YouTubeSearchResult } from './schemas'
 
 export const createSearchQueryOptions = (query: string, status: QueryStatus) =>
   queryOptions({
     queryKey: ['search-list', query],
     enabled: status === 'active',
-    queryFn: async (): Promise<SearchResponse[]> => fetchVideosByQuery(query),
+    queryFn: async (): Promise<YouTubeSearchResult[]> => youtubeService.search(query),
     staleTime: Infinity
   })
 

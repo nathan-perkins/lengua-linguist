@@ -1,16 +1,13 @@
-import type { SearchResponse, VideoResponse } from '../types'
+import { YouTubeSearchListResponseSchema, type YouTubeSearchResult } from '../schemas'
+import type { VideoResponse } from '../types'
 
-export async function fetchVideosByQuery(searchQuery: string): Promise<SearchResponse[]> {
-  try {
-    const response = await fetch(`/api/youtube/search?q=${encodeURIComponent(searchQuery)}`)
-
+export const youtubeService = {
+  search: async (query: string): Promise<YouTubeSearchResult[]> => {
+    const response = await fetch(`/api/youtube/search?q=${encodeURIComponent(query)}`)
     if (!response.ok) throw new Error('Failed to fetch videos')
 
-    const data = (await response.json()) as { items: SearchResponse[] }
+    const data = YouTubeSearchListResponseSchema.parse(await response.json())
     return data.items
-  } catch (error) {
-    console.error(error)
-    throw error
   }
 }
 

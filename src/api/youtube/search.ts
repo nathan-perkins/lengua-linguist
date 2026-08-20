@@ -6,7 +6,8 @@ const handler = createEndpoint(SearchParamsSchema, async (_, query) => {
   const rawData = await youtubeFetch<any>('/search', {
     q: query.q,
     part: 'snippet',
-    type: 'video'
+    type: 'video',
+    maxResults: '10'
   })
 
   const payload = YouTubeSearchListResponseSchema.parse(rawData)
