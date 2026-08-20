@@ -1,44 +1,21 @@
+import { createEndpoint } from '../../shared/api/serverHandler'
+import { SearchParamsSchema, YouTubeSearchListResponseSchema } from '../../source-media/schemas'
+import { youtubeFetch } from './_lib/youtubeClient'
+
+const handler = createEndpoint(SearchParamsSchema, async (_, query) => {
+  const rawData = await youtubeFetch<any>('/search', {
+    q: query.q,
+    part: 'snippet',
+    type: 'video'
+  })
+
+  const payload = YouTubeSearchListResponseSchema.parse(rawData)
+
+  return Response.json(payload)
+})
+
 export default {
-  async fetch(request: Request) {
-    try {
-      const apiUrl = process.env.YOUTUBE_DATA_API_URL
-      const apiKey = process.env.YOUTUBE_DATA_API_KEY
-
-      if (!apiUrl) {
-        console.error('Missing env var: YOUTUBE_DATA_API_URL')
-        return Response.json({ error: 'Server config error' }, { status: 500 })
-      }
-
-      if (!apiKey) {
-        console.error('Missing env var: YOUTUBE_DATA_API_KEY')
-        return Response.json({ error: 'Server config error' }, { status: 500 })
-      }
-
-      const { searchParams } = new URL(request.url)
-      const searchQuery = searchParams.get('q')?.trim()
-
-      if (!searchQuery) {
-        console.error('Missing query param: q')
-        return Response.json({ error: 'Malformatted request' }, { status: 400 })
-      }
-
-      const upstream = new URL('search', apiUrl)
-      upstream.searchParams.set('key', apiKey)
-      upstream.searchParams.set('type', 'video')
-      upstream.searchParams.set('part', 'snippet')
-      upstream.searchParams.set('q', searchQuery)
-      upstream.searchParams.set('maxResults', '10')
-      console.log(upstream)
-
-      const response = await fetch(upstream)
-      const data = await response.json()
-      console.log(data)
-      return Response.json(data, {
-        status: response.status
-      })
-    } catch (error) {
-      console.error('search function failed', error)
-      return Response.json({ error: 'Internal server error' }, { status: 500 })
-    }
+  async fetch(request: Request): Promise<Response> {
+    return handler(request)
   }
 }
