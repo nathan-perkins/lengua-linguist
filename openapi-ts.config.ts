@@ -6,14 +6,21 @@ export default defineConfig({
   parser: {
     filters: {
       operations: {
-        include: ['/youtube/v3/search']
-      }
+        include: ['GET /youtube/v3/search']
+      },
+      orphans: true
     }
   },
   plugins: [
     {
       name: '@hey-api/client-fetch',
       runtimeConfigPath: './src/hey-api.ts'
+    },
+    {
+      name: '@hey-api/sdk',
+      operations: {
+        strategy: 'flat'
+      }
     }
   ]
 })
