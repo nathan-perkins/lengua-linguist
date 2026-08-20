@@ -25,5 +25,5 @@
     "noUncheckedSideEffectImports": true
   },
   "include": ["src", "testSetup.ts"],
-  "exclude": ["src/api", "src/client"]
+  "exclude": ["src/api"]
 }

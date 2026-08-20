@@ -26,13 +26,7 @@ export default defineConfig({
     env: {
       builtin: true
     },
-    ignorePatterns: [
-      'dist',
-      'eslint.config.js',
-      'vite.config.ts',
-      '**/routeTree.gen.ts',
-      'src/client/**'
-    ],
+    ignorePatterns: ['dist', 'eslint.config.js', 'vite.config.ts', '**/routeTree.gen.ts'],
     overrides: [
       {
         files: ['**/*.{ts,tsx}'],
@@ -202,7 +196,7 @@ export default defineConfig({
     endOfLine: 'lf',
     printWidth: 100,
     sortPackageJson: false,
-    ignorePatterns: ['**/routeTree.gen.ts', 'src/client/**']
+    ignorePatterns: ['**/routeTree.gen.ts']
   },
   plugins: lazyPlugins(() => [
     tanstackRouter({

@@ -2,9 +2,7 @@ import type { SearchResponse, VideoResponse } from '../types'
 
 export async function fetchVideosByQuery(searchQuery: string): Promise<SearchResponse[]> {
   try {
-    const response = await fetch(
-      `/api/youtube/endpoints/search?q=${encodeURIComponent(searchQuery)}`
-    )
+    const response = await fetch(`/api/youtube/search?q=${encodeURIComponent(searchQuery)}`)
 
     if (!response.ok) throw new Error('Failed to fetch videos')
 
@@ -19,7 +17,7 @@ export async function fetchVideosByQuery(searchQuery: string): Promise<SearchRes
 export async function fetchVideosByIds(videoIdList: string[]): Promise<VideoResponse[]> {
   try {
     const videoIds = videoIdList.join()
-    const response = await fetch(`/api/youtube/endpoints/videos?id=${encodeURIComponent(videoIds)}`)
+    const response = await fetch(`/api/youtube/videos?id=${encodeURIComponent(videoIds)}`)
 
     if (!response.ok) throw new Error('Failed to fetch videos')
 
