@@ -7,16 +7,16 @@ export function useSearch(rawQuery: string) {
   const status: QueryStatus = input ? 'active' : 'idle'
 
   const {
-    data: videos = [],
+    data: searchResults = [],
     isPending,
     isError,
     error
   } = useQuery(createSearchQueryOptions(input, status))
 
   return {
-    videos,
-    isPending,
-    isError,
-    error
+    searchResults,
+    isSearchPending: isPending,
+    isSearchError: isError,
+    searchError: error
   }
 }

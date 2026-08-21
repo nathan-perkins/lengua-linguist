@@ -1,26 +1,40 @@
 import { useState } from 'react'
 import { useSearch } from '../hooks/useSearch'
+import { useVideo } from '../hooks/useVideo'
 import QueryForm from '../components/QueryForm'
-import VideoOption from '../components/VideoOption'
+import YouTubeSearchResultBox from '../components/YouTubeSearchResultBox'
 import '../css/SourceMedia.css'
 
 export default function SourceMedia() {
   const [submittedQuery, setSubmittedQuery] = useState('')
-  const { videos, isError, error } = useSearch(submittedQuery)
+  const [selectedVideoId, setSelectedVideoId] = useState('')
+  const { searchResults, isSearchError, searchError } = useSearch(submittedQuery)
+  const { videos, isVideoError, videoError } = useVideo(selectedVideoId)
 
-  if (isError) throw new Error(String(error))
+  if (isSearchError) throw new Error(String(searchError))
+  if (isVideoError) throw new Error(String(videoError))
 
-  console.log(videos)
+  console.log('search results:', searchResults)
+  console.log('videos:', videos)
 
   return (
     <div className="source-media">
       <QueryForm setSubmittedQuery={setSubmittedQuery} />
-      <div className="video-results-container">
-        <p>Results for "{submittedQuery}"</p>
-        {videos &&
-          videos.length > 0 &&
-          videos.map((video) => (
-            <VideoOption key={video.id.videoId} video={video} lastViewed={!!submittedQuery} />
+      <div className="search-results-container">
+        <p>
+          {videos.length > 0
+            ? `${videos[0].id} - ${videos[0].snippet.defaultLanguage}`
+            : `Results for "${submittedQuery}"`}
+        </p>
+        {searchResults &&
+          searchResults.length > 0 &&
+          searchResults.map((result) => (
+            <YouTubeSearchResultBox
+              key={result.id.videoId}
+              result={result}
+              lastViewed={!submittedQuery}
+              setSelectedVideoId={setSelectedVideoId}
+            />
           ))}
       </div>
     </div>
