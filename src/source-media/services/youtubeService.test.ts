@@ -1,4 +1,4 @@
-import { youtubeService, fetchVideosByIds } from './youtubeService'
+import { youtubeService } from './youtubeService'
 
 describe('fetchVideosByQuery', () => {
   it('should call the internal search endpoint when searchQuery is provided', async () => {
@@ -16,7 +16,7 @@ describe('fetchVideosByQuery', () => {
 
 describe('fetchVideosByQuery', () => {
   it('should call the internal videos endpoint when videoId is provided', async () => {
-    const videoResponse = await fetchVideosByIds(['pG0zn5Hvse8'])
+    const videoResponse = await youtubeService.videos('pG0zn5Hvse8')
 
     expect(videoResponse).toBeDefined()
     expect(Array.isArray(videoResponse)).toBe(true)
@@ -24,10 +24,10 @@ describe('fetchVideosByQuery', () => {
   })
 
   it('should return an error when no videoId is provided', async () => {
-    await expect(fetchVideosByIds([''])).rejects.toThrow('Failed to fetch videos')
+    await expect(youtubeService.videos('')).rejects.toThrow('Failed to fetch video')
   })
 
   it('should return an empty array when videoId is not found', async () => {
-    await expect(fetchVideosByIds(['unkown-id'])).resolves.toEqual([])
+    await expect(youtubeService.videos('unkown-id')).resolves.toEqual([])
   })
 })

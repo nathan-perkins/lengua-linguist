@@ -1,26 +1,27 @@
 import { http, HttpResponse } from 'msw'
-import type { VideoOption } from '../source-media/types'
-
+import type { YouTubeSearchResult, YouTubeVideo } from '../source-media/schemas'
 const mockVideos = [
   {
     kind: 'youtube#video',
     id: 'pG0zn5Hvse8',
     title: 'Nu Disciples',
     description: 'First video for kriiispy search',
-    channelTitle: 'KRIIISPY !'
+    channelTitle: 'KRIIISPY !',
+    defaultLanguage: 'en'
   },
   {
     kind: 'youtube#video',
     id: 'JmgBtUM5opI',
     title: 'GODS TIMING',
     description: 'Second video for kriiispy search',
-    channelTitle: 'KRIIISPY !'
+    channelTitle: 'KRIIISPY !',
+    defaultLanguage: 'en'
   }
 ]
 
-function toVideoOption(video: (typeof mockVideos)[number], kind: string) {
+function toSearchResult(video: (typeof mockVideos)[number]) {
   return {
-    kind,
+    kind: 'youtube#searchResult',
     id: { kind: video.kind, videoId: video.id },
     snippet: {
       title: video.title,
@@ -34,7 +35,27 @@ function toVideoOption(video: (typeof mockVideos)[number], kind: string) {
         }
       }
     }
-  } satisfies VideoOption
+  } satisfies YouTubeSearchResult | YouTubeVideo
+}
+
+function toVideo(video: (typeof mockVideos)[number]) {
+  return {
+    kind: 'youtube#video',
+    id: video.id,
+    snippet: {
+      title: video.title,
+      description: video.description,
+      channelTitle: video.channelTitle,
+      thumbnails: {
+        medium: {
+          url: `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`,
+          width: 320,
+          height: 180
+        }
+      },
+      defaultLanguage: video.defaultLanguage
+    }
+  } satisfies YouTubeVideo
 }
 
 export const handlers = [
@@ -48,7 +69,7 @@ export const handlers = [
 
     const items =
       searchQuery.toLowerCase() === 'kriiispy'
-        ? mockVideos.map((video) => toVideoOption(video, 'youtube#searchResult'))
+        ? mockVideos.map((video) => toSearchResult(video))
         : []
 
     return HttpResponse.json({
@@ -67,9 +88,7 @@ export const handlers = [
       return HttpResponse.json({ error: 'Missing query param id' }, { status: 400 })
     }
 
-    const items = mockVideos
-      .filter((video) => video.id === idQuery)
-      .map((video) => toVideoOption(video, 'youtube#video'))
+    const items = mockVideos.filter((video) => video.id === idQuery).map((video) => toVideo(video))
 
     return HttpResponse.json({
       kind: 'youtube#videoListResponse',
