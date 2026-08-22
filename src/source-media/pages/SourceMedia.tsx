@@ -21,16 +21,12 @@ export default function SourceMedia() {
     <div className="source-media">
       <QueryForm setSubmittedQuery={setSubmittedQuery} />
       <div className="search-results-container">
-        <p>
-          {videos.length > 0
-            ? `${videos[0].id} - ${videos[0].snippet.defaultLanguage}`
-            : `Results for "${submittedQuery}"`}
-        </p>
+        <p>{videos.length > 0 ? `${videos[0].id}` : `Results for "${submittedQuery}"`}</p>
         {searchResults &&
           searchResults.length > 0 &&
           searchResults.map((result) => (
             <YouTubeSearchResultBox
-              key={result.id.videoId}
+              key={result.id}
               result={result}
               lastViewed={!submittedQuery}
               setSelectedVideoId={setSelectedVideoId}

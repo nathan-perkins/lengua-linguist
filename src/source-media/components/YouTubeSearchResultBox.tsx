@@ -1,8 +1,8 @@
-import type { YouTubeSearchResult } from '../schemas'
+import type { YouTubeVideo } from '../schemas'
 import '../css/YouTubeSearchResultBox.css'
 
 type VideoOptionProps = {
-  result: YouTubeSearchResult
+  result: YouTubeVideo
   lastViewed: boolean
   setSelectedVideoId: React.Dispatch<React.SetStateAction<string>>
 }
@@ -17,7 +17,7 @@ export default function YouTubeSearchResultBox({
   ) : (
     <button
       type="button"
-      onClick={() => setSelectedVideoId(result.id.videoId)}
+      onClick={() => setSelectedVideoId(result.id)}
       className="youtube-search-result-btn"
     >
       <BaseResultBox result={result} />
@@ -26,7 +26,7 @@ export default function YouTubeSearchResultBox({
 }
 
 type BaseResultProps = {
-  result: YouTubeSearchResult
+  result: YouTubeVideo
 }
 
 function BaseResultBox({ result }: BaseResultProps) {
