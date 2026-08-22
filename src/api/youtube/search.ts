@@ -4,7 +4,7 @@ import {
   YouTubeSearchListResponseSchema,
   YouTubeVideoListResponseSchema
 } from '../../source-media/schemas'
-import { youtubeFetch } from './_lib/youtubeClient'
+import { youtubeFetch } from './_lib/_youtubeClient'
 
 const handler = createEndpoint(SearchParamsSchema, async (_, query) => {
   const rawSearchData = await youtubeFetch<any>('/search', {
