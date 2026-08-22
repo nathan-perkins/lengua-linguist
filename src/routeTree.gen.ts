@@ -13,6 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppMediaRouteImport } from './routes/app/media'
+import { Route as AppWorkspaceRouteImport } from './routes/app/workspace'
+import { Route as AppWorkspaceIndexRouteImport } from './routes/app/workspace/index'
+import { Route as AppWorkspaceVideoIdRouteImport } from './routes/app/workspace/$videoId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,31 +37,69 @@ const AppMediaRoute = AppMediaRouteImport.update({
   path: '/media',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWorkspaceRoute = AppWorkspaceRouteImport.update({
+  id: '/workspace',
+  path: '/workspace',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWorkspaceIndexRoute = AppWorkspaceIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppWorkspaceRoute,
+} as any)
+const AppWorkspaceVideoIdRoute = AppWorkspaceVideoIdRouteImport.update({
+  id: '/$videoId',
+  path: '/$videoId',
+  getParentRoute: () => AppWorkspaceRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/media': typeof AppMediaRoute
+  '/app/workspace': typeof AppWorkspaceRouteWithChildren
   '/app/': typeof AppIndexRoute
+  '/app/workspace/$videoId': typeof AppWorkspaceVideoIdRoute
+  '/app/workspace/': typeof AppWorkspaceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app/media': typeof AppMediaRoute
   '/app': typeof AppIndexRoute
+  '/app/workspace/$videoId': typeof AppWorkspaceVideoIdRoute
+  '/app/workspace': typeof AppWorkspaceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/media': typeof AppMediaRoute
+  '/app/workspace': typeof AppWorkspaceRouteWithChildren
   '/app/': typeof AppIndexRoute
+  '/app/workspace/$videoId': typeof AppWorkspaceVideoIdRoute
+  '/app/workspace/': typeof AppWorkspaceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/app/media' | '/app/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/media'
+    | '/app/workspace'
+    | '/app/'
+    | '/app/workspace/$videoId'
+    | '/app/workspace/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app/media' | '/app'
-  id: '__root__' | '/' | '/app' | '/app/media' | '/app/'
+  to: '/' | '/app/media' | '/app' | '/app/workspace/$videoId' | '/app/workspace'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/app/media'
+    | '/app/workspace'
+    | '/app/'
+    | '/app/workspace/$videoId'
+    | '/app/workspace/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -96,16 +137,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMediaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/workspace': {
+      id: '/app/workspace'
+      path: '/workspace'
+      fullPath: '/app/workspace'
+      preLoaderRoute: typeof AppWorkspaceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/workspace/': {
+      id: '/app/workspace/'
+      path: '/'
+      fullPath: '/app/workspace/'
+      preLoaderRoute: typeof AppWorkspaceIndexRouteImport
+      parentRoute: typeof AppWorkspaceRoute
+    }
+    '/app/workspace/$videoId': {
+      id: '/app/workspace/$videoId'
+      path: '/$videoId'
+      fullPath: '/app/workspace/$videoId'
+      preLoaderRoute: typeof AppWorkspaceVideoIdRouteImport
+      parentRoute: typeof AppWorkspaceRoute
+    }
   }
 }
 
+interface AppWorkspaceRouteChildren {
+  AppWorkspaceVideoIdRoute: typeof AppWorkspaceVideoIdRoute
+  AppWorkspaceIndexRoute: typeof AppWorkspaceIndexRoute
+}
+
+const AppWorkspaceRouteChildren: AppWorkspaceRouteChildren = {
+  AppWorkspaceVideoIdRoute: AppWorkspaceVideoIdRoute,
+  AppWorkspaceIndexRoute: AppWorkspaceIndexRoute,
+}
+
+const AppWorkspaceRouteWithChildren = AppWorkspaceRoute._addFileChildren(
+  AppWorkspaceRouteChildren,
+)
+
 interface AppRouteChildren {
   AppMediaRoute: typeof AppMediaRoute
+  AppWorkspaceRoute: typeof AppWorkspaceRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppMediaRoute: AppMediaRoute,
+  AppWorkspaceRoute: AppWorkspaceRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }
 
