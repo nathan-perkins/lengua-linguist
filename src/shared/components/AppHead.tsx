@@ -1,4 +1,4 @@
-import './AppHead.css'
+import '../css/AppHead.css'
 
 export default function AppHead() {
   return (
