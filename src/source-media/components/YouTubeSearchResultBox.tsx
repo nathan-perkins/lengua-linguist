@@ -1,4 +1,5 @@
 import type { YouTubeVideo } from '../schemas'
+import languageMap from '../../shared/languageMap.json'
 import '../css/YouTubeSearchResultBox.css'
 
 type VideoOptionProps = {
@@ -30,8 +31,11 @@ type BaseResultProps = {
 }
 
 function BaseResultBox({ result }: BaseResultProps) {
+  const langKey = result.snippet.defaultLanguage as keyof typeof languageMap
+  const langData = languageMap[langKey]
+
   return (
-    <div className="video-option-container">
+    <div className="youtube-results-container">
       <img
         src={result.snippet.thumbnails.medium.url}
         alt={result.snippet.title}
@@ -40,6 +44,9 @@ function BaseResultBox({ result }: BaseResultProps) {
       <div className="info">
         <h3>{result.snippet.title}</h3>
         <p>{result.snippet.channelTitle}</p>
+        <span className="tag" style={{ '--theme': langData.theme } as React.CSSProperties}>
+          {langData ? langData.language : null}
+        </span>
       </div>
     </div>
   )

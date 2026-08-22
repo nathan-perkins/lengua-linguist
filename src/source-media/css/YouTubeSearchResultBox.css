@@ -1,18 +1,36 @@
-.video-option-container {
-  background: var(--bg-elevated);
+.youtube-results-container {
   display: flex;
   gap: 1.5rem;
   padding: 1.5rem;
-  border: 1px solid var(--border);
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
+
+  &:hover {
+    background: var(--bg-elevated);
+    border-color: var(--border);
+  }
 }
 
-.video-option-container img {
-  max-width: 16rem;
+.youtube-results-container img {
+  max-width: 14rem;
 }
 
-.info h3 {
+.youtube-results-container .info {
+  display: flex;
+  flex-direction: column;
+}
+
+.youtube-results-container .info h3 {
   margin-bottom: 0.5rem;
+}
+
+.youtube-results-container .tag {
+  background: var(--theme);
+  font-size: 0.625rem;
+  margin-top: auto;
+  align-self: flex-start;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50px;
 }
 
 .youtube-search-result-btn {
