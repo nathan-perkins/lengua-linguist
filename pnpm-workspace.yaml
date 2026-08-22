@@ -1,7 +1,7 @@
 allowBuilds:
-  core-js: set this to true or false
-  esbuild: set this to true or false
-  jsonpath: set this to true or false
+  core-js: true
+  esbuild: true
+  jsonpath: true
   msw: true
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.6
