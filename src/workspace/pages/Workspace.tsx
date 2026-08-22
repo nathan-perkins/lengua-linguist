@@ -1,7 +1,13 @@
 import { useParams } from '@tanstack/react-router'
+import YouTubeVideo from '../components/YouTubeVideo'
+import '../css/Workspace.css'
 
 export default function Workspace() {
   const { videoId } = useParams({ from: '/app/workspace/$videoId' })
 
-  return <div>{videoId}</div>
+  return (
+    <div className="workspace">
+      <YouTubeVideo videoId={videoId} />
+    </div>
+  )
 }

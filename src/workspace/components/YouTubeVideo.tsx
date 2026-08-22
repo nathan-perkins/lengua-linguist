@@ -1,7 +1,9 @@
+import YouTube from 'react-youtube'
+
 type YouTubeVideoProps = {
   videoId: string
 }
 
 export default function YouTubeVideo({ videoId }: YouTubeVideoProps) {
-  return <div>{videoId}</div>
+  return <YouTube videoId={videoId} />
 }
