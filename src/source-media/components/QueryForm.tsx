@@ -1,23 +1,23 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import '../css/QueryForm.css'
 
 type QueryFormProps = {
-  setSubmittedQuery: React.Dispatch<React.SetStateAction<string>>
+  initialQuery: string
+  handleSubmit: (query: string) => void
 }
 
-export default function QueryForm({ setSubmittedQuery }: QueryFormProps) {
-  const [searchQuery, setSearchQuery] = useState('')
+export default function QueryForm({ initialQuery, handleSubmit }: QueryFormProps) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery)
 
-  const handleQuery = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setSubmittedQuery(searchQuery)
-    setSearchQuery('')
+    handleSubmit(searchQuery)
   }
 
   return (
-    <form onSubmit={(e) => void handleQuery(e)} className="query-form">
+    <form onSubmit={onSubmit} className="query-form">
       <label>
         Explore target language videos
         <div className="search-wrapper">

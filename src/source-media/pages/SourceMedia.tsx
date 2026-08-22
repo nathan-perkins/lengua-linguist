@@ -1,24 +1,31 @@
-import { useState } from 'react'
-import { useSearch } from '../hooks/useSearch'
+import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useYouTubeSearch } from '../hooks/useYouTubeSearch'
 import QueryForm from '../components/QueryForm'
 import YouTubeSearchResultBox from '../components/YouTubeSearchResultBox'
 import '../css/SourceMedia.css'
 
 export default function SourceMedia() {
-  const [submittedQuery, setSubmittedQuery] = useState('')
-  const { searchResults, isSearchError, searchError } = useSearch(submittedQuery)
+  const { q } = useSearch({ from: '/app/media' })
+  const navigate = useNavigate({ from: '/app/media' })
+  const { searchResults, isSearchError, searchError } = useYouTubeSearch(q)
+
+  const handleSearchSubmit = (newQuery: string) => {
+    void navigate({
+      search: (prev) => ({ ...prev, q: newQuery })
+    })
+  }
 
   if (isSearchError) throw new Error(String(searchError))
 
   return (
     <div className="source-media">
-      <QueryForm setSubmittedQuery={setSubmittedQuery} />
+      <QueryForm initialQuery={q} handleSubmit={handleSearchSubmit} />
       <div className="search-results-container">
-        <p>{submittedQuery ? `Results for "${submittedQuery}"` : null}</p>
+        <p>{q ? `Results for "${q}"` : null}</p>
         {searchResults &&
           searchResults.length > 0 &&
           searchResults.map((result) => (
-            <YouTubeSearchResultBox key={result.id} result={result} lastViewed={!submittedQuery} />
+            <YouTubeSearchResultBox key={result.id} result={result} lastViewed={!q} />
           ))}
       </div>
     </div>

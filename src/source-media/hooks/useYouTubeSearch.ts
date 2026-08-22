@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import type { QueryStatus } from '../types'
-import { createSearchQueryOptions } from '../queries'
+import { mediaQueryOptions } from '../queries'
 
-export function useSearch(rawQuery: string) {
+export function useYouTubeSearch(rawQuery: string) {
   const input = rawQuery.trim()
   const status: QueryStatus = input ? 'active' : 'idle'
 
@@ -11,7 +11,7 @@ export function useSearch(rawQuery: string) {
     isPending,
     isError,
     error
-  } = useQuery(createSearchQueryOptions(input, status))
+  } = useQuery(mediaQueryOptions.search(input, status))
 
   return {
     searchResults,

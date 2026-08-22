@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const SearchParamsSchema = z.object({
-  q: z.string().min(1)
+  q: z.string().optional().default('')
 })
 
 export const YouTubeSearchResultSchema = z.object({

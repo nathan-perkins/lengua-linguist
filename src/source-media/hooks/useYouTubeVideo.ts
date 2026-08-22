@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import type { QueryStatus } from '../types'
 import { createVideoQueryOptions } from '../queries'
 
-export function useVideo(rawId: string) {
+export function useYouTubeVideo(rawId: string) {
   const videoId = rawId.trim()
   const status: QueryStatus = videoId ? 'active' : 'idle'
 
