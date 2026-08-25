@@ -2,9 +2,9 @@ import { createEndpoint } from '../../shared/api/serverHandler'
 import { VideoParamsSchema, YouTubeVideoListResponseSchema } from '../../source-media/schemas'
 import { youtubeFetch } from './_lib/_youtubeClient'
 
-const handler = createEndpoint(VideoParamsSchema, async (_, id) => {
+const handler = createEndpoint(VideoParamsSchema, async (_, params) => {
   const rawData = await youtubeFetch<any>('/videos', {
-    id: id.id,
+    id: params.id,
     part: 'snippet'
   })
 

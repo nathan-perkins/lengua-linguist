@@ -1,20 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
 import type { QueryStatus } from '../types'
-import { createVideoQueryOptions } from '../queries'
+import { mediaQueryOptions } from '../queries'
 
-export function useYouTubeVideo(rawId: string) {
-  const videoId = rawId.trim()
-  const status: QueryStatus = videoId ? 'active' : 'idle'
+export function useYouTubeVideo(rawIds: string[]) {
+  const videoIds = rawIds.toString().trim()
+  const status: QueryStatus = videoIds ? 'active' : 'idle'
 
   const {
-    data: videos = [],
+    data: videoResults = [],
     isPending,
     isError,
     error
-  } = useQuery(createVideoQueryOptions(videoId, status))
+  } = useQuery(mediaQueryOptions.videos(videoIds, status))
 
   return {
-    videos,
+    videoResults,
     isVideoPending: isPending,
     isVideoError: isError,
     videoError: error

@@ -9,8 +9,8 @@ export const youtubeService = {
     return data.items
   },
 
-  videos: async (videoId: string): Promise<YouTubeVideo[]> => {
-    const response = await fetch(`/api/youtube/videos?id=${encodeURIComponent(videoId)}`)
+  videos: async (videoIds: string): Promise<YouTubeVideo[]> => {
+    const response = await fetch(`/api/youtube/videos?id=${encodeURIComponent(videoIds)}`)
     if (!response.ok) throw new Error('Failed to fetch video')
 
     const data = YouTubeVideoListResponseSchema.parse(await response.json())

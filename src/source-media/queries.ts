@@ -10,13 +10,13 @@ export const mediaQueryOptions = {
       queryFn: async (): Promise<YouTubeVideo[]> => youtubeService.search(query),
       enabled: status === 'active',
       staleTime: Infinity
+    }),
+
+  videos: (videoIds: string, status: QueryStatus) =>
+    queryOptions({
+      queryKey: ['youtube-videos', videoIds],
+      queryFn: async (): Promise<YouTubeVideo[]> => youtubeService.videos(videoIds),
+      enabled: status === 'active',
+      staleTime: Infinity
     })
 }
-
-export const createVideoQueryOptions = (videoId: string, status: QueryStatus) =>
-  queryOptions({
-    queryKey: ['videos-list', videoId],
-    enabled: status === 'active',
-    queryFn: async (): Promise<YouTubeVideo[]> => youtubeService.videos(videoId),
-    staleTime: Infinity
-  })
