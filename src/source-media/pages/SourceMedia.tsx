@@ -1,14 +1,26 @@
+import { useEffect } from 'react'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useYouTubeSearch } from '../hooks/useYouTubeSearch'
 import { useYouTubeVideo } from '../hooks/useYouTubeVideo'
 import QueryForm from '../components/QueryForm'
 import YouTubeSearchResultBox from '../components/YouTubeSearchResultBox'
+import { parseLink } from '../utils/parseLink'
 import '../css/SourceMedia.css'
 
 export default function SourceMedia() {
   const { q } = useSearch({ from: '/app/media' })
   const navigate = useNavigate({ from: '/app/media' })
-  const { searchResults, isSearchError, searchError } = useYouTubeSearch(q)
+
+  const { isValid, link } = parseLink(q)
+  useEffect(() => {
+    if (isValid && link.videoId) {
+      void navigate({ to: '/app/workspace/$videoId', params: { videoId: link.videoId } })
+    }
+  }, [isValid, link.videoId, navigate])
+
+  const { searchResults, isSearchError, searchError } = useYouTubeSearch(
+    !isValid ? q : link.videoId
+  )
 
   const previousVideoId = localStorage.getItem('LL_VIDEO')
   const { videoResults, isVideoError, videoError } = useYouTubeVideo([previousVideoId || ''])
