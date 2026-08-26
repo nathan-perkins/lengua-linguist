@@ -1,0 +1,13 @@
+.youtube-video {
+  width: 46rem;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  margin-inline: auto;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.player {
+  width: 100% !important;
+  height: 100% !important;
+}
