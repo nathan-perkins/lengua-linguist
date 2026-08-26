@@ -1,11 +1,12 @@
+import { Link } from '@tanstack/react-router'
 import '../css/AppHead.css'
 
 export default function AppHead() {
   return (
     <header className="apphead">
-      <h1>
+      <Link className="link" to="/">
         Lengua<span className="accent">Linguist</span>
-      </h1>
+      </Link>
     </header>
   )
 }
