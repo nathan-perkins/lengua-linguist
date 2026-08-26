@@ -25,7 +25,7 @@
 }
 
 .youtube-results-container .tag {
-  background: var(--theme);
+  background: var(--theme, --accent);
   font-size: 0.625rem;
   margin-top: auto;
   align-self: flex-start;
