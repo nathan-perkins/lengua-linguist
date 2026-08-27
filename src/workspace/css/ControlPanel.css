@@ -24,3 +24,8 @@
   width: 1rem;
   height: 1rem;
 }
+
+.control-icons .icon-btn {
+  background: transparent;
+  color: var(--text-muted);
+}

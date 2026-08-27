@@ -3,13 +3,14 @@ import '../css/YouTubeVideo.css'
 
 type YouTubeVideoProps = {
   videoId: string
+  isPlaying: boolean
 }
 
-export default function YouTubeVideo({ videoId }: YouTubeVideoProps) {
+export default function YouTubeVideo({ videoId, isPlaying }: YouTubeVideoProps) {
   const createYouTubeUrl = (videoId: string) => `https://www.youtube.com/watch?v=${videoId}`
   return (
     <div className="youtube-video">
-      <ReactPlayer className="player" src={createYouTubeUrl(videoId)} />
+      <ReactPlayer className="player" src={createYouTubeUrl(videoId)} playing={isPlaying} />
     </div>
   )
 }
