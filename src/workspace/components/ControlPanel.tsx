@@ -4,10 +4,10 @@ import '../css/ControlPanel.css'
 
 type ControlPanelProps = {
   isPlaying: boolean
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>
+  handlePlayPause: () => void
 }
 
-export default function ControlPanel({ isPlaying, setIsPlaying }: ControlPanelProps) {
+export default function ControlPanel({ isPlaying, handlePlayPause }: ControlPanelProps) {
   return (
     <div className="control-panel">
       <div className="timeline" />
@@ -15,7 +15,7 @@ export default function ControlPanel({ isPlaying, setIsPlaying }: ControlPanelPr
         <button className="icon-btn">
           <FontAwesomeIcon className="icon" icon={faBackwardStep} />
         </button>
-        <button className="icon-btn" onClick={() => setIsPlaying(!isPlaying)}>
+        <button className="icon-btn" onClick={handlePlayPause}>
           {isPlaying ? (
             <FontAwesomeIcon className="icon" icon={faPause} />
           ) : (
