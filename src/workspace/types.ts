@@ -15,3 +15,14 @@ export type PlayerState = {
   loadedSeconds: number
   playedSeconds: number
 }
+
+export type PlayerHandlers = {
+  handlePlayPause: () => void
+  handleDurationChange: () => void
+}
+
+export type Player = {
+  setPlayerRef: (node: HTMLVideoElement) => void
+  state: PlayerState
+  handlers: PlayerHandlers
+}

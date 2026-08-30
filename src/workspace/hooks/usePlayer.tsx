@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import type { PlayerState } from '../types'
+import { useRef, useState } from 'react'
+import type { Player, PlayerHandlers, PlayerState } from '../types'
 
 const initializeState = (url: string) =>
   ({
@@ -21,7 +21,12 @@ const initializeState = (url: string) =>
   }) satisfies PlayerState
 
 export function usePlayer(url: string) {
+  const playerRef = useRef<HTMLVideoElement>(null)
   const [state, setState] = useState<PlayerState>(() => initializeState(url))
+
+  const setPlayerRef = (node: HTMLVideoElement) => {
+    playerRef.current = node
+  }
 
   const handlePlayPause = () => {
     setState((prevState) => ({
@@ -30,8 +35,23 @@ export function usePlayer(url: string) {
     }))
   }
 
-  return {
-    state,
-    handlePlayPause
+  const handleDurationChange = () => {
+    if (playerRef.current) {
+      setState((prevState) => ({
+        ...prevState,
+        duration: playerRef.current?.duration || 0
+      }))
+    }
   }
+
+  const handlers: PlayerHandlers = {
+    handlePlayPause,
+    handleDurationChange
+  }
+
+  return {
+    setPlayerRef,
+    state,
+    handlers
+  } satisfies Player
 }

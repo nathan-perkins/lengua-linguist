@@ -13,8 +13,8 @@ export default function Workspace() {
 
   return (
     <div className="workspace">
-      <YouTubeVideo state={player.state} />
-      <ControlPanel isPlaying={player.state.playing} handlePlayPause={player.handlePlayPause} />
+      <YouTubeVideo player={player} />
+      <ControlPanel player={player} />
     </div>
   )
 }

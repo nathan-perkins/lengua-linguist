@@ -1,15 +1,23 @@
 import ReactPlayer from 'react-player'
-import type { PlayerState } from '../types'
+import type { Player } from '../types'
 import '../css/YouTubeVideo.css'
 
 type YouTubeVideoProps = {
-  state: PlayerState
+  player: Player
 }
 
-export default function YouTubeVideo({ state }: YouTubeVideoProps) {
+export default function YouTubeVideo({
+  player: { setPlayerRef, state, handlers }
+}: YouTubeVideoProps) {
   return (
     <div className="youtube-video">
-      <ReactPlayer className="player" src={state.src} playing={state.playing} />
+      <ReactPlayer
+        className="player"
+        ref={setPlayerRef}
+        src={state.src}
+        playing={state.playing}
+        onDurationChange={handlers.handleDurationChange}
+      />
     </div>
   )
 }
