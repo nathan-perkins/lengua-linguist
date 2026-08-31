@@ -35,6 +35,20 @@ export function usePlayer(url: string) {
     }))
   }
 
+  const handlePlay = () => {
+    setState((prevState) => ({
+      ...prevState,
+      playing: true
+    }))
+  }
+
+  const handlePause = () => {
+    setState((prevState) => ({
+      ...prevState,
+      playing: false
+    }))
+  }
+
   const handleTimeUpdate = () => {
     const player = playerRef.current
     if (!player) return
@@ -58,6 +72,8 @@ export function usePlayer(url: string) {
 
   const handlers: PlayerHandlers = {
     handlePlayPause,
+    handlePlay,
+    handlePause,
     handleTimeUpdate,
     handleDurationChange
   }

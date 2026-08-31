@@ -16,6 +16,8 @@ export default function YouTubeVideo({
         ref={setPlayerRef}
         src={state.src}
         playing={state.playing}
+        onPlay={handlers.handlePlay}
+        onPause={handlers.handlePause}
         onTimeUpdate={handlers.handleTimeUpdate}
         onDurationChange={handlers.handleDurationChange}
       />

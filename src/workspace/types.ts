@@ -18,6 +18,8 @@ export type PlayerState = {
 
 export type PlayerHandlers = {
   handlePlayPause: () => void
+  handlePlay: () => void
+  handlePause: () => void
   handleTimeUpdate: () => void
   handleDurationChange: () => void
 }
