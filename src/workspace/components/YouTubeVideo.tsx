@@ -16,6 +16,7 @@ export default function YouTubeVideo({
         ref={setPlayerRef}
         src={state.src}
         playing={state.playing}
+        onTimeUpdate={handlers.handleTimeUpdate}
         onDurationChange={handlers.handleDurationChange}
       />
     </div>

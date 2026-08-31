@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause, faForwardStep, faBackwardStep } from '@fortawesome/free-solid-svg-icons'
 import type { Player } from '../types'
+import Timeline from './Timeline'
 import { format } from '../utils/formatTime'
 import '../css/ControlPanel.css'
 
@@ -11,7 +12,7 @@ type ControlPanelProps = {
 export default function ControlPanel({ player: { state, handlers } }: ControlPanelProps) {
   return (
     <div className="control-panel">
-      <div className="timeline" />
+      <Timeline state={state} />
       <div className="control-icons">
         <button className="icon-btn">
           <FontAwesomeIcon className="icon" icon={faBackwardStep} />
