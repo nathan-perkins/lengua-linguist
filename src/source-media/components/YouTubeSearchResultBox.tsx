@@ -24,7 +24,7 @@ export default function YouTubeSearchResultBox({ result }: VideoOptionProps) {
           className="thumbnail"
         />
         <div className="info">
-          <h3>{result.snippet.title}</h3>
+          <h3 className="video-title">{result.snippet.title}</h3>
           <p>{result.snippet.channelTitle}</p>
           <span className="tag" style={{ '--theme': langData.theme } as React.CSSProperties}>
             {langData ? langData.language : null}

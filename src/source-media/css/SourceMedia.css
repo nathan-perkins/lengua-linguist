@@ -13,3 +13,9 @@
     margin-bottom: 0.5rem;
   }
 }
+
+@media (max-width: 50rem) {
+  .source-media {
+    padding-inline: 2rem;
+  }
+}
