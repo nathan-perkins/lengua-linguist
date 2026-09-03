@@ -17,7 +17,7 @@ export default function AppHead() {
         <div className="source">
           <FontAwesomeIcon icon={faLink} />
           <span>{url}</span>
-          <Link className="x-icon" to="/app/media">
+          <Link className="x-icon" to="/app/media" search={{ q: '' }}>
             <FontAwesomeIcon icon={faX} />
           </Link>
         </div>
