@@ -28,7 +28,7 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
           <FontAwesomeIcon className="icon" icon={faForwardStep} />
         </button>
       </div>
-      <span>{format(state.duration)}</span>
+      <span>{format(state.playedSeconds)}</span>
     </div>
   )
 }
