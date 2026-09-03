@@ -13,9 +13,14 @@ export default function SourceMedia() {
 
   const { isValid, link } = parseLink(q)
   useEffect(() => {
-    if (isValid && link.videoId) {
-      void navigate({ to: '/app/workspace/$videoId', params: { videoId: link.videoId } })
+    if (!isValid || !link.videoId) return
+
+    const handleNavigation = async () => {
+      await navigate({ to: '/app/media', search: { q: '' }, replace: true })
+      await navigate({ to: '/app/workspace/$videoId', params: { videoId: link.videoId } })
     }
+
+    void handleNavigation()
   }, [isValid, link.videoId, navigate])
 
   const { searchResults, isSearchError, searchError } = useYouTubeSearch(
