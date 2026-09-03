@@ -13,8 +13,6 @@ export function useYouTubeVideo(rawIds: string[]) {
     error
   } = useQuery(mediaQueryOptions.videos(videoIds, status))
 
-  console.log(videoResults)
-
   return {
     videoResults,
     isVideoPending: isPending,
