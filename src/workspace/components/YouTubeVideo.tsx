@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import ReactPlayer from 'react-player'
 import type { Player } from '../types'
 import '../css/YouTubeVideo.css'
@@ -9,6 +10,17 @@ type YouTubeVideoProps = {
 export default function YouTubeVideo({
   player: { setPlayerRef, state, handlers }
 }: YouTubeVideoProps) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code !== 'Space') return
+
+      e.preventDefault()
+      handlers.handlePlayPause()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+  }, [handlers])
+
   return (
     <div className="youtube-video">
       <ReactPlayer
