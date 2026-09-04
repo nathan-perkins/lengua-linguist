@@ -13,6 +13,7 @@
 
 .youtube-results-container img {
   width: clamp(7rem, 25vw, 14rem);
+  border-radius: 2px;
 }
 
 .youtube-results-container .info {
