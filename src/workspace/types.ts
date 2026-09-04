@@ -20,6 +20,8 @@ export type PlayerHandlers = {
   handlePlayPause: () => void
   handlePlay: () => void
   handlePause: () => void
+  handleForward: () => void
+  handleBackward: () => void
   handleTimeUpdate: () => void
   handleDurationChange: () => void
 }

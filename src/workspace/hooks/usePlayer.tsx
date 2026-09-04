@@ -49,6 +49,20 @@ export function usePlayer(url: string) {
     }))
   }
 
+  const handleForward = () => {
+    const player = playerRef.current
+    if (!player) return
+
+    player.currentTime += 10
+  }
+
+  const handleBackward = () => {
+    const player = playerRef.current
+    if (!player) return
+
+    player.currentTime -= 10
+  }
+
   const handleTimeUpdate = () => {
     const player = playerRef.current
     if (!player) return
@@ -74,6 +88,8 @@ export function usePlayer(url: string) {
     handlePlayPause,
     handlePlay,
     handlePause,
+    handleForward,
+    handleBackward,
     handleTimeUpdate,
     handleDurationChange
   }

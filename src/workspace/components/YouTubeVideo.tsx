@@ -12,10 +12,11 @@ export default function YouTubeVideo({
 }: YouTubeVideoProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code !== 'Space') return
-
       e.preventDefault()
-      handlers.handlePlayPause()
+
+      if (e.code === 'Space') handlers.handlePlayPause()
+      if (e.code === 'ArrowRight') handlers.handleForward()
+      if (e.code === 'ArrowLeft') handlers.handleBackward()
     }
 
     window.addEventListener('keydown', handleKeyDown)
