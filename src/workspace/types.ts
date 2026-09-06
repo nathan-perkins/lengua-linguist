@@ -14,6 +14,7 @@ export type PlayerState = {
   seeking: boolean
   loadedSeconds: number
   playedSeconds: number
+  activeLoops: boolean
 }
 
 export type PlayerHandlers = {
@@ -24,6 +25,7 @@ export type PlayerHandlers = {
   handleBackward: () => void
   handleTimeUpdate: () => void
   handleDurationChange: () => void
+  handleToggleLoops: () => void
 }
 
 export type Player = {

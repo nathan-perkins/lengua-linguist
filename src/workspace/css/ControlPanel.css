@@ -13,6 +13,7 @@
 .control-icons {
   display: flex;
   gap: 1rem;
+  width: 100%;
 }
 
 .control-icons .icon {
@@ -23,4 +24,12 @@
 .control-icons .icon-btn {
   background: transparent;
   color: var(--text-muted);
+}
+
+.loop-control-btn {
+  margin-left: auto;
+}
+
+.control-icons .active {
+  color: var(--accent);
 }

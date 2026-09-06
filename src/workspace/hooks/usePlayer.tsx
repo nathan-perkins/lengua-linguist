@@ -17,7 +17,8 @@ const initializeState = (url: string) =>
     loop: false,
     seeking: false,
     loadedSeconds: 0,
-    playedSeconds: 0
+    playedSeconds: 0,
+    activeLoops: false
   }) satisfies PlayerState
 
 export function usePlayer(url: string) {
@@ -84,6 +85,13 @@ export function usePlayer(url: string) {
     }))
   }
 
+  const handleToggleLoops = () => {
+    setState((prevState) => ({
+      ...prevState,
+      activeLoops: !prevState.activeLoops
+    }))
+  }
+
   const handlers: PlayerHandlers = {
     handlePlayPause,
     handlePlay,
@@ -91,7 +99,8 @@ export function usePlayer(url: string) {
     handleForward,
     handleBackward,
     handleTimeUpdate,
-    handleDurationChange
+    handleDurationChange,
+    handleToggleLoops
   }
 
   return {
