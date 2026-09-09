@@ -11,7 +11,7 @@ export default function Timeline({ state }: TimelineProps) {
   return (
     <div className="timeline">
       <div
-        className={`timeline-progress ${state.playing ? 'timeline-progress-playing' : ''}`}
+        className={`timeline-progress ${state.playing && !state.seeking ? 'timeline-progress-playing' : ''}`}
         style={{ '--progress': `${progress}%` } as React.CSSProperties}
       />
     </div>

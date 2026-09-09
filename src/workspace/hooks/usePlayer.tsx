@@ -54,6 +54,7 @@ export function usePlayer(url: string) {
     const player = playerRef.current
     if (!player) return
 
+    setState((prevState) => ({ ...prevState, seeking: true }))
     player.currentTime += 10
   }
 
@@ -61,6 +62,7 @@ export function usePlayer(url: string) {
     const player = playerRef.current
     if (!player) return
 
+    setState((prevState) => ({ ...prevState, seeking: true }))
     player.currentTime -= 10
   }
 
@@ -85,6 +87,10 @@ export function usePlayer(url: string) {
     }))
   }
 
+  const handleSeeked = () => {
+    setState((prevState) => ({ ...prevState, seeking: false }))
+  }
+
   const handleToggleLoops = () => {
     setState((prevState) => ({
       ...prevState,
@@ -100,6 +106,7 @@ export function usePlayer(url: string) {
     handleBackward,
     handleTimeUpdate,
     handleDurationChange,
+    handleSeeked,
     handleToggleLoops
   }
 

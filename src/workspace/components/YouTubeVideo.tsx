@@ -36,6 +36,7 @@ export default function YouTubeVideo({
         onPause={handlers.handlePause}
         onTimeUpdate={handlers.handleTimeUpdate}
         onDurationChange={handlers.handleDurationChange}
+        onSeeked={handlers.handleSeeked}
       />
     </div>
   )
