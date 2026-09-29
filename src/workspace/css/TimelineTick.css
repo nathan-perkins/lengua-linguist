@@ -1,0 +1,10 @@
+.timeline-tick {
+  background: var(--text-muted);
+  position: absolute;
+  left: var(--played);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.25rem;
+  height: 1rem;
+  border-radius: 50px;
+}
