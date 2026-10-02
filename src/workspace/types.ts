@@ -1,3 +1,9 @@
+export type ActiveLoop = {
+  id: number
+  start: number
+  end: number | null
+}
+
 export type PlayerState = {
   src: string
   pip: boolean
@@ -14,7 +20,8 @@ export type PlayerState = {
   seeking: boolean
   loadedSeconds: number
   playedSeconds: number
-  activeLoops: boolean
+  isActiveLoop: boolean
+  activeLoops: Array<ActiveLoop>
 }
 
 export type PlayerHandlers = {

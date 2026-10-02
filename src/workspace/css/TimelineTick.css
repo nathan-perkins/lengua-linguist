@@ -1,7 +1,7 @@
 .timeline-tick {
   background: var(--text-muted);
   position: absolute;
-  left: var(--played);
+  left: var(--start);
   top: 50%;
   transform: translate(-50%, -50%);
   width: 0.25rem;

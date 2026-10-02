@@ -21,7 +21,7 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
     <div className="control-panel">
       <div className="timeline-container">
         <Timeline state={state} />
-        {state.activeLoops && <TimelineTick state={state} />}
+        {state.isActiveLoop && <TimelineTick state={state} />}
       </div>
       <div className="control-icons">
         <button className="icon-btn">
@@ -39,7 +39,7 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
         </button>
         <span>{format(state.playedSeconds)}</span>
         <button
-          className={`icon-btn loop-control-btn ${state.activeLoops ? 'active' : ''}`}
+          className={`icon-btn loop-control-btn ${state.isActiveLoop ? 'active' : ''}`}
           onClick={handlers.handleToggleLoops}
         >
           <FontAwesomeIcon className="icon" icon={faRepeat} />

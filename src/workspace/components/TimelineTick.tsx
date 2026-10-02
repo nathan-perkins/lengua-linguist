@@ -9,7 +9,7 @@ export default function TimelineTick({ state }: TimelineTickProps) {
   return (
     <div
       className="timeline-tick"
-      style={{ '--played': `${state.played * 100}%` } as React.CSSProperties}
+      style={{ '--start': `${state.activeLoops[0].start}%` } as React.CSSProperties}
     />
   )
 }

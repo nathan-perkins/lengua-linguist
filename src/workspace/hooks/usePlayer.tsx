@@ -18,7 +18,8 @@ const initializeState = (url: string) =>
     seeking: false,
     loadedSeconds: 0,
     playedSeconds: 0,
-    activeLoops: false
+    isActiveLoop: false,
+    activeLoops: []
   }) satisfies PlayerState
 
 export function usePlayer(url: string) {
@@ -94,7 +95,8 @@ export function usePlayer(url: string) {
   const handleToggleLoops = () => {
     setState((prevState) => ({
       ...prevState,
-      activeLoops: !prevState.activeLoops
+      isActiveLoop: !prevState.isActiveLoop,
+      activeLoops: prevState.isActiveLoop ? [] : [{ id: 1, start: state.played * 100, end: null }]
     }))
   }
 
