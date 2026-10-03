@@ -12,6 +12,8 @@ export default function YouTubeVideo({
 }: YouTubeVideoProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'F12') return
+
       e.preventDefault()
 
       if (e.code === 'Space') handlers.handlePlayPause()
