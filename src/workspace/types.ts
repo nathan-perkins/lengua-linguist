@@ -1,7 +1,8 @@
-export type ActiveLoop = {
+export type TimelineLoop = {
   id: number
   start: number
   end: number | null
+  pending: boolean
 }
 
 export type PlayerState = {
@@ -21,13 +22,13 @@ export type PlayerState = {
   loadedSeconds: number
   playedSeconds: number
   isActiveLoop: boolean
-  activeLoops: Array<ActiveLoop>
+  activeLoops: Array<TimelineLoop>
 }
 
 export type PlayerHandlers = {
-  handlePlayPause: () => void
   handlePlay: () => void
   handlePause: () => void
+  handlePlayPause: () => void
   handleForward: () => void
   handleBackward: () => void
   handleTimeUpdate: () => void

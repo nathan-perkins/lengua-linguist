@@ -30,13 +30,6 @@ export function usePlayer(url: string) {
     playerRef.current = node
   }
 
-  const handlePlayPause = () => {
-    setState((prevState) => ({
-      ...prevState,
-      playing: !prevState.playing
-    }))
-  }
-
   const handlePlay = () => {
     setState((prevState) => ({
       ...prevState,
@@ -48,6 +41,23 @@ export function usePlayer(url: string) {
     setState((prevState) => ({
       ...prevState,
       playing: false
+    }))
+
+    if (state.activeLoops[0].pending) {
+      state.activeLoops[0].end = state.played * 100
+      state.activeLoops[0].pending = false
+    }
+  }
+
+  const handlePlayPause = () => {
+    if (state.playing === true) {
+      handlePause()
+      return
+    }
+
+    setState((prevState) => ({
+      ...prevState,
+      playing: true
     }))
   }
 
@@ -96,14 +106,16 @@ export function usePlayer(url: string) {
     setState((prevState) => ({
       ...prevState,
       isActiveLoop: !prevState.isActiveLoop,
-      activeLoops: prevState.isActiveLoop ? [] : [{ id: 1, start: state.played * 100, end: null }]
+      activeLoops: prevState.isActiveLoop
+        ? []
+        : [{ id: 1, start: state.played * 100, end: null, pending: true }]
     }))
   }
 
   const handlers: PlayerHandlers = {
-    handlePlayPause,
     handlePlay,
     handlePause,
+    handlePlayPause,
     handleForward,
     handleBackward,
     handleTimeUpdate,

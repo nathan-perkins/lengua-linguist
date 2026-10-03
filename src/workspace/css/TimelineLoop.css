@@ -1,10 +1,17 @@
 .timeline-tick {
   background: var(--text-muted);
   position: absolute;
-  left: var(--start);
   top: 50%;
   transform: translate(-50%, -50%);
   width: 0.25rem;
   height: 1rem;
   border-radius: 50px;
+
+  &.loop-start {
+    left: var(--start);
+  }
+
+  &.loop-end {
+    left: var(--end);
+  }
 }

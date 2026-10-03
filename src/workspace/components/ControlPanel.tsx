@@ -8,7 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import type { Player } from '../types'
 import Timeline from './Timeline'
-import TimelineTick from './TimelineTick'
+import TimelineLoop from './TimelineLoop'
 import { format } from '../utils/formatTime'
 import '../css/ControlPanel.css'
 
@@ -21,7 +21,7 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
     <div className="control-panel">
       <div className="timeline-container">
         <Timeline state={state} />
-        {state.isActiveLoop && <TimelineTick state={state} />}
+        {state.isActiveLoop && state.activeLoops.map((loop) => <TimelineLoop loop={loop} />)}
       </div>
       <div className="control-icons">
         <button className="icon-btn">
