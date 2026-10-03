@@ -3,19 +3,20 @@ import '../css/TimelineLoop.css'
 
 type TimelineLoopProps = {
   loop: TimelineLoop
+  videoDuration: number
 }
 
-export default function TimelineTick({ loop }: TimelineLoopProps) {
+export default function TimelineTick({ loop, videoDuration }: TimelineLoopProps) {
   return (
     <div className="timeline-loop">
       <div
         className="timeline-tick loop-start"
-        style={{ '--start': `${loop.start}%` } as React.CSSProperties}
+        style={{ '--start': `${(loop.start / videoDuration) * 100}%` } as React.CSSProperties}
       />
       {loop.end && (
         <div
           className="timeline-tick loop-end"
-          style={{ '--end': `${loop.end}%` } as React.CSSProperties}
+          style={{ '--end': `${(loop.end / videoDuration) * 100}%` } as React.CSSProperties}
         />
       )}
     </div>

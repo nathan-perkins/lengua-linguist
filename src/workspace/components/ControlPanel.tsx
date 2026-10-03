@@ -21,7 +21,10 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
     <div className="control-panel">
       <div className="timeline-container">
         <Timeline state={state} />
-        {state.isActiveLoop && state.activeLoops.map((loop) => <TimelineLoop loop={loop} />)}
+        {state.isActiveLoop &&
+          state.activeLoops.map((loop) => (
+            <TimelineLoop loop={loop} videoDuration={state.duration} />
+          ))}
       </div>
       <div className="control-icons">
         <button className="icon-btn">

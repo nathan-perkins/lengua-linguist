@@ -40,13 +40,17 @@ export function usePlayer(url: string) {
   const handlePause = () => {
     setState((prevState) => ({
       ...prevState,
-      playing: false
+      playing: false,
+      activeLoops:
+        prevState.isActiveLoop && prevState.activeLoops[0].pending
+          ? prevState.activeLoops.map((loop, index) =>
+              index === 0 ? { ...loop, end: prevState.playedSeconds, pending: false } : loop
+            )
+          : prevState.activeLoops
     }))
 
-    if (state.activeLoops[0].pending) {
-      state.activeLoops[0].end = state.played * 100
-      state.activeLoops[0].pending = false
-    }
+    if (state.isActiveLoop && playerRef.current)
+      playerRef.current.currentTime = state.activeLoops[0].start
   }
 
   const handlePlayPause = () => {
@@ -108,7 +112,7 @@ export function usePlayer(url: string) {
       isActiveLoop: !prevState.isActiveLoop,
       activeLoops: prevState.isActiveLoop
         ? []
-        : [{ id: 1, start: state.played * 100, end: null, pending: true }]
+        : [{ id: 1, start: prevState.playedSeconds, end: null, pending: true }]
     }))
   }
 
