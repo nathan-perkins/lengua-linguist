@@ -36,6 +36,8 @@ export type PlayerHandlers = {
   handleDurationChange: () => void
   handleSeeked: () => void
   handleToggleLoops: () => void
+  handleLoopForwardStep: () => void
+  handleLoopBackwardStep: () => void
 }
 
 export type Player = {

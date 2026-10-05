@@ -23,11 +23,11 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
         <Timeline state={state} />
         {state.isActiveLoop &&
           state.activeLoops.map((loop) => (
-            <TimelineLoop loop={loop} videoDuration={state.duration} />
+            <TimelineLoop key={loop.id} loop={loop} videoDuration={state.duration} />
           ))}
       </div>
       <div className="control-icons">
-        <button className="icon-btn">
+        <button className="icon-btn" onClick={handlers.handleLoopBackwardStep}>
           <FontAwesomeIcon className="icon" icon={faBackwardStep} />
         </button>
         <button className="icon-btn" onClick={handlers.handlePlayPause}>
@@ -37,7 +37,7 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
             <FontAwesomeIcon className="icon" icon={faPlay} />
           )}
         </button>
-        <button className="icon-btn">
+        <button className="icon-btn" onClick={handlers.handleLoopForwardStep}>
           <FontAwesomeIcon className="icon" icon={faForwardStep} />
         </button>
         <span>{format(state.playedSeconds)}</span>

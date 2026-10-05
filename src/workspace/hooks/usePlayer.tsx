@@ -27,6 +27,7 @@ export function usePlayer(url: string) {
   const [state, setState] = useState<PlayerState>(() => initializeState(url))
 
   const currentLoop = state.activeLoops.find((loop) => loop.isCurrent)
+  const currentLoopIndex = currentLoop ? state.activeLoops.indexOf(currentLoop) : null
 
   const setPlayerRef = (node: HTMLVideoElement) => {
     playerRef.current = node
@@ -46,7 +47,9 @@ export function usePlayer(url: string) {
       activeLoops:
         prevState.isActiveLoop && currentLoop?.isPending
           ? prevState.activeLoops.map((loop, index) =>
-              index === 0 ? { ...loop, end: prevState.playedSeconds, isPending: false } : loop
+              index === currentLoopIndex
+                ? { ...loop, end: prevState.playedSeconds, isPending: false }
+                : loop
             )
           : prevState.activeLoops
     }))
@@ -117,8 +120,72 @@ export function usePlayer(url: string) {
       isActiveLoop: !prevState.isActiveLoop,
       activeLoops: prevState.isActiveLoop
         ? []
-        : [{ id: 1, start: prevState.playedSeconds, end: null, isCurrent: true, isPending: true }]
+        : [{ id: 0, start: prevState.playedSeconds, end: null, isCurrent: true, isPending: true }]
     }))
+  }
+
+  const handleLoopForwardStep = () => {
+    if (
+      currentLoop === undefined ||
+      currentLoopIndex === null ||
+      currentLoopIndex > state.activeLoops.length - 1
+    )
+      return
+
+    if (currentLoopIndex !== state.activeLoops.length - 1) {
+      setState((prevState) => ({
+        ...prevState,
+        activeLoops: prevState.activeLoops.map((loop, index) => {
+          if (index === currentLoopIndex) return { ...loop, isCurrent: false }
+          if (index === currentLoopIndex + 1) return { ...loop, isCurrent: true }
+
+          return loop
+        })
+      }))
+
+      if (playerRef.current)
+        playerRef.current.currentTime = state.activeLoops[currentLoopIndex + 1].start
+      return
+    }
+
+    const pendingLoop = {
+      id: currentLoopIndex + 1,
+      start: state.activeLoops[currentLoopIndex].end!,
+      end: null,
+      isCurrent: true,
+      isPending: true
+    }
+
+    setState((prevState) => ({
+      ...prevState,
+      activeLoops: [
+        ...prevState.activeLoops.map((loop, index) => {
+          if (index === currentLoopIndex) return { ...loop, isCurrent: false }
+
+          return loop
+        }),
+        pendingLoop
+      ]
+    }))
+
+    if (playerRef.current) playerRef.current.currentTime = pendingLoop.start
+  }
+
+  const handleLoopBackwardStep = () => {
+    if (currentLoop === undefined || currentLoopIndex === null || currentLoopIndex <= 0) return
+
+    setState((prevState) => ({
+      ...prevState,
+      activeLoops: prevState.activeLoops.map((loop, index) => {
+        if (index === currentLoopIndex) return { ...loop, isCurrent: false }
+        if (index === currentLoopIndex - 1) return { ...loop, isCurrent: true }
+
+        return loop
+      })
+    }))
+
+    if (playerRef.current)
+      playerRef.current.currentTime = state.activeLoops[currentLoopIndex - 1].start
   }
 
   const handlers: PlayerHandlers = {
@@ -130,7 +197,9 @@ export function usePlayer(url: string) {
     handleTimeUpdate,
     handleDurationChange,
     handleSeeked,
-    handleToggleLoops
+    handleToggleLoops,
+    handleLoopForwardStep,
+    handleLoopBackwardStep
   }
 
   return {

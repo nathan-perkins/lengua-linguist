@@ -14,4 +14,9 @@
   &.loop-end {
     left: var(--end);
   }
+
+  &.current {
+    background: #ed955e;
+    z-index: 1000;
+  }
 }
