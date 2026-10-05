@@ -90,6 +90,13 @@ export function usePlayer(url: string) {
       playedSeconds: player.currentTime,
       played: player.currentTime / player.duration
     }))
+
+    if (
+      state.activeLoops &&
+      state.activeLoops[0].end &&
+      player.currentTime >= state.activeLoops[0].end
+    )
+      handlePause()
   }
 
   const handleDurationChange = () => {
