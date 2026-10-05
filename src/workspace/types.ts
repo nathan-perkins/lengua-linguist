@@ -2,7 +2,8 @@ export type TimelineLoop = {
   id: number
   start: number
   end: number | null
-  pending: boolean
+  isCurrent: boolean
+  isPending: boolean
 }
 
 export type PlayerState = {

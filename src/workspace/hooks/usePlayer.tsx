@@ -26,6 +26,8 @@ export function usePlayer(url: string) {
   const playerRef = useRef<HTMLVideoElement>(null)
   const [state, setState] = useState<PlayerState>(() => initializeState(url))
 
+  const currentLoop = state.activeLoops.find((loop) => loop.isCurrent)
+
   const setPlayerRef = (node: HTMLVideoElement) => {
     playerRef.current = node
   }
@@ -42,15 +44,15 @@ export function usePlayer(url: string) {
       ...prevState,
       playing: false,
       activeLoops:
-        prevState.isActiveLoop && prevState.activeLoops[0].pending
+        prevState.isActiveLoop && currentLoop?.isPending
           ? prevState.activeLoops.map((loop, index) =>
-              index === 0 ? { ...loop, end: prevState.playedSeconds, pending: false } : loop
+              index === 0 ? { ...loop, end: prevState.playedSeconds, isPending: false } : loop
             )
           : prevState.activeLoops
     }))
 
-    if (state.isActiveLoop && playerRef.current)
-      playerRef.current.currentTime = state.activeLoops[0].start
+    if (state.isActiveLoop && currentLoop && playerRef.current)
+      playerRef.current.currentTime = currentLoop.start
   }
 
   const handlePlayPause = () => {
@@ -91,11 +93,7 @@ export function usePlayer(url: string) {
       played: player.currentTime / player.duration
     }))
 
-    if (
-      state.activeLoops &&
-      state.activeLoops[0].end &&
-      player.currentTime >= state.activeLoops[0].end
-    )
+    if (state.activeLoops && currentLoop?.end && player.currentTime >= currentLoop.end)
       handlePause()
   }
 
@@ -119,7 +117,7 @@ export function usePlayer(url: string) {
       isActiveLoop: !prevState.isActiveLoop,
       activeLoops: prevState.isActiveLoop
         ? []
-        : [{ id: 1, start: prevState.playedSeconds, end: null, pending: true }]
+        : [{ id: 1, start: prevState.playedSeconds, end: null, isCurrent: true, isPending: true }]
     }))
   }
 
