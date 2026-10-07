@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { IconZoom } from '@tabler/icons-react'
 import '../css/QueryForm.css'
 
 type QueryFormProps = {
@@ -29,7 +28,7 @@ export default function QueryForm({ initialQuery, handleSubmit }: QueryFormProps
             onChange={({ target }) => setSearchQuery(target.value)}
           />
           <button type="submit" className="search-icon-btn">
-            <FontAwesomeIcon className="search-icon" icon={faMagnifyingGlass} />
+            <IconZoom className="search-icon" />
           </button>
         </div>
       </label>

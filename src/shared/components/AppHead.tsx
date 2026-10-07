@@ -1,6 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLink, faX } from '@fortawesome/free-solid-svg-icons'
+import { IconLinkFilled, IconXFilled } from '@tabler/icons-react'
 import { createYouTubeUrl } from '../../workspace/utils/createYouTubeUrl'
 import '../css/AppHead.css'
 
@@ -15,10 +14,10 @@ export default function AppHead() {
       </Link>
       {videoId && (
         <div className="source">
-          <FontAwesomeIcon icon={faLink} />
+          <IconLinkFilled />
           <span>{url}</span>
           <Link className="x-icon" to="/app/media" search={{ q: '' }}>
-            <FontAwesomeIcon icon={faX} />
+            <IconXFilled />
           </Link>
         </div>
       )}

@@ -17,10 +17,10 @@ export default function YouTubeVideo({
       e.preventDefault()
 
       if (e.code === 'Space') handlers.handlePlayPause()
-      if (e.code === 'ArrowRight' && !state.isActiveLoop) handlers.handleForward()
-      if (e.code === 'ArrowLeft' && !state.isActiveLoop) handlers.handleBackward()
       if (e.code === 'Enter' && !state.isActiveLoop) handlers.handleToggleLoops()
       if (e.code === 'Escape' && state.isActiveLoop) handlers.handleToggleLoops()
+      if (e.code === 'ArrowRight' && !state.isActiveLoop) handlers.handleForward()
+      if (e.code === 'ArrowLeft' && !state.isActiveLoop) handlers.handleBackward()
       if (e.code === 'ArrowRight' && state.isActiveLoop) handlers.handleLoopForwardStep()
       if (e.code === 'ArrowLeft' && state.isActiveLoop) handlers.handleLoopBackwardStep()
     }

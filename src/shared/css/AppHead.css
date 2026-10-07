@@ -19,6 +19,7 @@
   .source {
     grid-column: 2;
     justify-self: center;
+    align-items: center;
     display: flex;
     gap: 0.5rem;
     background: var(--bg-elevated);

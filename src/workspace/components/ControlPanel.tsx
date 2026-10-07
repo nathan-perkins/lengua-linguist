@@ -1,11 +1,10 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faPlay,
-  faPause,
-  faForwardStep,
-  faBackwardStep,
-  faRepeat
-} from '@fortawesome/free-solid-svg-icons'
+  IconPlayerPlayFilled,
+  IconPlayerPauseFilled,
+  IconPlayerTrackNextFilled,
+  IconPlayerTrackPrevFilled,
+  IconRepeat
+} from '@tabler/icons-react'
 import type { Player } from '../types'
 import Timeline from './Timeline'
 import TimelineLoop from './TimelineLoop'
@@ -28,24 +27,24 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
       </div>
       <div className="control-icons">
         <button className="icon-btn" onClick={handlers.handleLoopBackwardStep}>
-          <FontAwesomeIcon className="icon" icon={faBackwardStep} />
+          <IconPlayerTrackPrevFilled className="icon" />
         </button>
         <button className="icon-btn" onClick={handlers.handlePlayPause}>
           {state.playing ? (
-            <FontAwesomeIcon className="icon" icon={faPause} />
+            <IconPlayerPauseFilled className="icon" />
           ) : (
-            <FontAwesomeIcon className="icon" icon={faPlay} />
+            <IconPlayerPlayFilled className="icon" />
           )}
         </button>
         <button className="icon-btn" onClick={handlers.handleLoopForwardStep}>
-          <FontAwesomeIcon className="icon" icon={faForwardStep} />
+          <IconPlayerTrackNextFilled className="icon" />
         </button>
         <span>{format(state.playedSeconds)}</span>
         <button
           className={`icon-btn loop-control-btn ${state.isActiveLoop ? 'active' : ''}`}
           onClick={handlers.handleToggleLoops}
         >
-          <FontAwesomeIcon className="icon" icon={faRepeat} />
+          <IconRepeat className="icon" />
         </button>
       </div>
     </div>
