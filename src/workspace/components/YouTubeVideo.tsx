@@ -20,6 +20,7 @@ export default function YouTubeVideo({
       if (e.code === 'ArrowRight') handlers.handleForward()
       if (e.code === 'ArrowLeft') handlers.handleBackward()
       if ((e.metaKey || e.ctrlKey) && e.code === 'KeyL') handlers.handleToggleLoops()
+      if (e.code === 'Escape' && state.isActiveLoop) handlers.handleToggleLoops()
     }
 
     window.addEventListener('keydown', handleKeyDown)
