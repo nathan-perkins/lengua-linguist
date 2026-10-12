@@ -12,7 +12,9 @@ export default function Workspace() {
 
   return (
     <div className="workspace">
+      <div className="loop-sequence-manager" />
       <YouTubeVideo player={player} />
+      <div className="recorder" />
       <ControlPanel player={player} />
     </div>
   )

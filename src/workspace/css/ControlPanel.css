@@ -1,11 +1,12 @@
 .control-panel {
+  grid-area: control-panel;
   background-color: var(--bg-elevated);
-  position: fixed;
-  bottom: 0;
-  left: 0;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  /* offset workspace padding */
+  margin-inline: -2rem;
+  margin-bottom: -2rem;
   width: 100vw;
   padding: 1.5rem 2rem;
 }

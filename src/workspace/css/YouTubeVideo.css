@@ -1,9 +1,11 @@
 .youtube-video {
-  width: 46rem;
-  height: auto;
+  grid-area: youtube-video;
+  height: 100%;
+  width: auto;
+  max-width: 100%;
   aspect-ratio: 16 / 9;
-  margin-inline: auto;
-  border-radius: 8px;
+  margin: auto;
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 

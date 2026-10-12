@@ -1,3 +1,26 @@
 .workspace {
-  padding: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 24rem minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) 8rem auto;
+  grid-template-areas:
+    'loop-sequence-manager youtube-video'
+    'loop-sequence-manager recorder'
+    'control-panel control-panel';
+  gap: 2rem;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.loop-sequence-manager {
+  grid-area: loop-sequence-manager;
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+}
+
+.recorder {
+  grid-area: recorder;
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
 }

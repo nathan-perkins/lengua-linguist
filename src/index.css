@@ -110,6 +110,13 @@ button {
   index styles
 */
 
+#root {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .hero {
   display: flex;
   flex-direction: column;
