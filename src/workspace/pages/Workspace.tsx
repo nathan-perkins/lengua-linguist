@@ -1,6 +1,8 @@
 import { useParams } from '@tanstack/react-router'
 import { usePlayer } from '../hooks/usePlayer'
+import LoopSequenceManager from '../components/LoopSequenceManager'
 import YouTubeVideo from '../components/YouTubeVideo'
+import Recorder from '../components/Recorder'
 import ControlPanel from '../components/ControlPanel'
 import { createYouTubeUrl } from '../utils/createYouTubeUrl'
 import '../css/Workspace.css'
@@ -12,9 +14,9 @@ export default function Workspace() {
 
   return (
     <div className="workspace">
-      <div className="loop-sequence-manager" />
+      <LoopSequenceManager />
       <YouTubeVideo player={player} />
-      <div className="recorder" />
+      <Recorder />
       <ControlPanel player={player} />
     </div>
   )

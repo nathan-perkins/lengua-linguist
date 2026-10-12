@@ -12,15 +12,3 @@
   padding: 2rem;
   overflow: hidden;
 }
-
-.loop-sequence-manager {
-  grid-area: loop-sequence-manager;
-  background-color: var(--bg-elevated);
-  border-radius: var(--radius-md);
-}
-
-.recorder {
-  grid-area: recorder;
-  background-color: var(--bg-elevated);
-  border-radius: var(--radius-md);
-}

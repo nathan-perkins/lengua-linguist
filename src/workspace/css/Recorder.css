@@ -1,0 +1,5 @@
+.recorder {
+  grid-area: recorder;
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+}

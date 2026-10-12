@@ -1,0 +1,5 @@
+.loop-sequence-manager {
+  grid-area: loop-sequence-manager;
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-md);
+}
