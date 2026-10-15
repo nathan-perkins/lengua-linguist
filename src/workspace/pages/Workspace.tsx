@@ -13,10 +13,10 @@ export default function Workspace() {
   const player = usePlayer(youtubeUrl)
 
   return (
-    <div className="workspace">
-      <LoopSequenceManager />
+    <div className={`workspace${player.state.isActiveLoop ? ' active' : ''}`}>
+      {player.state.isActiveLoop && <LoopSequenceManager />}
       <YouTubeVideo player={player} />
-      <Recorder />
+      {player.state.isActiveLoop && <Recorder />}
       <ControlPanel player={player} />
     </div>
   )
