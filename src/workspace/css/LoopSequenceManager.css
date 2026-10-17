@@ -49,3 +49,22 @@
     border-color: var(--accent);
   }
 }
+
+.add-loop-btn {
+  background: inherit;
+  color: inherit;
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 0.25rem;
+
+  &:hover {
+    color: var(--accent);
+  }
+
+  .plus-icon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}

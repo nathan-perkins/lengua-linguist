@@ -1,3 +1,4 @@
+import { IconPlus } from '@tabler/icons-react'
 import type { Player } from '../types'
 import '../css/LoopSequenceManager.css'
 
@@ -24,6 +25,10 @@ export default function LoopSequenceManager({ player }: LoopSequenceManagerProps
               </button>
             )
           })}
+        <button className="add-loop-btn" onClick={player.handlers.handleLoopForwardStep}>
+          Add loop
+          <IconPlus className="plus-icon" />
+        </button>
       </div>
     </div>
   )
