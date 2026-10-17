@@ -26,6 +26,8 @@
 
 .loop-entry {
   background: var(--bg-elevated-high);
+  color: inherit;
+  text-align: left;
   padding: 1rem;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
@@ -40,6 +42,10 @@
   }
 
   &.current {
+    border-color: var(--accent);
+  }
+
+  &:hover {
     border-color: var(--accent);
   }
 }

@@ -15,10 +15,13 @@ export default function LoopSequenceManager({ player }: LoopSequenceManagerProps
             if (loop.isPending) return
 
             return (
-              <div className={`loop-entry${loop.isCurrent ? ' current' : ''}`}>
+              <button
+                className={`loop-entry${loop.isCurrent ? ' current' : ''}`}
+                onClick={() => player.handlers.handleSelectLoop(loop)}
+              >
                 <span>{`${loop.start.toFixed(2)}s - ${loop.end!.toFixed(2)}s`}</span>
                 <p>{loop.title}</p>
-              </div>
+              </button>
             )
           })}
       </div>

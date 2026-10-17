@@ -37,6 +37,7 @@ export type PlayerHandlers = {
   handleDurationChange: () => void
   handleSeeked: () => void
   handleToggleLoops: () => void
+  handleSelectLoop: (selectedLoop: TimelineLoop) => void
   handleLoopForwardStep: () => void
   handleLoopBackwardStep: () => void
 }
