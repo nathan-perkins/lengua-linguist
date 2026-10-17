@@ -120,7 +120,16 @@ export function usePlayer(url: string) {
       isActiveLoop: !prevState.isActiveLoop,
       activeLoops: prevState.isActiveLoop
         ? []
-        : [{ id: 0, start: prevState.playedSeconds, end: null, isCurrent: true, isPending: true }]
+        : [
+            {
+              id: 0,
+              title: 'Loop 1',
+              start: prevState.playedSeconds,
+              end: null,
+              isCurrent: true,
+              isPending: true
+            }
+          ]
     }))
   }
 
@@ -150,6 +159,7 @@ export function usePlayer(url: string) {
 
     const pendingLoop = {
       id: currentLoopIndex + 1,
+      title: `Loop ${currentLoopIndex + 2}`,
       start: state.activeLoops[currentLoopIndex].end!,
       end: null,
       isCurrent: true,

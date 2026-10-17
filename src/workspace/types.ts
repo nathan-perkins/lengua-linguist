@@ -1,5 +1,6 @@
 export type TimelineLoop = {
   id: number
+  title: string
   start: number
   end: number | null
   isCurrent: boolean

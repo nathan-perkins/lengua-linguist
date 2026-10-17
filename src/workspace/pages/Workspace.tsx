@@ -14,7 +14,7 @@ export default function Workspace() {
 
   return (
     <div className={`workspace${player.state.isActiveLoop ? ' active' : ''}`}>
-      {player.state.isActiveLoop && <LoopSequenceManager />}
+      {player.state.isActiveLoop && <LoopSequenceManager player={player} />}
       <YouTubeVideo player={player} />
       {player.state.isActiveLoop && <Recorder />}
       <ControlPanel player={player} />

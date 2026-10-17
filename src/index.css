@@ -5,6 +5,7 @@
 :root {
   --bg: #fcfcfc;
   --bg-elevated: #fefefe;
+  --bg-elevated-high: #ffffff;
   --bg-muted: #f3f3f3;
   --text: #2e2e2e;
   --text-muted: #595959;
@@ -21,6 +22,7 @@
   :root {
     --bg: #2e2e2e;
     --bg-elevated: #373737;
+    --bg-elevated-high: #444444;
     --bg-muted: #3f3f3f;
     --text: #fcfcfc;
     --text-muted: #d8d8d8;
