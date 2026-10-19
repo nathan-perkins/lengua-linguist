@@ -50,13 +50,21 @@ export default function SourceMedia() {
               ? `Results for "${q}"`
               : null}
         </p>
-        {searchResults.length < 1 &&
-          videoResults &&
-          videoResults.length > 0 &&
-          videoResults.map((result) => <YouTubeSearchResultBox key={result.id} result={result} />)}
-        {searchResults &&
-          searchResults.length > 0 &&
-          searchResults.map((result) => <YouTubeSearchResultBox key={result.id} result={result} />)}
+        {videoResults && videoResults.length > 0 && (
+          <div className="video-results">
+            {searchResults.length < 1 &&
+              videoResults &&
+              videoResults.length > 0 &&
+              videoResults.map((result) => (
+                <YouTubeSearchResultBox key={result.id} result={result} />
+              ))}
+            {searchResults &&
+              searchResults.length > 0 &&
+              searchResults.map((result) => (
+                <YouTubeSearchResultBox key={result.id} result={result} />
+              ))}
+          </div>
+        )}
       </div>
     </div>
   )
