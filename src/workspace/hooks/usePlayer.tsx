@@ -159,7 +159,8 @@ export function usePlayer(url: string) {
     if (
       currentLoop === undefined ||
       currentLoopIndex === null ||
-      currentLoopIndex > state.activeLoops.length - 1
+      currentLoopIndex > state.activeLoops.length - 1 ||
+      state.activeLoops[currentLoopIndex].isPending
     )
       return
 
