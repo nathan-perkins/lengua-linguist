@@ -25,7 +25,7 @@ export default function LoopSequenceManager({ player }: LoopSequenceManagerProps
               </button>
             )
           })}
-        <button className="add-loop-btn" onClick={player.handlers.handleLoopForwardStep}>
+        <button className="add-loop-btn" onClick={player.handlers.handleNewLoop}>
           Add loop
           <IconPlus className="plus-icon" />
         </button>

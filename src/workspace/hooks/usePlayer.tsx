@@ -1,6 +1,12 @@
 import { useRef, useState } from 'react'
 import type { Player, PlayerHandlers, PlayerState, TimelineLoop } from '../types'
-import { getCurrent, selectLoop, stepBackward, stepForward } from '../utils/playerStateHelpers'
+import {
+  getCurrent,
+  jumpToLatest,
+  selectLoop,
+  stepBackward,
+  stepForward
+} from '../utils/playerStateHelpers'
 
 const initializeState = (url: string) =>
   ({
@@ -164,6 +170,17 @@ export function usePlayer(url: string) {
     if (playerRef.current && target) playerRef.current.currentTime = target.start
   }
 
+  const handleNewLoop = () => {
+    const { loop } = getCurrent(state)
+    if (!loop || loop.isPending) return
+
+    const next = stepForward(jumpToLatest(state))
+    setState(next)
+
+    const target = getCurrent(next).loop
+    if (playerRef.current && target) playerRef.current.currentTime = target.start
+  }
+
   const handlers: PlayerHandlers = {
     handlePlay,
     handlePause,
@@ -176,7 +193,8 @@ export function usePlayer(url: string) {
     handleToggleLoops,
     handleSelectLoop,
     handleLoopBackwardStep,
-    handleLoopForwardStep
+    handleLoopForwardStep,
+    handleNewLoop
   }
 
   return {

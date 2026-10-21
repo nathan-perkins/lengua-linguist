@@ -40,6 +40,7 @@ export type PlayerHandlers = {
   handleSelectLoop: (selectedLoop: TimelineLoop) => void
   handleLoopBackwardStep: () => void
   handleLoopForwardStep: () => void
+  handleNewLoop: () => void
 }
 
 export type Player = {
