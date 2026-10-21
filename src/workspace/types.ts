@@ -38,8 +38,8 @@ export type PlayerHandlers = {
   handleSeeked: () => void
   handleToggleLoops: () => void
   handleSelectLoop: (selectedLoop: TimelineLoop) => void
-  handleLoopForwardStep: () => void
   handleLoopBackwardStep: () => void
+  handleLoopForwardStep: () => void
 }
 
 export type Player = {

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import type { Player, PlayerHandlers, PlayerState, TimelineLoop } from '../types'
+import { getCurrent, selectLoop, stepBackward, stepForward } from '../utils/playerStateHelpers'
 
 const initializeState = (url: string) =>
   ({
@@ -26,8 +27,8 @@ export function usePlayer(url: string) {
   const playerRef = useRef<HTMLVideoElement>(null)
   const [state, setState] = useState<PlayerState>(() => initializeState(url))
 
-  const currentLoop = state.activeLoops.find((loop) => loop.isCurrent)
-  const currentLoopIndex = currentLoop ? state.activeLoops.indexOf(currentLoop) : null
+  const currentLoop = getCurrent(state).loop
+  const currentLoopIndex = getCurrent(state).index
 
   const setPlayerRef = (node: HTMLVideoElement) => {
     playerRef.current = node
@@ -140,85 +141,27 @@ export function usePlayer(url: string) {
 
     const selectedLoopIndex = state.activeLoops.findIndex((loop) => loop === selectedLoop)
 
-    setState((prevState) => ({
-      ...prevState,
-      activeLoops: prevState.activeLoops.map((loop, index) => {
-        if (index === currentLoopIndex) return { ...loop, isCurrent: false }
-        if (index === selectedLoopIndex) return { ...loop, isCurrent: true }
+    const next = selectLoop(state, selectedLoopIndex)
+    setState(next)
 
-        return loop
-      })
-    }))
-
-    if (playerRef.current) {
-      playerRef.current.currentTime = state.activeLoops[selectedLoopIndex].start
-    }
-  }
-
-  const handleLoopForwardStep = () => {
-    if (
-      currentLoop === undefined ||
-      currentLoopIndex === null ||
-      currentLoopIndex > state.activeLoops.length - 1 ||
-      state.activeLoops[currentLoopIndex].isPending
-    )
-      return
-
-    if (currentLoopIndex !== state.activeLoops.length - 1) {
-      setState((prevState) => ({
-        ...prevState,
-        activeLoops: prevState.activeLoops.map((loop, index) => {
-          if (index === currentLoopIndex) return { ...loop, isCurrent: false }
-          if (index === currentLoopIndex + 1) return { ...loop, isCurrent: true }
-
-          return loop
-        })
-      }))
-
-      if (playerRef.current)
-        playerRef.current.currentTime = state.activeLoops[currentLoopIndex + 1].start
-      return
-    }
-
-    const pendingLoop = {
-      id: currentLoopIndex + 1,
-      title: `Loop ${currentLoopIndex + 2}`,
-      start: state.activeLoops[currentLoopIndex].end!,
-      end: null,
-      isCurrent: true,
-      isPending: true
-    }
-
-    setState((prevState) => ({
-      ...prevState,
-      activeLoops: [
-        ...prevState.activeLoops.map((loop, index) => {
-          if (index === currentLoopIndex) return { ...loop, isCurrent: false }
-
-          return loop
-        }),
-        pendingLoop
-      ]
-    }))
-
-    if (playerRef.current) playerRef.current.currentTime = pendingLoop.start
+    const target = getCurrent(next).loop
+    if (playerRef.current && target) playerRef.current.currentTime = target.start
   }
 
   const handleLoopBackwardStep = () => {
-    if (currentLoop === undefined || currentLoopIndex === null || currentLoopIndex <= 0) return
+    const next = stepBackward(state)
+    setState(next)
 
-    setState((prevState) => ({
-      ...prevState,
-      activeLoops: prevState.activeLoops.map((loop, index) => {
-        if (index === currentLoopIndex) return { ...loop, isCurrent: false }
-        if (index === currentLoopIndex - 1) return { ...loop, isCurrent: true }
+    const target = getCurrent(next).loop
+    if (playerRef.current && target) playerRef.current.currentTime = target.start
+  }
 
-        return loop
-      })
-    }))
+  const handleLoopForwardStep = () => {
+    const next = stepForward(state)
+    setState(next)
 
-    if (playerRef.current)
-      playerRef.current.currentTime = state.activeLoops[currentLoopIndex - 1].start
+    const target = getCurrent(next).loop
+    if (playerRef.current && target) playerRef.current.currentTime = target.start
   }
 
   const handlers: PlayerHandlers = {
@@ -232,8 +175,8 @@ export function usePlayer(url: string) {
     handleSeeked,
     handleToggleLoops,
     handleSelectLoop,
-    handleLoopForwardStep,
-    handleLoopBackwardStep
+    handleLoopBackwardStep,
+    handleLoopForwardStep
   }
 
   return {
