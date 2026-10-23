@@ -9,7 +9,12 @@ type LoopSequenceManagerProps = {
 export default function LoopSequenceManager({ player }: LoopSequenceManagerProps) {
   return (
     <div className="loop-sequence-manager">
-      <div className="sequence-header">Loop sequence</div>
+      <div className="sequence-header">
+        <span>Loop sequence</span>
+        <button type="button" className="add-loop-btn" onClick={player.handlers.handleNewLoop}>
+          <IconPlus />
+        </button>
+      </div>
       <div className="sequence-list">
         {player.state.isActiveLoop &&
           player.state.activeLoops.map((loop) => {
@@ -25,10 +30,6 @@ export default function LoopSequenceManager({ player }: LoopSequenceManagerProps
               </button>
             )
           })}
-        <button className="add-loop-btn" onClick={player.handlers.handleNewLoop}>
-          Add loop
-          <IconPlus className="plus-icon" />
-        </button>
       </div>
     </div>
   )
