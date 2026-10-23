@@ -121,6 +121,16 @@ export function usePlayer(url: string) {
     setState((prevState) => ({ ...prevState, seeking: false }))
   }
 
+  const handleIncreasePlaybackSpeed = () => {
+    if (state.playbackRate >= 2) return
+    setState((prevState) => ({ ...prevState, playbackRate: prevState.playbackRate + 0.1 }))
+  }
+
+  const handleDecreasePlaybackSpeed = () => {
+    if (state.playbackRate <= 0.1) return
+    setState((prevState) => ({ ...prevState, playbackRate: prevState.playbackRate - 0.1 }))
+  }
+
   const handleToggleLoops = () => {
     setState((prevState) => ({
       ...prevState,
@@ -190,6 +200,8 @@ export function usePlayer(url: string) {
     handleTimeUpdate,
     handleDurationChange,
     handleSeeked,
+    handleIncreasePlaybackSpeed,
+    handleDecreasePlaybackSpeed,
     handleToggleLoops,
     handleSelectLoop,
     handleLoopBackwardStep,

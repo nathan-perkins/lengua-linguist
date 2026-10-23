@@ -23,6 +23,8 @@ export default function YouTubeVideo({
       if (e.code === 'ArrowLeft' && !state.isActiveLoop) handlers.handleBackward()
       if (e.code === 'ArrowRight' && state.isActiveLoop) handlers.handleLoopForwardStep()
       if (e.code === 'ArrowLeft' && state.isActiveLoop) handlers.handleLoopBackwardStep()
+      if (e.code === 'ArrowUp') handlers.handleIncreasePlaybackSpeed()
+      if (e.code === 'ArrowDown') handlers.handleDecreasePlaybackSpeed()
     }
 
     window.addEventListener('keydown', handleKeyDown)
@@ -37,6 +39,7 @@ export default function YouTubeVideo({
         ref={setPlayerRef}
         src={state.src}
         playing={state.playing}
+        playbackRate={state.playbackRate}
         onPlay={handlers.handlePlay}
         onPause={handlers.handlePause}
         onTimeUpdate={handlers.handleTimeUpdate}
