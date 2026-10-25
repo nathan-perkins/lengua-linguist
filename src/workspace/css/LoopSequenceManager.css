@@ -52,6 +52,7 @@
   padding: 1rem;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
+  position: relative;
 
   span {
     color: var(--text-muted);
@@ -69,4 +70,13 @@
   &:hover {
     border-color: var(--accent);
   }
+}
+
+.edit-icon-btn {
+  background: transparent;
+  color: inherit;
+  position: absolute;
+  /* mock padding */
+  top: 1rem;
+  right: 1rem;
 }

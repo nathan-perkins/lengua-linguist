@@ -1,4 +1,5 @@
-import { IconPlus } from '@tabler/icons-react'
+import { useState } from 'react'
+import { IconPencil, IconPlus } from '@tabler/icons-react'
 import type { Player } from '../types'
 import '../css/LoopSequenceManager.css'
 
@@ -7,6 +8,8 @@ type LoopSequenceManagerProps = {
 }
 
 export default function LoopSequenceManager({ player }: LoopSequenceManagerProps) {
+  const [hoveredLoopId, setHoveredLoopId] = useState<number | null>(null)
+
   return (
     <div className="loop-sequence-manager">
       <div className="sequence-header">
@@ -24,9 +27,19 @@ export default function LoopSequenceManager({ player }: LoopSequenceManagerProps
               <button
                 className={`loop-entry${loop.isCurrent ? ' current' : ''}`}
                 onClick={() => player.handlers.handleSelectLoop(loop)}
+                onMouseEnter={() => setHoveredLoopId(loop.id)}
+                onMouseLeave={() => setHoveredLoopId(null)}
               >
                 <span>{`${loop.start.toFixed(2)}s - ${loop.end!.toFixed(2)}s`}</span>
                 <p>{loop.title}</p>
+                {hoveredLoopId === loop.id && (
+                  <button
+                    className="edit-icon-btn"
+                    onClick={() => alert(`edit loop ${loop.id + 1}`)}
+                  >
+                    <IconPencil />
+                  </button>
+                )}
               </button>
             )
           })}
