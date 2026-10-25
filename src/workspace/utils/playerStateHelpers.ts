@@ -39,4 +39,5 @@ export const stepForward = (state: PlayerState): PlayerState => {
   }
 }
 
+export const jumpToFirst = (state: PlayerState) => selectLoop(state, 0)
 export const jumpToLatest = (state: PlayerState) => selectLoop(state, state.activeLoops.length - 1)
