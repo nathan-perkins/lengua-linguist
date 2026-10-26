@@ -1,4 +1,4 @@
-import { IconPlus } from '@tabler/icons-react'
+import { IconArrowBackUp, IconPlus } from '@tabler/icons-react'
 import type { Player } from '../types'
 import '../css/LoopSequenceManager.css'
 
@@ -13,6 +13,9 @@ export default function LoopSequenceManager({ player }: LoopSequenceManagerProps
         <span>Loop sequence</span>
         <button type="button" className="add-loop-btn" onClick={player.handlers.handleNewLoop}>
           <IconPlus />
+        </button>
+        <button type="button" className="undo-loop-btn" onClick={player.handlers.handleUndoLoop}>
+          <IconArrowBackUp />
         </button>
       </div>
       <div className="sequence-list">

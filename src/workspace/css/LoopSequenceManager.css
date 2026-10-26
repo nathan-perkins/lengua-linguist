@@ -11,16 +11,16 @@
 
 .sequence-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border);
 }
 
-.add-loop-btn {
+.add-loop-btn,
+.undo-loop-btn {
   background: inherit;
   color: inherit;
-  font-size: 0.75rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,11 +28,10 @@
   &:hover {
     color: var(--accent);
   }
+}
 
-  .plus-icon {
-    width: 0.75rem;
-    height: 0.75rem;
-  }
+.add-loop-btn {
+  margin-left: auto;
 }
 
 .sequence-list {

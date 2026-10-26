@@ -27,6 +27,7 @@ export default function YouTubeVideo({
       if (e.code === 'ArrowDown') handlers.handleDecreasePlaybackSpeed()
       if (e.code === 'ArrowLeft' && e.shiftKey) handlers.handleJumpToFirst()
       if (e.code === 'ArrowRight' && e.shiftKey) handlers.handleJumpToLatest()
+      if ((e.ctrlKey || e.metaKey) && e.code === 'KeyZ') handlers.handleUndoLoop()
     }
 
     window.addEventListener('keydown', handleKeyDown)

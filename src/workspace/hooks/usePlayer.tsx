@@ -6,7 +6,8 @@ import {
   jumpToLatest,
   selectLoop,
   stepBackward,
-  stepForward
+  stepForward,
+  undoLoop
 } from '../utils/playerStateHelpers'
 
 const initializeState = (url: string) =>
@@ -208,6 +209,13 @@ export function usePlayer(url: string) {
     if (playerRef.current && target) playerRef.current.currentTime = target.start
   }
 
+  const handleUndoLoop = () => {
+    const { index } = getCurrent(state)
+    if (!index || index === getCurrent(jumpToFirst(state)).index) return
+
+    setState(undoLoop(state))
+  }
+
   const handlers: PlayerHandlers = {
     handlePlay,
     handlePause,
@@ -225,7 +233,8 @@ export function usePlayer(url: string) {
     handleLoopForwardStep,
     handleJumpToFirst,
     handleJumpToLatest,
-    handleNewLoop
+    handleNewLoop,
+    handleUndoLoop
   }
 
   return {

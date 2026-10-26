@@ -39,5 +39,18 @@ export const stepForward = (state: PlayerState): PlayerState => {
   }
 }
 
+export const undoLoop = (state: PlayerState): PlayerState => {
+  const { index, loop } = getCurrent(jumpToLatest(state))
+  if (!loop) return state
+
+  const next = {
+    ...state,
+    activeLoops: state.activeLoops.filter((_, indexFilter) => index !== indexFilter)
+  }
+
+  console.log(jumpToLatest(next))
+  return jumpToLatest(next)
+}
+
 export const jumpToFirst = (state: PlayerState) => selectLoop(state, 0)
 export const jumpToLatest = (state: PlayerState) => selectLoop(state, state.activeLoops.length - 1)
