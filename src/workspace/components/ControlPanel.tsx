@@ -40,6 +40,7 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
           <IconPlayerTrackNextFilled className="icon" />
         </button>
         <span>{format(state.playedSeconds)}</span>
+        <span>{state.playbackRate.toFixed(1)}</span>
         <button
           className={`icon-btn loop-control-btn ${state.isActiveLoop ? 'active' : ''}`}
           onClick={handlers.handleToggleLoops}
