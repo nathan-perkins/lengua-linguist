@@ -1,8 +1,8 @@
 import {
   IconPlayerPlayFilled,
   IconPlayerPauseFilled,
-  IconPlayerTrackNextFilled,
-  IconPlayerTrackPrevFilled,
+  IconPlayerSkipForwardFilled,
+  IconPlayerSkipBackFilled,
   IconRepeat
 } from '@tabler/icons-react'
 import type { Player } from '../types'
@@ -27,7 +27,7 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
       </div>
       <div className="control-icons">
         <button className="icon-btn" onClick={handlers.handleLoopBackwardStep}>
-          <IconPlayerTrackPrevFilled className="icon" />
+          <IconPlayerSkipBackFilled className="icon" />
         </button>
         <button className="icon-btn" onClick={handlers.handlePlayPause}>
           {state.playing ? (
@@ -37,7 +37,7 @@ export default function ControlPanel({ player: { state, handlers } }: ControlPan
           )}
         </button>
         <button className="icon-btn" onClick={handlers.handleLoopForwardStep}>
-          <IconPlayerTrackNextFilled className="icon" />
+          <IconPlayerSkipForwardFilled className="icon" />
         </button>
         <span>{format(state.playedSeconds)}</span>
         <span>{state.playbackRate.toFixed(1)}</span>
