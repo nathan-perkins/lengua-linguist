@@ -46,6 +46,7 @@ export type PlayerHandlers = {
   handleJumpToLatest: () => void
   handleNewLoop: () => void
   handleUndoLoop: () => void
+  handleMergeLoop: () => void
 }
 
 export type Player = {

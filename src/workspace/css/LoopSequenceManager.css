@@ -18,7 +18,8 @@
 }
 
 .add-loop-btn,
-.undo-loop-btn {
+.undo-loop-btn,
+.merge-loops-btn {
   background: inherit;
   color: inherit;
   display: flex;

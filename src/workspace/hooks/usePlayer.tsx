@@ -4,6 +4,7 @@ import {
   getCurrent,
   jumpToFirst,
   jumpToLatest,
+  mergeLoop,
   selectLoop,
   stepBackward,
   stepForward,
@@ -216,6 +217,17 @@ export function usePlayer(url: string) {
     setState(undoLoop(state))
   }
 
+  const handleMergeLoop = () => {
+    const { loop } = getCurrent(state)
+    if (!loop || loop.isPending) return
+
+    const next = mergeLoop(state)
+    setState(next)
+
+    const target = getCurrent(next).loop
+    if (playerRef.current && target) playerRef.current.currentTime = target.start
+  }
+
   const handlers: PlayerHandlers = {
     handlePlay,
     handlePause,
@@ -234,7 +246,8 @@ export function usePlayer(url: string) {
     handleJumpToFirst,
     handleJumpToLatest,
     handleNewLoop,
-    handleUndoLoop
+    handleUndoLoop,
+    handleMergeLoop
   }
 
   return {

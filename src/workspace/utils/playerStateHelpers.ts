@@ -48,8 +48,28 @@ export const undoLoop = (state: PlayerState): PlayerState => {
     activeLoops: state.activeLoops.filter((_, indexFilter) => index !== indexFilter)
   }
 
-  console.log(jumpToLatest(next))
   return jumpToLatest(next)
+}
+
+export const mergeLoop = (state: PlayerState): PlayerState => {
+  const { index, loop } = getCurrent(state)
+  if (index <= 0) return state
+
+  const previous = state.activeLoops[index - 1]
+  const merged = {
+    ...previous,
+    end: loop.end,
+    isCurrent: true
+  }
+
+  return {
+    ...state,
+    activeLoops: [
+      ...state.activeLoops.slice(0, index - 1),
+      merged,
+      ...state.activeLoops.slice(index + 1)
+    ]
+  }
 }
 
 export const jumpToFirst = (state: PlayerState) => selectLoop(state, 0)

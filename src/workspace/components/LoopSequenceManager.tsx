@@ -1,4 +1,4 @@
-import { IconArrowBackUp, IconPlus } from '@tabler/icons-react'
+import { IconArrowBackUp, IconArrowMerge, IconPlus } from '@tabler/icons-react'
 import type { Player } from '../types'
 import '../css/LoopSequenceManager.css'
 
@@ -16,6 +16,9 @@ export default function LoopSequenceManager({ player }: LoopSequenceManagerProps
         </button>
         <button type="button" className="undo-loop-btn" onClick={player.handlers.handleUndoLoop}>
           <IconArrowBackUp />
+        </button>
+        <button type="button" className="merge-loops-btn" onClick={player.handlers.handleMergeLoop}>
+          <IconArrowMerge />
         </button>
       </div>
       <div className="sequence-list">
