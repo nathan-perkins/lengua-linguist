@@ -23,13 +23,15 @@ export const stepForward = (state: PlayerState): PlayerState => {
 
   if (index !== state.activeLoops.length - 1) return selectLoop(state, index + 1)
 
+  const nextId = Math.max(...state.activeLoops.map((loop) => loop.id)) + 1
+
   return {
     ...state,
     activeLoops: [
       ...state.activeLoops.map((loop) => ({ ...loop, isCurrent: false })),
       {
-        id: index + 1,
-        title: `Loop ${index + 2}`,
+        id: nextId,
+        title: `Loop ${nextId + 1}`,
         start: loop.end!,
         end: null,
         isCurrent: true,
