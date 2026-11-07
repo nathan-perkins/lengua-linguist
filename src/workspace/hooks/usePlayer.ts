@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import type { Player, PlayerHandlers, PlayerState, TimelineLoop } from '../types'
+import { type Player, type PlayerHandlers, type PlayerState, type TimelineLoop } from '../types'
 import {
   getCurrent,
   jumpToFirst,
@@ -7,9 +7,9 @@ import {
   mergeLoop,
   selectLoop,
   stepBackward,
-  stepForward,
-  undoLoop
+  stepForward
 } from '../utils/playerStateHelpers'
+import { usePrevious } from './usePrevious'
 
 const initializeState = (url: string) =>
   ({
@@ -35,6 +35,7 @@ const initializeState = (url: string) =>
 export function usePlayer(url: string) {
   const playerRef = useRef<HTMLVideoElement>(null)
   const [state, setState] = useState<PlayerState>(() => initializeState(url))
+  const previousLoops = usePrevious(state.activeLoops)
 
   const currentLoop = getCurrent(state).loop
   const currentLoopIndex = getCurrent(state).index
@@ -210,13 +211,6 @@ export function usePlayer(url: string) {
     if (playerRef.current && target) playerRef.current.currentTime = target.start
   }
 
-  const handleUndoLoop = () => {
-    const { index } = getCurrent(state)
-    if (!index || index === getCurrent(jumpToFirst(state)).index) return
-
-    setState(undoLoop(state))
-  }
-
   const handleMergeLoop = () => {
     const { loop } = getCurrent(state)
     if (!loop || loop.isPending) return
@@ -225,6 +219,18 @@ export function usePlayer(url: string) {
     setState(next)
 
     const target = getCurrent(next).loop
+    if (playerRef.current && target) playerRef.current.currentTime = target.start
+  }
+
+  const handleUndo = () => {
+    const { index } = getCurrent(state)
+    if (!index || index === getCurrent(jumpToFirst(state)).index || !previousLoops) return
+
+    const prevState = { ...state, activeLoops: previousLoops }
+
+    setState(prevState)
+
+    const target = getCurrent(prevState).loop
     if (playerRef.current && target) playerRef.current.currentTime = target.start
   }
 
@@ -246,8 +252,8 @@ export function usePlayer(url: string) {
     handleJumpToFirst,
     handleJumpToLatest,
     handleNewLoop,
-    handleUndoLoop,
-    handleMergeLoop
+    handleMergeLoop,
+    handleUndo
   }
 
   return {

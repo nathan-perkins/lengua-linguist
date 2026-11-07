@@ -45,8 +45,8 @@ export type PlayerHandlers = {
   handleJumpToFirst: () => void
   handleJumpToLatest: () => void
   handleNewLoop: () => void
-  handleUndoLoop: () => void
   handleMergeLoop: () => void
+  handleUndo: () => void
 }
 
 export type Player = {
@@ -54,3 +54,5 @@ export type Player = {
   state: PlayerState
   handlers: PlayerHandlers
 }
+
+export type LoopAction = 'create' | 'merge'

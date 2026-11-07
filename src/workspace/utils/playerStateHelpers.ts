@@ -41,17 +41,17 @@ export const stepForward = (state: PlayerState): PlayerState => {
   }
 }
 
-export const undoLoop = (state: PlayerState): PlayerState => {
-  const { index, loop } = getCurrent(jumpToLatest(state))
-  if (!loop) return state
+// export const undoLoop = (state: PlayerState): PlayerState => {
+//   const { index, loop } = getCurrent(jumpToLatest(state))
+//   if (!loop) return state
 
-  const next = {
-    ...state,
-    activeLoops: state.activeLoops.filter((_, indexFilter) => index !== indexFilter)
-  }
+//   const next = {
+//     ...state,
+//     activeLoops: state.activeLoops.filter((_, indexFilter) => index !== indexFilter)
+//   }
 
-  return jumpToLatest(next)
-}
+//   return jumpToLatest(next)
+// }
 
 export const mergeLoop = (state: PlayerState): PlayerState => {
   const { index, loop } = getCurrent(state)
