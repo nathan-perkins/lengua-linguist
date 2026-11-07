@@ -1,6 +1,16 @@
 .recorder {
   grid-area: recorder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
   background-color: var(--bg-elevated);
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
+}
+
+.recorder-control-btns {
+  display: flex;
+  gap: 0.5rem;
 }
