@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { IconMicrophone, IconSquareFilled } from '@tabler/icons-react'
 import '../css/Recorder.css'
 
 export default function Recorder() {
@@ -39,8 +40,12 @@ export default function Recorder() {
     <div className="recorder">
       <audio controls src={recordedUrl} />
       <div className="recorder-control-btns">
-        <button onClick={() => void startRecording}>Start Recording</button>
-        <button onClick={stopRecording}>Stop Recording</button>
+        <button className="icon-btn" onClick={() => void startRecording}>
+          <IconMicrophone className="icon" />
+        </button>
+        <button className="icon-btn" onClick={stopRecording}>
+          <IconSquareFilled className="icon" />
+        </button>
       </div>
     </div>
   )
