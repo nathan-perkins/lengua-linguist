@@ -40,7 +40,7 @@ export default function Recorder() {
     <div className="recorder">
       <audio controls src={recordedUrl} />
       <div className="recorder-control-btns">
-        <button className="icon-btn" onClick={() => void startRecording}>
+        <button className="icon-btn" onClick={() => void startRecording()}>
           <IconMicrophone className="icon" />
         </button>
         <button className="icon-btn" onClick={stopRecording}>
