@@ -3,12 +3,14 @@ import { IconMicrophone, IconSquareFilled } from '@tabler/icons-react'
 import '../css/Recorder.css'
 
 export default function Recorder() {
+  const [isRecording, setIsRecording] = useState(false)
   const [recordedUrl, setRecordedUrl] = useState('')
   const mediaStream = useRef<MediaStream>(null)
   const mediaRecorder = useRef<MediaRecorder>(null)
   const chunks = useRef<Blob[]>([])
   const startRecording = async () => {
     try {
+      setIsRecording(true)
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       mediaStream.current = stream
       mediaRecorder.current = new MediaRecorder(stream)
@@ -28,6 +30,7 @@ export default function Recorder() {
   }
 
   const stopRecording = () => {
+    setIsRecording(false)
     if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
       mediaRecorder.current.stop()
     }
@@ -38,14 +41,17 @@ export default function Recorder() {
 
   return (
     <div className="recorder">
-      <audio controls src={recordedUrl} />
+      {recordedUrl && <audio controls src={recordedUrl} />}
       <div className="recorder-control-btns">
-        <button className="icon-btn" onClick={() => void startRecording()}>
-          <IconMicrophone className="icon" />
-        </button>
-        <button className="icon-btn" onClick={stopRecording}>
-          <IconSquareFilled className="icon" />
-        </button>
+        {isRecording ? (
+          <button className="icon-btn" onClick={stopRecording}>
+            <IconSquareFilled className="icon" />
+          </button>
+        ) : (
+          <button className="icon-btn" onClick={() => void startRecording()}>
+            <IconMicrophone className="icon" />
+          </button>
+        )}
       </div>
     </div>
   )
