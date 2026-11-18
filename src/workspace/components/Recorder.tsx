@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { IconMicrophone, IconSquareFilled } from '@tabler/icons-react'
+import { IconMicrophone, IconSquareFilled, IconXFilled } from '@tabler/icons-react'
 import '../css/Recorder.css'
 
 export default function Recorder() {
@@ -41,18 +41,26 @@ export default function Recorder() {
 
   return (
     <div className="recorder">
-      {recordedUrl && <audio controls src={recordedUrl} />}
-      <div className="recorder-control-btns">
-        {isRecording ? (
-          <button className="icon-btn" onClick={stopRecording}>
-            <IconSquareFilled className="icon" />
+      {recordedUrl ? (
+        <div className="recording-container">
+          <audio controls src={recordedUrl} />
+          <button className="icon-btn" onClick={() => setRecordedUrl('')}>
+            <IconXFilled className="icon" />
           </button>
-        ) : (
-          <button className="icon-btn" onClick={() => void startRecording()}>
-            <IconMicrophone className="icon" />
-          </button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="recorder-control-btns">
+          {isRecording ? (
+            <button className="icon-btn" onClick={stopRecording}>
+              <IconSquareFilled className="icon" />
+            </button>
+          ) : (
+            <button className="icon-btn" onClick={() => void startRecording()}>
+              <IconMicrophone className="icon" />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   )
 }

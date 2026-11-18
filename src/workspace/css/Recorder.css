@@ -6,6 +6,13 @@
   gap: 0.5rem;
 }
 
+.recording-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .recorder-control-btns {
   display: flex;
   gap: 0.5rem;
