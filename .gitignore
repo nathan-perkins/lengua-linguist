@@ -27,3 +27,4 @@ dist-ssr
 .tanstack
 .vite-hooks
 .vite/
+.vitest/
