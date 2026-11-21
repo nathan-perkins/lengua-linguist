@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { IconMicrophone, IconSquareFilled, IconXFilled } from '@tabler/icons-react'
 import '../css/Recorder.css'
 
@@ -8,8 +8,10 @@ export default function Recorder() {
   const mediaStream = useRef<MediaStream>(null)
   const mediaRecorder = useRef<MediaRecorder>(null)
   const chunks = useRef<Blob[]>([])
+
   const startRecording = async () => {
     try {
+      console.log('record')
       setIsRecording(true)
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       mediaStream.current = stream
@@ -30,6 +32,7 @@ export default function Recorder() {
   }
 
   const stopRecording = () => {
+    console.log('lets go')
     setIsRecording(false)
     if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
       mediaRecorder.current.stop()
@@ -38,6 +41,28 @@ export default function Recorder() {
       mediaStream.current.getTracks().forEach((track) => track.stop())
     }
   }
+
+  useEffect(() => {
+    const keyDown = async (e: KeyboardEvent) => {
+      if (e.key === 'F12') return
+
+      e.preventDefault()
+
+      if (e.code === 'KeyR') {
+        if (isRecording) {
+          stopRecording()
+        } else {
+          await startRecording()
+        }
+      }
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => void keyDown(e)
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isRecording])
 
   return (
     <div className="recorder">
